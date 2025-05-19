@@ -17,6 +17,10 @@
       "PackagePath": "staticwebassets\\bootstrap\\bootstrap.min.css.map"
     },
     {
+      "Id": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\wwwroot\\casa.jpg",
+      "PackagePath": "staticwebassets\\casa.jpg"
+    },
+    {
       "Id": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\wwwroot\\favicon.png",
       "PackagePath": "staticwebassets\\favicon.png"
     },

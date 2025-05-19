@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "Ypf+lKfAu9X+Di3KnLCkgmcxF4iIHtHsnwo8DHbAnS4=",
+  "Hash": "xy0HMAb2OwgG6pNgBoejoLe9G8dCfciFe4rT9MHYmz0=",
   "Source": "AL.UI",
   "BasePath": "_content/AL.UI",
   "Mode": "Default",
@@ -110,6 +110,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\bootstrap\\bootstrap.min.css.map"
+    },
+    {
+      "Identity": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\wwwroot\\casa.jpg",
+      "SourceId": "AL.UI",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\wwwroot\\",
+      "BasePath": "_content/AL.UI",
+      "RelativePath": "casa.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\casa.jpg"
     },
     {
       "Identity": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\wwwroot\\favicon.png",

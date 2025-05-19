@@ -19,9 +19,7 @@ public class UsuarioAlta(IUsuarioRepositorio _repositorio, ITarjetaRepositorio _
             }
             else
             {
-                int idT = _repoTarjeta.Agregar(t);
-                usuario.Tarjeta = t;
-                usuario.TarjetaId = idT;
+                usuario.TarjetaId = _repoTarjeta.Agregar(t);
                 int id = Repositorio.Agregar(usuario);
 
                 if (id == 1)
