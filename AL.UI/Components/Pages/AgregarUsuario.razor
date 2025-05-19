@@ -4,6 +4,7 @@
 @inject UsuarioAlta UsuarioAlta
 @inject IHashService HashService
 @inject IUsuarioRepositorio IUsuarioRepositorio
+@inject ITarjetaRepositorio ITarjetaRepositorio
 @inject IUsuarioValidador IUsuarioValidador
 @inject IServicioSesion UserService
 
@@ -14,6 +15,13 @@
     <p>Edad:<input placeholder="Edad" @bind="_usuario.Edad" class="form-control" required type="number"></p>
     <p>Email: <input placeholder="Email" @bind="_usuario.CorreoElectronico" class="form-control" required type="email"></p>
     <p>Contraseña: <input placeholder="Contraseña" @bind="_password" type="password" class="form-control"></p>
+</form>
+<h4>Tarjeta</h4>
+<form>
+    <p>Numero: <input placeholder="Numero" @bind="_tarjeta.Numero" class="form-control" required type="number"></p>
+    <p>Nombre del Titular: <input placeholder="Nombre Titular" @bind="_tarjeta.NombreTitular" class="form-control" required type="text"> </p>
+    <p>Fecha de Vencimiento: <input type ="date" placeholder ="Fecha de vencimiento" @bind="_tarjeta.FechaVencimiento" class="form-control" required/></p>
+    <p>Codigo de Seguridad:<input placeholder="Codigo de seguridad" @bind="_tarjeta.CodigoSeguridad" class="form-control" required type="number"></p>
 </form>
 
 @if (!string.IsNullOrEmpty(ErrorMessage))
@@ -39,6 +47,7 @@
     private int id_Usuario => UserService.Id;
 
     Usuario _usuario = new Usuario();
+    Tarjeta _tarjeta = new Tarjeta();
     string _password = string.Empty;
     String ErrorMessage { get; set; }=null!;
     String SuccessMessage {get;set;}=null!;
@@ -53,7 +62,7 @@
             _usuario.SalContraseña = sal;
         
             // Ejecutar el caso de uso para agregar el usuario
-            UsuarioAlta.Ejecutar(_usuario);
+            UsuarioAlta.Ejecutar(_usuario,_tarjeta);
         
             // Limpiar variables después de registrar correctamente
             //_usuario = new Usuario();

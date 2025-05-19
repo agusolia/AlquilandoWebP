@@ -13,3 +13,4 @@ C:\Users\CONSU\proyectoIS2\AL\AL.Repositorios\obj\Debug\net8.0\AL.Repositorios.d
 C:\Users\CONSU\proyectoIS2\AL\AL.Repositorios\obj\Debug\net8.0\refint\AL.Repositorios.dll
 C:\Users\CONSU\proyectoIS2\AL\AL.Repositorios\obj\Debug\net8.0\AL.Repositorios.pdb
 C:\Users\CONSU\proyectoIS2\AL\AL.Repositorios\obj\Debug\net8.0\ref\AL.Repositorios.dll
+C:\Users\CONSU\proyectoIS2\AL\AL.Repositorios\obj\Debug\net8.0\AL.Repositorios.sourcelink.json

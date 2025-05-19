@@ -10,9 +10,11 @@ public class EntidadesContext:DbContext
     public DbSet <Reserva> Reservas{ get; set; }
     public DbSet <Alojamiento> Alojamientos { get; set; }   
     public DbSet <Usuario> Usuarios { get; set; }
+    public DbSet <Tarjeta> Tarjetas { get; set; }
+    
     #nullable enable
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-       optionsBuilder.UseSqlite("data source=Entidades.sqlite");
+        optionsBuilder.UseSqlite("data source=Entidades.sqlite");
     }
 }

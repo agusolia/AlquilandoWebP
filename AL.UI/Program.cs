@@ -14,8 +14,10 @@ EntidadesSqlite.Inicializar();
 builder.Services.AddTransient<UsuarioAlta>();
 
 builder.Services.AddSingleton<IUsuarioRepositorio, UsuarioRepositorio>();
+builder.Services.AddSingleton<ITarjetaRepositorio, TarjetaRepositorio>();
 
 builder.Services.AddTransient<IUsuarioValidador, UsuarioValidador>();
+
 builder.Services.AddTransient<IHashService, HashService>();
 builder.Services.AddScoped<IServicioSesion, ServicioSesion>();
 
@@ -36,7 +38,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 app.UseAntiforgery();

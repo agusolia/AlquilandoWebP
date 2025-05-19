@@ -4,26 +4,39 @@ using AL.Aplicacion.Interfaces;
 using AL.Aplicacion.Excepciones; 
 namespace AL.Aplicacion.CasosDeUso;
 
-public class UsuarioAlta(IUsuarioRepositorio _repositorio,IUsuarioValidador _validador): UsuarioCasoDeUso(_repositorio)
+public class UsuarioAlta(IUsuarioRepositorio _repositorio, ITarjetaRepositorio _repoTarjeta,IUsuarioValidador _validador): UsuarioCasoDeUso(_repositorio)
 {
 
-    public void Ejecutar(Usuario usuario)
+    public void Ejecutar(Usuario usuario, Tarjeta t)
     {
         String mensajeError;
-        if(_validador.Validar(usuario,out mensajeError)){  
-            int id = Repositorio.Agregar(usuario);
-
-           
-            if (id==1)
+        
+        if (_validador.Validar(usuario, out mensajeError))
+        {
+            if (t == null)
             {
-                //El administrador tendría id 1
+                mensajeError += "Debe completar los datos de la tarjeta.\n";
             }
             else
             {
- 
+                int idT = _repoTarjeta.Agregar(t);
+                usuario.Tarjeta = t;
+                usuario.TarjetaId = idT;
+                int id = Repositorio.Agregar(usuario);
+
+                if (id == 1)
+                {
+                    //El administrador tendría id 1
+                }
+                else
+                {
+
+                } 
             }
+ 
         }
-        else{
+        else
+        {
             throw new ValidacionException(mensajeError);
         }
     }

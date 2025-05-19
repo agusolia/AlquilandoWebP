@@ -9,6 +9,8 @@ public class Usuario
     public string Apellido { get; set; } = "";
     public int Edad {   get; set; }
     public String CorreoElectronico { get; set; } = "";
+    public Tarjeta? Tarjeta { get; set; } = null!;
+    public int TarjetaId { get; set; }
     public string HashContraseña { get; set; } = "";
     public string SalContraseña { get; set; } = "";
     public List <Reserva> ListaReservas { get; set; } = new List<Reserva>();

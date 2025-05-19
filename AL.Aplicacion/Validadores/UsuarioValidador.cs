@@ -25,7 +25,7 @@ public class UsuarioValidador(IUsuarioRepositorio _usuarioRepo): IUsuarioValidad
         if (string.IsNullOrWhiteSpace(u.CorreoElectronico)){
             mensajeError += "El correo electrónico no puede estar vacío.\n";
         }
-        if(!u.CorreoElectronico.Contains("@"))
+        if (!u.CorreoElectronico.Contains("@"))
         {
             mensajeError += "El correo electrónico debe contener un '@'.\n";
 
