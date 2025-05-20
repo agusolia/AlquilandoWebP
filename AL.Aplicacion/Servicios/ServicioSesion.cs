@@ -1,28 +1,39 @@
 using System;
+using AL.Aplicacion.Enumerativos;
 using AL.Aplicacion.Interfaces;
+
 namespace AL.Aplicacion.Servicios;
 
-public class ServicioSesion(IUsuarioRepositorio _repo,IHashService _hash):IServicioSesion
+public class ServicioSesion(IUsuarioRepositorio _repo, IHashService _hash) : IServicioSesion
 {
 
-    public int Id {get;set;}
+    public int Id { get; set; }
+    public RolUsuario Rol { get; set; }
 
-    public bool Loggin(String email, String contraseña){
-        var usuario=_repo.IniciarSesion(email);
-        if(usuario != null ){  
-            if(_hash.VerifyHash(contraseña,usuario.HashContraseña,usuario.SalContraseña)){
-                Id=usuario.Id;
-                return true;
-            }
-            else{
-                return false;
-            }
+    public async Task<bool> Loggin(String email, String contraseña)
+    {
+        return await Task.Run(() => IniciarSesion(email, contraseña));
+    }
+    
+    private bool IniciarSesion(string email, string contraseña)
+    {
+        var usuario = _repo.IniciarSesion(email);
+        if (usuario == null)
+        {
+            return false;
         }
+
+        if (_hash.VerifyHash(contraseña, usuario.HashContraseña, usuario.SalContraseña))
+        {
+            Id = usuario.Id;
+            Rol = usuario.Rol;
+            return true;
+        }
+        
         return false;
     }
 
     public void Close(){
         Id=0;
     }
-
 }

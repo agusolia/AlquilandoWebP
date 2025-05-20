@@ -6,7 +6,7 @@
 @inject IUsuarioRepositorio IUsuarioRepositorio
 @inject ITarjetaRepositorio ITarjetaRepositorio
 @inject IUsuarioValidador IUsuarioValidador
-@inject IServicioSesion UserService
+
 
 <h3>Registrarse</h3>
 <form>
@@ -18,10 +18,15 @@
 </form>
 <h4>Tarjeta</h4>
 <form>
-    <p>Numero: <input placeholder="Numero" @bind="_tarjeta.Numero" class="form-control" required type="number"></p>
+    <p>Numero: <input placeholder="Numero" @bind="_tarjeta.Numero" class="form-control" required type="text" maxlength="16" pattern="\d{16}" inputmode="numeric"></p>
     <p>Nombre del Titular: <input placeholder="Nombre Titular" @bind="_tarjeta.NombreTitular" class="form-control" required type="text"> </p>
-    <p>Fecha de Vencimiento: <input type ="date" placeholder ="Fecha de vencimiento" @bind="_tarjeta.FechaVencimiento" class="form-control" required/></p>
-    <p>Codigo de Seguridad:<input placeholder="Codigo de seguridad" @bind="_tarjeta.CodigoSeguridad" class="form-control" required type="number"></p>
+    <p>Fecha de Vencimiento: 
+        <input placeholder="MM/yy" @bind="_tarjeta.FechaVencimiento" class="form-control"
+               required type="text" maxlength="5" pattern="(0[1-9]|1[0,2])\/\d{2}" title="Formato MM/YY(por ejemplo 08/32)"> </p>
+    <p>Codigo de Seguridad:
+        <input placeholder="Codigo de seguridad" @bind="_tarjeta.CodigoSeguridad" class="form-control"
+               required type="text" maxlength="3" pattern="\d{3}" inputmode="numeric">
+    </p>
 </form>
 
 @if (!string.IsNullOrEmpty(ErrorMessage))
@@ -44,8 +49,7 @@
 </div>
 
 @code {
-    private int id_Usuario => UserService.Id;
-
+    //private int id_Usuario => UserService.Id;
     Usuario _usuario = new Usuario();
     Tarjeta _tarjeta = new Tarjeta();
     string _password = string.Empty;
@@ -65,7 +69,7 @@
             UsuarioAlta.Ejecutar(_usuario,_tarjeta);
         
             // Limpiar variables después de registrar correctamente
-            //_usuario = new Usuario();
+            _usuario = new Usuario();
             //_password = string.Empty; // Limpiar contraseña también si es necesario
         
             // Mensaje de éxito
@@ -83,12 +87,7 @@
 
     private void VolverHome()
     {
-        if(id_Usuario==1){
-            NavigationManager.NavigateTo("/");//Va ahi si el administrador fue el que registró al nuevo usuario.
-        }
-        else{
-            NavigationManager.NavigateTo("/"); // Vuelve al Home
-        }
+        NavigationManager.NavigateTo("/"); // Vuelve al Home
     }
 
 }

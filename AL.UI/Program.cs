@@ -12,16 +12,16 @@ EntidadesSqlite.Inicializar();
 //agregamos estos servicios al contenedor DI
 
 builder.Services.AddTransient<UsuarioAlta>();
+builder.Services.AddTransient<AlojamientoAlta>();
 
 builder.Services.AddSingleton<IUsuarioRepositorio, UsuarioRepositorio>();
 builder.Services.AddSingleton<ITarjetaRepositorio, TarjetaRepositorio>();
+builder.Services.AddSingleton<IAlojamientoRepositorio, AlojamientoRepositorio>();
 
 builder.Services.AddTransient<IUsuarioValidador, UsuarioValidador>();
 
 builder.Services.AddTransient<IHashService, HashService>();
 builder.Services.AddScoped<IServicioSesion, ServicioSesion>();
-
-//builder.Services.AddSingleton<IServicioSesion, ServicioSesion>();
 
 
 // Add services to the container.

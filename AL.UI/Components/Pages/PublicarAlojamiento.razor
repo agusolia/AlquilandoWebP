@@ -1,0 +1,139 @@
+﻿@page "/PublicarAlojamiento"
+@rendermode InteractiveServer
+@inject NavigationManager NavigationManager
+
+@inject IServicioSesion ServicioSesion
+@inject AlojamientoAlta AlojamientoAlta
+@inject IAlojamientoRepositorio AlojamientoRepositorio
+
+<h3>Publicar Alojamiento</h3>
+
+<form>
+    <p>Nombre: <input placeholder="Nombre" @bind="_alojamiento.Nombre" class="form-control" required type="text"></p> 
+    <p>Ciudad: <input placeholder="Ciudad" @bind="_alojamiento.Ciudad" class="form-control" required type="text"></p>
+    <p>Direccion: <input placeholder="Direccion" @bind="_alojamiento.Direccion" class="form-control" required type="text"></p>
+    <p>Precio: <input placeholder="Precio" @bind="_alojamiento.PrecioPorNoche" class="form-control" required type="number"></p>
+    <p>Capacidad: <input placeholder="Capacidad Máxima" @bind="_alojamiento.CapacidadMaxima" class="form-control" required type="number"> </p>
+    <p>Dormitorios: <input placeholder="Dormitorios" @bind="_alojamiento.CantidadDormitorios" class="form-control" required type="number"> </p>
+    <p>Camas: <input placeholder="Camas" @bind="_alojamiento.CantidadCamas" class="form-control" required type="number"> </p>
+    <p>Baños: <input placeholder="Baños" @bind="_alojamiento.CantidadBaños" class="form-control" required type="number"> </p>
+    <p>Descripcion: <input placeholder="Descripcion" @bind="_alojamiento.Descripcion" class="form-control" required type="text"></p>
+    <p>Servicios: <input placeholder="Descripcion" @bind="_alojamiento.Servicios" class="form-control" required type="text"></p>
+    <p>Fotos: <InputFile OnChange="OnInputFileChange" multiple accept="image/*" /></p>
+    @if (_previewUrls.Any())
+    {
+        <div class="mb-3">
+            <label>Vista previa:</label>
+            <div style="display:flex; gap:10px;">
+                @foreach (var url in _previewUrls)
+                {
+                    <img src="@url" style="max-width:120px; max-height:120px; border:1px solid #ccc; border-radius:8px;" />
+                }
+            </div>
+        </div>
+    }
+</form> 
+
+<div class="container">
+    <button class="btn btn-primary" @onclick="RegistrarAlojamiento">Aceptar</button>
+    <button @onclick="VolverMenu" class="btn btn-primary">Cancelar</button>
+</div>
+
+@if (!string.IsNullOrEmpty(ErrorMessage))
+{
+    <div class="alert alert-danger" role="alert">
+        @ErrorMessage
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(SuccessMessage))
+{
+    <div class="alert alert-success" role="alert">
+        @SuccessMessage
+    </div>
+}
+
+@code {
+    public RolUsuario rol => ServicioSesion.Rol;
+    Alojamiento _alojamiento = new Alojamiento();
+    string ErrorMessage { get; set; }=null!;
+    string SuccessMessage {get;set;}=null!;
+    private List<IBrowserFile> _imagenes = new ();
+    private List<string> _previewUrls = new();
+
+    private async void OnInputFileChange(InputFileChangeEventArgs e)
+    {
+        _imagenes = e.GetMultipleFiles().ToList();
+        _previewUrls.Clear();
+
+        foreach (var image in _imagenes)
+        {
+            using var stream = image.OpenReadStream(5 * 1024 * 1024);
+            using var ms = new MemoryStream();
+            await stream.CopyToAsync(ms);
+            var base64 = Convert.ToBase64String(ms.ToArray());
+            var url = $"data:{image.ContentType};base64,{base64}";
+            _previewUrls.Add(url);
+        }
+
+        StateHasChanged();
+    }
+    private async Task RegistrarAlojamiento()
+    {
+        List<string> archivosSubidos = new List<string>();
+        try{
+
+             _alojamiento.Imagenes = new List<string>();
+            var uploadsPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+            if (!Directory.Exists(uploadsPath))
+                Directory.CreateDirectory(uploadsPath);
+
+            foreach (var imagen in _imagenes)
+            {
+                var uniqueFileName = $"{Guid.NewGuid()}_{imagen.Name}";
+                var filePath = Path.Combine(uploadsPath, uniqueFileName);
+
+                using (var stream = imagen.OpenReadStream(5 * 1024 * 1024)) // 5MB máximo por archivo
+                using (var fileStream = File.Create(filePath))
+                {
+                    await stream.CopyToAsync(fileStream);
+                }
+
+                // Guarda la ruta relativa para usarla en la web
+                var rutaRelativa = $"/uploads/{uniqueFileName}";
+                _alojamiento.Imagenes.Add(rutaRelativa);
+                archivosSubidos.Add(filePath); // Guarda la ruta física para posible borrado
+            }
+            // Ejecutar el caso de uso para agregar un alojamiento
+            AlojamientoAlta.Ejecutar(_alojamiento,rol);
+            
+        
+            _alojamiento = new Alojamiento();
+            _imagenes.Clear();
+            ErrorMessage = "";
+            SuccessMessage = "Alojamiento registrado con éxito";
+        }
+        catch(Exception msj){
+            SuccessMessage = "";
+            ErrorMessage = $"Error al publicar el alojamiento: {msj.Message}";
+            Console.WriteLine($"Exception: {msj}");
+            // Borra los archivos subidos si ocurre un error
+            foreach (var filePath in archivosSubidos)
+            {
+                try
+                {
+                    if (File.Exists(filePath))
+                    File.Delete(filePath);
+                }
+                catch { /* Ignora errores de borrado */ }
+            }
+        }
+
+    }
+
+
+    private void VolverMenu()
+    {
+             NavigationManager.NavigateTo("/CuentaAdministrador");  
+    }
+}

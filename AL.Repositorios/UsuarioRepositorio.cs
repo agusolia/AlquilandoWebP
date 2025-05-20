@@ -1,7 +1,7 @@
 using System;
 using AL.Aplicacion.Entidades;
 using AL.Aplicacion.Interfaces;
-
+using AL.Aplicacion.Enumerativos;
 using Microsoft.EntityFrameworkCore;
 namespace AL.Repositorios;
 
@@ -31,10 +31,23 @@ public class UsuarioRepositorio: IUsuarioRepositorio
         }
     }
 
-
-    //Dar de baja un usuario
-    public void Eliminar(Usuario u){
+    public int AsignarRol(int id, RolUsuario rol){
         using(var db = new EntidadesContext()){
+            Usuario? usuario = db.Usuarios.Where(x => x.Id == id).SingleOrDefault();
+            if(usuario != null){
+                usuario.Rol = rol;
+                db.SaveChanges();
+                return usuario.Id;
+            }
+            return 0;
+        }
+    }   
+    
+    //Dar de baja un usuario
+    public void Eliminar(Usuario u)
+    {
+        using (var db = new EntidadesContext())
+        {
             db.Usuarios.Remove(u);
             db.SaveChanges();
         }

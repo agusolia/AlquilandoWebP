@@ -2,12 +2,12 @@ using System;
 using Microsoft.VisualBasic;
 
 namespace AL.Aplicacion.Entidades;
-
+//Después podriamos cifrar la información de la tarjeta
 public class Tarjeta
 {
     public int Id { get; set; }
-    public int Numero { get; set; }
+    public String? Numero { get; set; } 
     public String? NombreTitular { get; set; }
-    public DateTime FechaVencimiento { get; set; }
+    public String? FechaVencimiento { get; set; } 
     public int CodigoSeguridad { get; set; }
 }
