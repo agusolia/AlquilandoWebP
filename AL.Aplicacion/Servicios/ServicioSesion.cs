@@ -1,4 +1,5 @@
 using System;
+using AL.Aplicacion.Entidades;
 using AL.Aplicacion.Enumerativos;
 using AL.Aplicacion.Interfaces;
 
@@ -33,7 +34,9 @@ public class ServicioSesion(IUsuarioRepositorio _repo, IHashService _hash) : ISe
         return false;
     }
 
-    public void Close(){
-        Id=0;
+    public void Logout()
+    {
+        this.Id = 0;
+        this.Rol = RolUsuario.Invitado;
     }
 }

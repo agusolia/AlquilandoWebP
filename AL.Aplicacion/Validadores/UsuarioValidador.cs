@@ -9,11 +9,11 @@ public class UsuarioValidador(IUsuarioRepositorio _usuarioRepo): IUsuarioValidad
     {
         mensajeError = "";
         if(_usuarioRepo.BuscarPorCorreoElectronico(u.CorreoElectronico)){ 
-            mensajeError="Ya existe un usuario con el correo electronico ingresado.\n";
+            mensajeError="El correo electronico se encuentra en uso.\n";
         }
         if (u.Edad < 18)
         {
-            mensajeError +="Debe ser mayor de 18 años.\n";
+            mensajeError +="El usuario debe ser mayor de edad.\n";
         }
         if (string.IsNullOrWhiteSpace(u.Nombre))
         {
@@ -28,7 +28,6 @@ public class UsuarioValidador(IUsuarioRepositorio _usuarioRepo): IUsuarioValidad
         if (!u.CorreoElectronico.Contains("@"))
         {
             mensajeError += "El correo electrónico debe contener un '@'.\n";
-
         }
         return (mensajeError == "");
     }   

@@ -1,6 +1,5 @@
 using System;
 using AL.Aplicacion.Enumerativos;
-
 namespace AL.Aplicacion.Entidades;
 
 public class Usuario

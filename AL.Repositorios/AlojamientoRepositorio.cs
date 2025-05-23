@@ -25,12 +25,24 @@ public class AlojamientoRepositorio:IAlojamientoRepositorio
         }
         }
     }
-
-    //Caso de uso Consulta por Id
-    public Alojamiento? ObtenerPorId(int id){
-        using(var db=new EntidadesContext()){  
-            var expediente = db.Alojamientos.Where(t => t.Id == id).SingleOrDefault();
-            return expediente;
+    //También se podría obtener por Id por si el administrador quiere buscar un alojamiento
+    public Alojamiento? ObtenerPorNombre(string nombre)
+    {
+        using (var db = new EntidadesContext())
+        {
+            var alojamiento = db.Alojamientos.Where(a => a.Nombre != null && a.Nombre.Equals(nombre)).SingleOrDefault();
+            return alojamiento;
+        }
+    }
+    
+    //Creo que este método va a servir para "Buscar Alojamiento" en la UI
+    public List<Alojamiento> ObtenerPorCiudadYDisponibilidad(String ciudad, DateTime fechaDesde, DateTime fechaHasta)
+    {
+        using (var db = new EntidadesContext())
+        {
+            var alojamientos = db.Alojamientos.Where(a => a.Ciudad != null && a.Ciudad.Equals(ciudad)).ToList();
+            alojamientos = alojamientos.Where(a => !a.Reservas.Any(r => (r.FechaInicioEstadia.Equals(fechaDesde) && r.FechaFinEstadia.Equals(fechaHasta)))).ToList();
+            return alojamientos;
         }
     }
     public List<Alojamiento> ListarAlojamientosConSusReservas()

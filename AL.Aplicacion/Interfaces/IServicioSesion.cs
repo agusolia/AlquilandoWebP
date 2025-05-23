@@ -8,5 +8,5 @@ public interface IServicioSesion
     public int Id { get; set; }
     public RolUsuario Rol { get; set; }
     public Task<bool> Loggin(string email, string contraseña);
-    public void Close();
+    public void Logout();
 }
