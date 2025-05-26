@@ -11,7 +11,7 @@ public class UsuarioValidador(IUsuarioRepositorio _usuarioRepo): IUsuarioValidad
         if(_usuarioRepo.BuscarPorCorreoElectronico(u.CorreoElectronico)){ 
             mensajeError="El correo electronico se encuentra en uso.\n";
         }
-        if (u.Edad < 18)
+        if (u.FechaDeNacimiento.Year > DateTime.Now.Year - 18)
         {
             mensajeError +="El usuario debe ser mayor de edad.\n";
         }

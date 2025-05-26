@@ -6,7 +6,7 @@ namespace AL.Aplicacion.Entidades;
 public class Alojamiento
 {
     public int Id { get; set; }
-    public String? Nombre { get; set; }
+    public string Nombre { get; set; } ="";
     public String? Ciudad { get; set; }
     public String? Direccion { get; set; }
     public int CapacidadMaxima { get; set; }

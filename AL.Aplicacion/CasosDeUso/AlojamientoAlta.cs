@@ -6,14 +6,14 @@ using AL.Aplicacion.Excepciones;
 using AL.Aplicacion.Enumerativos;
 namespace AL.Aplicacion.CasosDeUso;
 
-public class AlojamientoAlta(IAlojamientoRepositorio _alojamientoRepo): AlojamientoCasoDeUso(_alojamientoRepo)
+public class AlojamientoAlta(IAlojamientoRepositorio _alojamientoRepo, IAlojamientoValidador _validador): AlojamientoCasoDeUso(_alojamientoRepo)
 {
     public void Ejecutar(Alojamiento alojamiento, RolUsuario rol){
 
-        if(rol.Equals(RolUsuario.Administrador) ){
+        if(rol == RolUsuario.Administrador){
             string mensajeError;
             
-            if(AlojamientoValidador.Validar(alojamiento, out mensajeError)){
+            if(_validador.Validar(alojamiento, out mensajeError)){
         
                 Repositorio.Agregar(alojamiento);
             }

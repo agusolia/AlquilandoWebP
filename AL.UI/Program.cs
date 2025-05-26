@@ -13,12 +13,15 @@ EntidadesSqlite.Inicializar();
 
 builder.Services.AddTransient<UsuarioAlta>();
 builder.Services.AddTransient<AlojamientoAlta>();
+builder.Services.AddTransient<BuscarAlojamientoCasoDeUso>();
 
 builder.Services.AddSingleton<IUsuarioRepositorio, UsuarioRepositorio>();
 builder.Services.AddSingleton<ITarjetaRepositorio, TarjetaRepositorio>();
-builder.Services.AddSingleton<IAlojamientoRepositorio, AlojamientoRepositorio>();
+builder.Services.AddTransient<IAlojamientoRepositorio, AlojamientoRepositorio>();
+builder.Services.AddTransient<IReservasRepositorio, ReservasRepositorio>();
 
 builder.Services.AddTransient<IUsuarioValidador, UsuarioValidador>();
+builder.Services.AddTransient<IAlojamientoValidador, AlojamientoValidador>();
 
 builder.Services.AddTransient<IHashService, HashService>();
 builder.Services.AddScoped<IServicioSesion, ServicioSesion>();

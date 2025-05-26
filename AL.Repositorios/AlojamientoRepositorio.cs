@@ -36,13 +36,17 @@ public class AlojamientoRepositorio:IAlojamientoRepositorio
     }
     
     //Creo que este método va a servir para "Buscar Alojamiento" en la UI
-    public List<Alojamiento> ObtenerPorCiudadYDisponibilidad(String ciudad, DateTime fechaDesde, DateTime fechaHasta)
+    public List<Alojamiento> ObtenerPorCiudadYDisponibilidad(String ciudad, DateTime fechaDesde,DateTime fechaHasta)
     {
         using (var db = new EntidadesContext())
         {
-            var alojamientos = db.Alojamientos.Where(a => a.Ciudad != null && a.Ciudad.Equals(ciudad)).ToList();
-            alojamientos = alojamientos.Where(a => !a.Reservas.Any(r => (r.FechaInicioEstadia.Equals(fechaDesde) && r.FechaFinEstadia.Equals(fechaHasta)))).ToList();
-            return alojamientos;
+            return db.Alojamientos
+            .Include(a => a.Reservas)
+            .Where(a => a.Ciudad != null && a.Ciudad.ToLower() == ciudad.ToLower())
+            .Where(a => a.Reservas == null || !a.Reservas.Any(r =>
+                r.FechaInicioEstadia.Date <= fechaHasta.Date && r.FechaFinEstadia.Date >= fechaDesde.Date
+            ))
+            .ToList();
         }
     }
     public List<Alojamiento> ListarAlojamientosConSusReservas()

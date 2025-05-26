@@ -7,7 +7,7 @@ public class Usuario
     public int Id { get; set; }
     public string Nombre { get; set; } = "";
     public string Apellido { get; set; } = "";
-    public int Edad {   get; set; }
+    public DateOnly FechaDeNacimiento {   get; set; }
     public String CorreoElectronico { get; set; } = "";
     public int TarjetaId { get; set; }
     public RolUsuario Rol { get; set; }

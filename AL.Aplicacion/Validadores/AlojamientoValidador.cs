@@ -1,14 +1,21 @@
 using System;
 using AL.Aplicacion.Entidades;
+using AL.Aplicacion.Interfaces;
 
 namespace AL.Aplicacion.Validadores;
 
-public static class AlojamientoValidador
+public class AlojamientoValidador(IAlojamientoRepositorio _alojamientoRepo):IAlojamientoValidador
 {
-    public static bool Validar(Alojamiento a, out string mensajeError){
+    public bool Validar(Alojamiento a, out string mensajeError){
         mensajeError = "";
-        if (string.IsNullOrWhiteSpace(a.Nombre)){
-            mensajeError="El nombre no puede estar vacio."; 
+        if (_alojamientoRepo.ObtenerPorNombre(a.Nombre) != null)
+        {
+            mensajeError = "El nombre del alojamiento ingresado ya fue dado de alta anteriormente.";
+        }
+        
+        if (string.IsNullOrWhiteSpace(a.Nombre))
+        {
+            mensajeError = "El nombre no puede estar vacio.";
         }
         if (string.IsNullOrWhiteSpace(a.Ciudad)){
             mensajeError="La ciudad no puede estar vacia.";

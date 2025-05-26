@@ -12,7 +12,7 @@
 <form>
     <p>Nombre: <input placeholder="Nombre" @bind="_usuario.Nombre" class="form-control" required type="text"></p>
     <p>Apellido: <input placeholder="Apellido" @bind="_usuario.Apellido" class="form-control" required type="text"></p>
-    <p>Edad:<input placeholder="Edad" @bind="_usuario.Edad" class="form-control" required type="number"></p>
+    <p>Fecha de Nacimiento:<input @bind="_usuario.FechaDeNacimiento" class="form-control" required type="date"></p>
     <p>Email: <input placeholder="Email" @bind="_usuario.CorreoElectronico" class="form-control" required type="email"></p>
     <p>Contraseña: <input placeholder="Contraseña" @bind="_password" type="password" class="form-control"></p>
 </form>

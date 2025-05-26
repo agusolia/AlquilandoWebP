@@ -5,6 +5,7 @@
 @inject IServicioSesion ServicioSesion
 @inject AlojamientoAlta AlojamientoAlta
 @inject IAlojamientoRepositorio AlojamientoRepositorio
+@inject IAlojamientoValidador AlojamientoValidador
 
 <h3>Publicar Alojamiento</h3>
 
@@ -110,6 +111,7 @@
         
             _alojamiento = new Alojamiento();
             _imagenes.Clear();
+            _previewUrls.Clear();
             ErrorMessage = "";
             SuccessMessage = "Alojamiento registrado con éxito";
         }
