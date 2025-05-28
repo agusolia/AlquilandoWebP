@@ -9,7 +9,7 @@ public class ServicioSesion(IUsuarioRepositorio _repo, IHashService _hash) : ISe
 {
 
     public int Id { get; set; }
-    public RolUsuario Rol { get; set; } = RolUsuario.Invitado;
+    public RolUsuario Rol { get; set; } 
 
     public async Task<bool> Loggin(String email, String contraseña)
     {
