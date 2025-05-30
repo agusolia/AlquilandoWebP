@@ -1,5 +1,5 @@
 using System;
-using AL.Aplicacion.Entidades;
+
 using AL.Aplicacion.Enumerativos;
 using AL.Aplicacion.Interfaces;
 
@@ -9,6 +9,7 @@ public class ServicioSesion(IUsuarioRepositorio _repo, IHashService _hash) : ISe
 {
 
     public int Id { get; set; }
+
     public RolUsuario Rol { get; set; }
 
     public async Task<bool> Loggin(String email, String contraseña)

@@ -29,7 +29,7 @@ builder.Services.AddTransient<IAlojamientoValidadorEdicion, AlojamientoValidador
 
 builder.Services.AddTransient<IHashService, HashService>();
 builder.Services.AddScoped<IServicioSesion, ServicioSesion>();
-builder.Services.AddScoped<ServicioReserva>();
+builder.Services.AddTransient<ServicioReserva>();
 
 
 // Add services to the container.
