@@ -1,45 +1,63 @@
 ﻿@page "/"
 @using Microsoft.AspNetCore.Components
+@rendermode InteractiveServer
 @inject IAlojamientoRepositorio AlojamientoRepositorio
+@inject NavigationManager NavigationManager
 
-<PageTitle>Home</PageTitle>
-<!--Le puse una imagen provisional-->
-<h1>
-  <img src="logo.jpg" alt="Logo de AlquilandoWeb" style="vertical-align: middle; margin-right: 10px;">
-  AlquilandoWeb
-</h1>
-<a href ="/buscar" class="btn btn-primary">Buscar Alojamiento</a>
+<PageTitle>AlquilandoWeb</PageTitle>
+<div class="text-center">
+  <h1>
+    <img src="logo.jpg" alt="Logo de AlquilandoWeb" style="vertical-align: middle; margin-right: 10px;">
+  </h1>
+</div>
+<div class="container text-center mt-5">
+  <p class="lead">Bienvenido a AlquilandoWeb, la plataforma de alquiler de propiedades más confiable y fácil de usar.
+  </p>
 
-<!-- Formulario de Búsqueda -->
-<div class="container mt-5">
-  <h3 class="text-center">Buscar Alojamiento</h3>
   <EditForm Model="busqueda" OnValidSubmit="BuscarAlojamientos">
     <DataAnnotationsValidator />
     <ValidationSummary />
 
-    <div class="form-row mt-3 text-center">
-      <div class="col">
-        <button type="submit" class="btn btn-primary btn-lg">Buscar</button>
+    <div class="row justify-content-center mb-3">
+      <div class="col-md-3">
+        <InputText @bind-Value="busqueda.Ciudad" class="form-control" placeholder="Ciudad" />
+      </div>
+      <div class="col-md-3">
+        <InputDate @bind-Value="busqueda.FechaDesde" class="form-control" />
+      </div>
+      <div class="col-md-3">
+        <InputDate @bind-Value="busqueda.FechaHasta" class="form-control" />
+      </div>
+      <div class="col-md-2">
+        <button type="submit" class="btn btn-primary w-100">Buscar</button>
       </div>
     </div>
   </EditForm>
 </div>
 
-
-
 @code {
-  private BusquedaAlojamiento busqueda = new BusquedaAlojamiento();
+  private BusquedaAlojamiento busqueda = new BusquedaAlojamiento
+  {
+    FechaDesde = DateOnly.FromDateTime(DateTime.Today),
+    FechaHasta = DateOnly.FromDateTime(DateTime.Today.AddDays(1))
+  };
+
   private List<Alojamiento>? alojamientos;
 
   public class BusquedaAlojamiento
   {
-    public string Ciudad { get; set; }= string.Empty;
+    public string Ciudad { get; set; } = string.Empty;
     public DateOnly FechaDesde { get; set; }
     public DateOnly FechaHasta { get; set; }
   }
 
   private void BuscarAlojamientos()
   {
-    
+    alojamientos = AlojamientoRepositorio.ObtenerPorCiudadYDisponibilidad(
+    busqueda.Ciudad,
+    busqueda.FechaDesde.ToDateTime(TimeOnly.MinValue),
+    busqueda.FechaHasta.ToDateTime(TimeOnly.MinValue)
+    );
+    NavigationManager.NavigateTo("/resultados");
   }
-  }
+}

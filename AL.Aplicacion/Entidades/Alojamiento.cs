@@ -15,6 +15,8 @@ public class Alojamiento
     public int CantidadBaños { get; set; }
     public String? Descripcion { get; set; }
     public String? Servicios { get; set; }
+    public String? Pais { get; set; }
+    public Boolean Estacionamiento { get; set; } = false;
     public double PrecioPorNoche { get; set; }
     public List<String> Imagenes { get; set; } = new List<string>();
     public List<Reserva> Reservas { get; set; } = new List<Reserva>();

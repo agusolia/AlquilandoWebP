@@ -1,7 +1,6 @@
 using System;
 using AL.Aplicacion.Entidades;
 using AL.Aplicacion.Interfaces;
-using AL.Aplicacion.Validadores;
 using AL.Aplicacion.Excepciones;
 using AL.Aplicacion.Enumerativos;
 namespace AL.Aplicacion.CasosDeUso;

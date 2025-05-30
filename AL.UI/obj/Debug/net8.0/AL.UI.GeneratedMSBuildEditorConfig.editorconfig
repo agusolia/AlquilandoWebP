@@ -34,8 +34,20 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xDdWVudGFBZG1pbmlzdHJhZG9yLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/CONSU/proyectoIS2/AL/AL.UI/Components/Pages/DetalleAlojamiento.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xEZXRhbGxlQWxvamFtaWVudG8ucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/CONSU/proyectoIS2/AL/AL.UI/Components/Pages/EditarAlojamiento.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xFZGl0YXJBbG9qYW1pZW50by5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/CONSU/proyectoIS2/AL/AL.UI/Components/Pages/Error.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xFcnJvci5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/CONSU/proyectoIS2/AL/AL.UI/Components/Pages/FiltrarAlojamiento.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xGaWx0cmFyQWxvamFtaWVudG8ucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/CONSU/proyectoIS2/AL/AL.UI/Components/Pages/Home.razor]
@@ -46,12 +58,28 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xJbmljaWFyU2VzaW9uLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/CONSU/proyectoIS2/AL/AL.UI/Components/Pages/ListarAlojamientos.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xMaXN0YXJBbG9qYW1pZW50b3MucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/CONSU/proyectoIS2/AL/AL.UI/Components/Pages/MisReservas.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xNaXNSZXNlcnZhcy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/CONSU/proyectoIS2/AL/AL.UI/Components/Pages/PublicarAlojamiento.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xQdWJsaWNhckFsb2phbWllbnRvLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/CONSU/proyectoIS2/AL/AL.UI/Components/Pages/RegistrarCuenta.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xSZWdpc3RyYXJDdWVudGEucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/CONSU/proyectoIS2/AL/AL.UI/Components/Pages/Resultados.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xSZXN1bHRhZG9zLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/CONSU/proyectoIS2/AL/AL.UI/Components/Pages/VerInformacionDeAlojamiento.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xWZXJJbmZvcm1hY2lvbkRlQWxvamFtaWVudG8ucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/CONSU/proyectoIS2/AL/AL.UI/Components/Pages/Weather.razor]

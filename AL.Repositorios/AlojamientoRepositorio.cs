@@ -25,7 +25,14 @@ public class AlojamientoRepositorio:IAlojamientoRepositorio
         }
         }
     }
-    //También se podría obtener por Id por si el administrador quiere buscar un alojamiento
+    //Consulta por Id, para que el administrador pueda ver los detalles de un alojamiento
+    public async Task<Alojamiento?> ObtenerPorId(int id)
+    {
+        using (var db = new EntidadesContext())
+        {
+            return await db.Alojamientos.FindAsync(id);
+        }
+    }
     public Alojamiento? ObtenerPorNombre(string nombre)
     {
         using (var db = new EntidadesContext())

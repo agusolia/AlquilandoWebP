@@ -49,3 +49,140 @@ h1:focus {
 .darker-border-checkbox.form-check-input {
     border-color: #929292;
 }
+
+.logo-img {
+    width: 48px;
+    vertical-align: middle;
+}
+
+.search-container {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 1.5rem;
+    background-color: #fff;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+}
+
+.highlighted-bar {
+    background-color: #f7f7f7;
+    border-top: 1px solid #e0e0e0;
+}
+
+.alojamiento-card {
+    min-width: 200px;
+    max-width: 200px;
+    border: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+}
+
+.alojamiento-card:hover {
+    transform: scale(1.03);
+}
+
+.inicio-container {
+    padding: 2rem;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.logo-titulo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.logo-img {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+}
+
+.bienvenida {
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+}
+
+.busqueda-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+}
+
+.busqueda-form .form-control {
+    min-width: 150px;
+}
+
+.navbar-brand img {
+    border-radius: 5px;
+}
+
+.form-control {
+    font-size: 1rem;
+}
+
+button[type="submit"] {
+    font-weight: bold;
+}
+
+.navbar-nav .nav-link {
+    font-weight: 500;
+    color: #00abb7;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #007b8a;
+}
+
+
+.sidebar-background {
+    background-image: url('/imagenes/departamentoA.jpg');
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    position: relative;
+    color: white;
+}
+
+.sidebar-overlay {
+    background-color: rgba(0, 0, 0, 0.6);
+    /* Negro con 60% de opacidad */
+    height: 100%;
+    width: 100%;
+    padding: 1rem;
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 2rem;
+    gap: 10px;
+}
+
+.sidebar-header img {
+    width: 60px;
+    height: 60px;
+}
+
+.sidebar-header h2 {
+    font-size: 1.8rem;
+    margin: 0;
+}
+.nav-link {
+    background-color: rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    padding: 10px 15px;
+    margin-bottom: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+    text-decoration: none;
+}

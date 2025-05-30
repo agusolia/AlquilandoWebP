@@ -20,19 +20,7 @@
     <p>Baños: <input placeholder="Baños" @bind="_alojamiento.CantidadBaños" class="form-control" required type="number"> </p>
     <p>Descripcion: <input placeholder="Descripcion" @bind="_alojamiento.Descripcion" class="form-control" required type="text"></p>
     <p>Servicios: <input placeholder="Descripcion" @bind="_alojamiento.Servicios" class="form-control" required type="text"></p>
-    <p>Fotos: <InputFile OnChange="OnInputFileChange" multiple accept="image/*" /></p>
-    @if (_previewUrls.Any())
-    {
-        <div class="mb-3">
-            <label>Vista previa:</label>
-            <div style="display:flex; gap:10px;">
-                @foreach (var url in _previewUrls)
-                {
-                    <img src="@url" style="max-width:120px; max-height:120px; border:1px solid #ccc; border-radius:8px;" />
-                }
-            </div>
-        </div>
-    }
+ 
 </form> 
 
 <div class="container">
@@ -59,59 +47,16 @@
     Alojamiento _alojamiento = new Alojamiento();
     string ErrorMessage { get; set; }=null!;
     string SuccessMessage {get;set;}=null!;
-    private List<IBrowserFile> _imagenes = new ();
-    private List<string> _previewUrls = new();
 
-    private async void OnInputFileChange(InputFileChangeEventArgs e)
+    private void RegistrarAlojamiento()
     {
-        _imagenes = e.GetMultipleFiles().ToList();
-        _previewUrls.Clear();
-
-        foreach (var image in _imagenes)
-        {
-            using var stream = image.OpenReadStream(5 * 1024 * 1024);
-            using var ms = new MemoryStream();
-            await stream.CopyToAsync(ms);
-            var base64 = Convert.ToBase64String(ms.ToArray());
-            var url = $"data:{image.ContentType};base64,{base64}";
-            _previewUrls.Add(url);
-        }
-
-        StateHasChanged();
-    }
-    private async Task RegistrarAlojamiento()
-    {
-        List<string> archivosSubidos = new List<string>();
+        
         try{
-
-             _alojamiento.Imagenes = new List<string>();
-            var uploadsPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
-            if (!Directory.Exists(uploadsPath))
-                Directory.CreateDirectory(uploadsPath);
-
-            foreach (var imagen in _imagenes)
-            {
-                var uniqueFileName = $"{Guid.NewGuid()}_{imagen.Name}";
-                var filePath = Path.Combine(uploadsPath, uniqueFileName);
-
-                using (var stream = imagen.OpenReadStream(5 * 1024 * 1024)) // 5MB máximo por archivo
-                using (var fileStream = File.Create(filePath))
-                {
-                    await stream.CopyToAsync(fileStream);
-                }
-
-                // Guarda la ruta relativa para usarla en la web
-                var rutaRelativa = $"/uploads/{uniqueFileName}";
-                _alojamiento.Imagenes.Add(rutaRelativa);
-                archivosSubidos.Add(filePath); // Guarda la ruta física para posible borrado
-            }
+            
             // Ejecutar el caso de uso para agregar un alojamiento
             AlojamientoAlta.Ejecutar(_alojamiento,rol);
             
-        
             _alojamiento = new Alojamiento();
-            _imagenes.Clear();
-            _previewUrls.Clear();
             ErrorMessage = "";
             SuccessMessage = "Alojamiento registrado con éxito";
         }
@@ -119,16 +64,6 @@
             SuccessMessage = "";
             ErrorMessage = $"Error al publicar el alojamiento: {msj.Message}";
             Console.WriteLine($"Exception: {msj}");
-            // Borra los archivos subidos si ocurre un error
-            foreach (var filePath in archivosSubidos)
-            {
-                try
-                {
-                    if (File.Exists(filePath))
-                    File.Delete(filePath);
-                }
-                catch { /* Ignora errores de borrado */ }
-            }
         }
 
     }
