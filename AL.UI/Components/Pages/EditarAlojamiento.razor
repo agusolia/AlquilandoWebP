@@ -1,4 +1,7 @@
 ﻿@page "/editar-alojamiento/{AlojamientoId:int}"
+@rendermode InteractiveServer
+@inject NavigationManager NavigationManager
+
 @inject AlojamientoEdicion alojamientoEdicion
 @inject IAlojamientoRepositorio alojamientoRepo
 @inject IServicioSesion sesion
@@ -43,6 +46,7 @@
         </div>
 
         <button type="submit" class="btn btn-primary">Guardar cambios</button>
+        <button type="button" class="btn btn-secondary" @onclick="Volver">Volver</button>
     </EditForm>
 }
 else
@@ -58,7 +62,7 @@ else
 @code {
     [Parameter]
     public int AlojamientoId { get; set; }
-
+    private RolUsuario rol => sesion.Rol;
     private Alojamiento? alojamiento = new Alojamiento();
     private String nombreOriginal = string.Empty;
     string SuccessMessage {get;set;}=null!;
@@ -85,6 +89,15 @@ else
         catch (Exception ex)
         {
             Console.WriteLine(ex.Message);
+        }
+    }
+        private void Volver()
+    {
+        if(rol==RolUsuario.Administrador){
+            NavigationManager.NavigateTo("/alojamientos");
+        }
+        else{
+            NavigationManager.NavigateTo("/");
         }
     }
 }
