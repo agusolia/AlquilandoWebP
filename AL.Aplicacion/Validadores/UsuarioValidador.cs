@@ -9,7 +9,7 @@ public class UsuarioValidador(IUsuarioRepositorio _usuarioRepo): IUsuarioValidad
     {
         mensajeError = "";
         if(_usuarioRepo.BuscarPorCorreoElectronico(u.CorreoElectronico)){ 
-            mensajeError="El correo electronico se encuentra en uso.\n";
+            mensajeError+="El correo electronico se encuentra en uso.\n";
         }
         if (u.FechaDeNacimiento.Year > DateTime.Now.Year - 18)
         {

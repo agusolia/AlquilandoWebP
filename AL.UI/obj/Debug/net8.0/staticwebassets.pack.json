@@ -45,6 +45,26 @@
       "PackagePath": "staticwebassets\\logo.jpg"
     },
     {
+      "Id": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\wwwroot\\uploads\\03d88223-dbad-499b-af92-ce364fd4a9ab_Captura de pantalla 2025-02-06 181756.png",
+      "PackagePath": "staticwebassets\\uploads\\03d88223-dbad-499b-af92-ce364fd4a9ab_Captura de pantalla 2025-02-06 181756.png"
+    },
+    {
+      "Id": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\wwwroot\\uploads\\1cd3461d-db37-4268-9f29-d53dae7ecadd_Captura de pantalla 2025-02-06 181520.png",
+      "PackagePath": "staticwebassets\\uploads\\1cd3461d-db37-4268-9f29-d53dae7ecadd_Captura de pantalla 2025-02-06 181520.png"
+    },
+    {
+      "Id": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\wwwroot\\uploads\\2dea453a-45e3-4747-8b1d-f22ead97e17b_Captura de pantalla 2025-02-25 184503.png",
+      "PackagePath": "staticwebassets\\uploads\\2dea453a-45e3-4747-8b1d-f22ead97e17b_Captura de pantalla 2025-02-25 184503.png"
+    },
+    {
+      "Id": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\wwwroot\\uploads\\d1da8751-f56d-40cc-88ae-a23b51bc59b9_imagenMuestra.jpg",
+      "PackagePath": "staticwebassets\\uploads\\d1da8751-f56d-40cc-88ae-a23b51bc59b9_imagenMuestra.jpg"
+    },
+    {
+      "Id": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\wwwroot\\uploads\\e4ffff5f-abf3-42e4-b264-40bb320cb158_imagenMuestra.jpg",
+      "PackagePath": "staticwebassets\\uploads\\e4ffff5f-abf3-42e4-b264-40bb320cb158_imagenMuestra.jpg"
+    },
+    {
       "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.AL.UI.Microsoft.AspNetCore.StaticWebAssets.props",
       "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
     },

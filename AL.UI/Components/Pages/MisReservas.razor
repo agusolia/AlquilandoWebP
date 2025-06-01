@@ -1,13 +1,44 @@
 ﻿@page "/misreservas"
+
+@rendermode InteractiveServer
+@inject NavigationManager NavigationManager
 @inject CancelarReservaCasoDeUso cancelarReservaUseCase
-@inject IServicioSesion sesion
-@using AL.Aplicacion.Entidades
+@inject IServicioSesion ServicioSesion
+@inject IReservasRepositorio ReservasRepositorio
+@inject IUsuarioRepositorio UsuarioRepositorio
+
+
+<h3>Datos personales</h3>
+@if (_usuario == null)
+{
+    <p><em>Cargando...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Fecha de Nacimiento</th>
+                <th>Correo electrónico</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                    <td>@_usuario.Nombre</td>
+                    <td>@_usuario.Apellido</td>
+                    <th>@_usuario.FechaDeNacimiento</th>
+                    <td>@_usuario.CorreoElectronico</td>
+            </tr>
+        </tbody>
+    </table>
+}
 
 <h3>Mis Reservas</h3>
-
-@if (sesion.Id == 0)
+@if (rol != RolUsuario.Usuario )
 {
-    <p>Debes iniciar sesión para ver tus reservas.</p>
+    //<p>Debes iniciar sesión para ver tus reservas.</p>
 }
 else if (reservas.Count == 0)
 {
@@ -32,11 +63,28 @@ else
 }
 
 @code {
-    private List<Reserva> reservas = new();
 
-    protected override void OnInitialized()
+    public RolUsuario rol => ServicioSesion.Rol;
+    public int usuario_Actual => ServicioSesion.Id;
+    private List<Reserva> reservas = new();
+    private bool _usuarioInicializado = false;
+    Usuario _usuario = new Usuario();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        reservas = cancelarReservaUseCase.ObtenerMisReservas();
+        if (firstRender && !_usuarioInicializado)
+        {
+            await ServicioSesion.InicializarUsuarioAsync();
+            _usuarioInicializado = true;
+
+            var usuario = UsuarioRepositorio.ObtenerPorId(ServicioSesion.Id);
+            if (usuario != null)
+            {
+                _usuario = usuario;
+            }
+            reservas = cancelarReservaUseCase.ObtenerMisReservas();
+            StateHasChanged();
+        }
     }
 
     private void Cancelar(int idReserva)

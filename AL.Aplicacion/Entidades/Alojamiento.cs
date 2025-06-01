@@ -1,4 +1,5 @@
 using System;
+using AL.Aplicacion.Enumerativos;
 
 namespace AL.Aplicacion.Entidades;
 
@@ -18,6 +19,7 @@ public class Alojamiento
     public String? Pais { get; set; }
     public Boolean Estacionamiento { get; set; } = false;
     public double PrecioPorNoche { get; set; }
+    public TipoReembolso? TipoDeReembolso { get; set; } 
     public List<String> Imagenes { get; set; } = new List<string>();
     public List<Reserva> Reservas { get; set; } = new List<Reserva>();
 

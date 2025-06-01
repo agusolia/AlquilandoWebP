@@ -2,8 +2,8 @@ namespace AL.Aplicacion.Enumerativos;
 
 public enum RolUsuario
 {
-    Administrador,
     Encargado,
+    Administrador,
     Usuario,
     Invitado
 }

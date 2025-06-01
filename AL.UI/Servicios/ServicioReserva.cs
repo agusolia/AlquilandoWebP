@@ -2,10 +2,9 @@ using AL.Aplicacion.Entidades;
 using AL.Aplicacion.Interfaces;
 using System;
 using System.Linq;
+namespace AL.UI.Servicios;
 
-namespace AL.Aplicacion.Servicios;
-
-public class ServicioReserva
+public class ServicioReserva : IServicioReserva
 {
     private readonly IReservasRepositorio _reservasRepositorio;
     private readonly IServicioSesion _sesion;

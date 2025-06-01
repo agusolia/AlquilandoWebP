@@ -4,7 +4,7 @@
 
 @inject AlojamientoEdicion alojamientoEdicion
 @inject IAlojamientoRepositorio alojamientoRepo
-@inject IServicioSesion sesion
+@inject IServicioSesion ServicioSesion
 
 
 <h3>Editar Alojamiento</h3>
@@ -62,10 +62,21 @@ else
 @code {
     [Parameter]
     public int AlojamientoId { get; set; }
-    private RolUsuario rol => sesion.Rol;
+    private RolUsuario rol => ServicioSesion.Rol;
     private Alojamiento? alojamiento = new Alojamiento();
     private String nombreOriginal = string.Empty;
     string SuccessMessage {get;set;}=null!;
+    private bool _usuarioInicializado = false;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && !_usuarioInicializado)
+        {
+            await ServicioSesion.InicializarUsuarioAsync();
+            _usuarioInicializado = true;
+            StateHasChanged(); // Refresca la UI si es necesario
+        }
+    }
     protected override async Task OnInitializedAsync()
     {
         var _alojamiento = await alojamientoRepo.ObtenerPorId(AlojamientoId);
@@ -83,7 +94,7 @@ else
     {
         try
         {
-           alojamientoEdicion.Ejecutar(alojamiento!, sesion.Rol, nombreOriginal);
+           alojamientoEdicion.Ejecutar(alojamiento!, ServicioSesion.Rol, nombreOriginal);
            SuccessMessage="Alojamiento actualizado correctamente.";
         }
         catch (Exception ex)

@@ -28,12 +28,11 @@
 
     @if (Resultados == null)
     {
-        <div class="alert alert-danger mt-3">@ErrorMensaje</div>
+        //<div class="alert alert-danger mt-3">@ErrorMensaje</div>
     }
-
     else if (!Resultados.Any())
     {
-        <p>...</p>
+        <h4>No se encontraron alojamientos</h4>
     }
     else{
             <h4 class="mt-5">Alojamientos encontrados:</h4>
@@ -55,7 +54,7 @@
     private string ciudad = "";
     private DateTime FechaDesde = DateTime.Today;
     private DateTime FechaHasta =DateTime.Today.AddDays(1);
-    private List<Alojamiento> Resultados = new();
+    private List<Alojamiento>? Resultados = null!;
     private string? ErrorMensaje=null!;
 
     private void Buscar()

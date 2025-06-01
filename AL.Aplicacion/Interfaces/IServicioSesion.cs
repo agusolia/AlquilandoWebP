@@ -9,4 +9,6 @@ public interface IServicioSesion
     public RolUsuario Rol { get; set; }
     public Task<bool> Loggin(string email, string contraseña);
     public void Logout();
+    public Task InicializarUsuarioAsync();
+
 }

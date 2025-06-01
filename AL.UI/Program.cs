@@ -1,10 +1,13 @@
 using AL.UI.Components;
 //agregamos estas directivas using
+using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using AL.Repositorios;
 using AL.Aplicacion.CasosDeUso;
 using AL.Aplicacion.Interfaces;
 using AL.Aplicacion.Servicios;
 using AL.Aplicacion.Validadores;
+using AL.UI.Servicios;
+
 
 var builder = WebApplication.CreateBuilder(args);
 EntidadesSqlite.Inicializar();
@@ -16,21 +19,21 @@ builder.Services.AddTransient<AlojamientoAlta>();
 builder.Services.AddTransient<BuscarAlojamientoCasoDeUso>();
 builder.Services.AddTransient<FiltrarAlojamientoCasoDeUso>();
 builder.Services.AddTransient<AlojamientoEdicion>();
-builder.Services.AddScoped<CancelarReservaCasoDeUso>();
+builder.Services.AddTransient<CancelarReservaCasoDeUso>();
 
 builder.Services.AddSingleton<IUsuarioRepositorio, UsuarioRepositorio>();
-builder.Services.AddSingleton<ITarjetaRepositorio, TarjetaRepositorio>();
-builder.Services.AddTransient<IAlojamientoRepositorio, AlojamientoRepositorio>();
-builder.Services.AddTransient<IReservasRepositorio, ReservasRepositorio>();
+builder.Services.AddScoped<ITarjetaRepositorio, TarjetaRepositorio>();
+builder.Services.AddScoped<IAlojamientoRepositorio, AlojamientoRepositorio>();
+builder.Services.AddScoped<IReservasRepositorio, ReservasRepositorio>();
 
 builder.Services.AddTransient<IUsuarioValidador, UsuarioValidador>();
 builder.Services.AddTransient<IAlojamientoValidador, AlojamientoValidador>();
 builder.Services.AddTransient<IAlojamientoValidadorEdicion, AlojamientoValidadorEdicion>();
 
 builder.Services.AddTransient<IHashService, HashService>();
-builder.Services.AddScoped<IServicioSesion, ServicioSesion>();
-builder.Services.AddTransient<ServicioReserva>();
-
+builder.Services.AddScoped<IServicioSesion,ServicioSesion>();
+builder.Services.AddScoped<IServicioReserva,ServicioReserva>();
+builder.Services.AddScoped<ProtectedSessionStorage>();
 
 // Add services to the container.
 builder.Services.AddRazorComponents()

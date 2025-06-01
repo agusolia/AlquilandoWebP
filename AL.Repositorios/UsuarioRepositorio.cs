@@ -7,9 +7,6 @@ namespace AL.Repositorios;
 
 public class UsuarioRepositorio: IUsuarioRepositorio
 {
-    public UsuarioRepositorio(){
-
-    }
 
     //Verificar que el usuario no exista
     public bool BuscarPorCorreoElectronico(String correo){
@@ -36,6 +33,7 @@ public class UsuarioRepositorio: IUsuarioRepositorio
             Usuario? usuario = db.Usuarios.Where(x => x.Id == id).SingleOrDefault();
             if(usuario != null){
                 usuario.Rol = rol;
+                db.Usuarios.Update(usuario);
                 db.SaveChanges();
                 return usuario.Id;
             }

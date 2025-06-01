@@ -6,9 +6,9 @@ namespace AL.Aplicacion.CasosDeUso;
 
 public class CancelarReservaCasoDeUso
 {
-    private readonly ServicioReserva _servicioReserva;
+    private readonly IServicioReserva _servicioReserva;
 
-    public CancelarReservaCasoDeUso(ServicioReserva servicioReserva)
+    public CancelarReservaCasoDeUso(IServicioReserva servicioReserva)
     {
         _servicioReserva = servicioReserva;
     }
