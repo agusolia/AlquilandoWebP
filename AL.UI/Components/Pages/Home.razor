@@ -1,6 +1,6 @@
 ﻿@page "/"
-@using Microsoft.AspNetCore.Components
 @rendermode InteractiveServer
+@using Microsoft.AspNetCore.Components
 @inject IAlojamientoRepositorio AlojamientoRepositorio
 @inject NavigationManager NavigationManager
 
@@ -38,26 +38,22 @@
 @code {
   private BusquedaAlojamiento busqueda = new BusquedaAlojamiento
   {
-    FechaDesde = DateOnly.FromDateTime(DateTime.Today),
-    FechaHasta = DateOnly.FromDateTime(DateTime.Today.AddDays(1))
+    FechaDesde = DateTime.Today,
+    FechaHasta = DateTime.Today.AddDays(1)
   };
 
-  private List<Alojamiento>? alojamientos;
 
   public class BusquedaAlojamiento
   {
     public string Ciudad { get; set; } = string.Empty;
-    public DateOnly FechaDesde { get; set; }
-    public DateOnly FechaHasta { get; set; }
+    public DateTime FechaDesde { get; set; }
+    public DateTime FechaHasta { get; set; }
   }
 
   private void BuscarAlojamientos()
   {
-    alojamientos = AlojamientoRepositorio.ObtenerPorCiudadYDisponibilidad(
-    busqueda.Ciudad,
-    busqueda.FechaDesde.ToDateTime(TimeOnly.MinValue),
-    busqueda.FechaHasta.ToDateTime(TimeOnly.MinValue)
-    );
-    NavigationManager.NavigateTo("/resultados");
+      var url = $"/resultados?ciudad={Uri.EscapeDataString(busqueda.Ciudad)}&desde={busqueda.FechaDesde:yyyy-MM-dd}&hasta={busqueda.FechaHasta:yyyy-MM-dd}";
+      NavigationManager.NavigateTo(url);
+
   }
 }
