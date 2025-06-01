@@ -12,7 +12,11 @@
     {
         <div class="alert alert-danger">@ErrorMessage</div>
     }
-    <button type="submit" class="btn btn-primary">Ingresar</button>
+    <button type="submit" class="btn btn-primary" disabled="@_procesando">Ingresar</button>
+    @if (_procesando)
+    {
+        <span class="ms-2">Procesando...</span>
+    }
 </EditForm>
 
 <div class="mt-3">
@@ -26,9 +30,10 @@
     public String Email { get; set; } = string.Empty;
     public string Password { get; set; } =  string.Empty;
     public String? ErrorMessage { get; set; } = string.Empty;
-
+    private bool _procesando = false;
     private async Task OnSubmit()
     {
+        _procesando = true;
         try
         {
             var result = await ServicioSesion.Loggin(Email, Password);
@@ -41,7 +46,7 @@
                 }
                 else
                 {
-                    NavigationManager.NavigateTo("/MisReservas");
+                    NavigationManager.NavigateTo("/misreservas");
                 }
             }
            else {
@@ -52,6 +57,7 @@
         {
             ErrorMessage = $"Error: {ex.Message}";
         }
+        _procesando = false;
     }
 
 

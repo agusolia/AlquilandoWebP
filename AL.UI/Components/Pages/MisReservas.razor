@@ -6,7 +6,7 @@
 @inject IServicioSesion ServicioSesion
 @inject IReservasRepositorio ReservasRepositorio
 @inject IUsuarioRepositorio UsuarioRepositorio
-
+@inject ITarjetaRepositorio TarjetaRepositorio
 
 <h3>Datos personales</h3>
 @if (_usuario == null)
@@ -22,6 +22,7 @@ else
                 <th>Apellido</th>
                 <th>Fecha de Nacimiento</th>
                 <th>Correo electrónico</th>
+                <th>Tarjeta</th>
             </tr>
         </thead>
         <tbody>
@@ -30,6 +31,7 @@ else
                     <td>@_usuario.Apellido</td>
                     <th>@_usuario.FechaDeNacimiento</th>
                     <td>@_usuario.CorreoElectronico</td>
+                    <td>@_numeroTarjeta</td>
             </tr>
         </tbody>
     </table>
@@ -69,6 +71,7 @@ else
     private List<Reserva> reservas = new();
     private bool _usuarioInicializado = false;
     Usuario _usuario = new Usuario();
+    String _numeroTarjeta = string.Empty;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -81,6 +84,7 @@ else
             if (usuario != null)
             {
                 _usuario = usuario;
+                _numeroTarjeta = TarjetaRepositorio.ObtenerPorIdUltimosCuatro(usuario.TarjetaId);
             }
             reservas = cancelarReservaUseCase.ObtenerMisReservas();
             StateHasChanged();
