@@ -45,10 +45,6 @@
       "PackagePath": "staticwebassets\\logo.jpg"
     },
     {
-      "Id": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\wwwroot\\uploads\\a824d8f2-39b5-4533-bde3-e78cf39465c1_imagenMuestra.jpg",
-      "PackagePath": "staticwebassets\\uploads\\a824d8f2-39b5-4533-bde3-e78cf39465c1_imagenMuestra.jpg"
-    },
-    {
       "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.AL.UI.Microsoft.AspNetCore.StaticWebAssets.props",
       "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
     },

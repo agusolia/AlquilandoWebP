@@ -2,6 +2,7 @@ using System;
 using AL.Aplicacion.Interfaces;
 using AL.Aplicacion.Excepciones;
 using AL.Aplicacion.Entidades;
+using AL.Aplicacion.Enumerativos;
 
 namespace AL.Aplicacion.CasosDeUso;
 
@@ -14,9 +15,9 @@ public class FiltrarAlojamientoCasoDeUso
         this.Repositorio = repositorio;
     }
 
-    public List<Alojamiento> Ejecutar(Filtro filtros)
+    public List<Alojamiento> Ejecutar(Filtro filtros,List<Alojamiento> a)
     {
-        var alojamientos = Repositorio.ObtenerTodos().AsQueryable();
+        var alojamientos = a.AsQueryable();
 
         if (filtros.PrecioMinimo.HasValue)
             alojamientos = alojamientos.Where(a => a.PrecioPorNoche >= filtros.PrecioMinimo.Value);

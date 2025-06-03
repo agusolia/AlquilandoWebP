@@ -12,7 +12,7 @@ public  class AlojamientoValidadorEdicion(IAlojamientoRepositorio _alojamientoRe
         var alojamientoExistente = _alojamientoRepo.ObtenerPorNombre(a.Nombre);
         if (alojamientoExistente != null && !alojamientoExistente.Nombre.Equals(nombreOriginal))
         {
-            mensajeError += "El nombre del alojamiento ingresado ya existe.\n";
+            mensajeError += "No ha sido posible guardar los cambios porque el alojamiento ya se encuentra registrado.<br />";
         }
         if (string.IsNullOrWhiteSpace(a.Nombre))
         {

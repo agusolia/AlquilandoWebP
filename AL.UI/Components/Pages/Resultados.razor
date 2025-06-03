@@ -1,11 +1,27 @@
 ﻿@page "/resultados"
 @rendermode InteractiveServer
 @inject IAlojamientoRepositorio AlojamientoRepositorio
+@inject BuscarAlojamientoCasoDeUso Buscar
 @inject NavigationManager Navigation
 
-<PageTitle>Resultados de Búsqueda</PageTitle>
+<PageTitle>Resultados de Búsqueda</PageTitle> 
 
 <h3>Resultados para "@ciudad" entre @desde?.ToShortDateString() y @hasta?.ToShortDateString()</h3>
+@if (alojamientos != null && alojamientos.Any())
+{
+    <div class="d-flex justify-content-end mb-3">
+        <button class="btn btn-outline-secondary d-flex align-items-center"
+             @onclick="IrAFiltros">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16">
+                <rect y="3" width="16" height="2" rx="1"/>
+                <rect y="7" width="16" height="2" rx="1"/>
+                <rect y="11" width="16" height="2" rx="1"/>
+            </svg>
+            <span class="ms-2 fw-bold">Filtros</span>
+        </button>
+    </div>
+}
+
 
 @if (alojamientos == null)
 {
@@ -13,7 +29,9 @@
 }
 else if (!alojamientos.Any())
 {
-    <p>No hay coincidencias</p>
+    <div class="alert alert-danger mt-3">
+        <p>No hay coincidencias</p>
+    </div>
 }
 else
 {
@@ -39,6 +57,7 @@ else
     [Parameter] public DateTime? desde{ get; set; }
     [Parameter] public DateTime? hasta {get;set;}
     private List<Alojamiento> alojamientos = new();
+    private string? ErrorMessage { get; set; }
 
     protected override void OnInitialized()
     {
@@ -48,15 +67,27 @@ else
         ciudad = query["ciudad"];
         desde = DateTime.TryParse(query["desde"], out var d) ? d : (DateTime?)null;
         hasta = DateTime.TryParse(query["hasta"], out var h) ? h : (DateTime?)null;
-
-        if (!string.IsNullOrWhiteSpace(ciudad) && desde.HasValue && hasta.HasValue)
-        {
-            alojamientos = AlojamientoRepositorio.ObtenerPorCiudadYDisponibilidad(ciudad, desde.Value, hasta.Value);
+        try{
+            if (!string.IsNullOrWhiteSpace(ciudad) && desde.HasValue && hasta.HasValue)
+            {
+                alojamientos = Buscar.Ejecutar(ciudad, desde.Value, hasta.Value);
+            }
         }
-    }
+        catch (Exception ex)
+        {
+            ErrorMessage = "";
+            ErrorMessage=$"{ex.Message}";
+        }
 
+    }
     void VerDetalle(int id)
     {
         Navigation.NavigateTo($"/DetalleAlojamiento/{id}");
+    }
+
+    void IrAFiltros()
+    {
+        // Reenvía los parámetros de búsqueda actuales
+        Navigation.NavigateTo($"/FiltrarAlojamiento?ciudad={Uri.EscapeDataString(ciudad ?? "")}&desde={desde:yyyy-MM-dd}&hasta={hasta:yyyy-MM-dd}");
     }
 }

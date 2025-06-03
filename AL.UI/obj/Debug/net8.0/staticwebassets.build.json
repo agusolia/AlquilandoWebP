@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "2iq1Zay4ed0X74MqwchQbG4Y/cLTIOtBna7lbgfppRM=",
+  "Hash": "f0IiIYvwCTGAujBpfD2gz4jqO6eTXGk2uO8d4zsQS2g=",
   "Source": "AL.UI",
   "BasePath": "_content/AL.UI",
   "Mode": "Default",
@@ -243,25 +243,6 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\logo.jpg"
-    },
-    {
-      "Identity": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\wwwroot\\uploads\\a824d8f2-39b5-4533-bde3-e78cf39465c1_imagenMuestra.jpg",
-      "SourceId": "AL.UI",
-      "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\wwwroot\\",
-      "BasePath": "_content/AL.UI",
-      "RelativePath": "uploads/a824d8f2-39b5-4533-bde3-e78cf39465c1_imagenMuestra.jpg",
-      "AssetKind": "All",
-      "AssetMode": "All",
-      "AssetRole": "Primary",
-      "AssetMergeBehavior": "PreferTarget",
-      "AssetMergeSource": "",
-      "RelatedAsset": "",
-      "AssetTraitName": "",
-      "AssetTraitValue": "",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\uploads\\a824d8f2-39b5-4533-bde3-e78cf39465c1_imagenMuestra.jpg"
     }
   ]
 }

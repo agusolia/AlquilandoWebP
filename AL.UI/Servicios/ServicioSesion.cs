@@ -2,6 +2,7 @@ using System;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using AL.Aplicacion.Enumerativos;
 using AL.Aplicacion.Interfaces;
+using AL.Aplicacion.CasosDeUso;
 namespace AL.UI.Servicios;
 
 public class ServicioSesion: IServicioSesion
@@ -41,9 +42,13 @@ public class ServicioSesion: IServicioSesion
         var usuario = _repo.IniciarSesion(email);
         if (usuario == null)
         {
-            return false;
+            throw new Exception("No hay un usuario registrado con ese correo.");
         }
-
+        //Esto lo agrego para poder demostrar el escenario de usuario deshabilitado(provisional hasta realizar el sprint 2)
+        if (usuario.CorreoElectronico.Equals("usuarioD@gmail.com"))
+        {
+            throw new Exception("El usuario ha sido deshabilitado hasta nuevo aviso.");
+        }
         if (_hash.VerifyHash(contraseña, usuario.HashContraseña, usuario.SalContraseña))
         {
             Id = usuario.Id;
@@ -51,7 +56,7 @@ public class ServicioSesion: IServicioSesion
             return true;
         }
         
-        return false;
+        throw new Exception("La contraseña es incorrecta.");
     }
     public async Task GuardarUsuarioAsync()
     {

@@ -1,6 +1,9 @@
 ﻿@page "/FiltrarAlojamiento"
 @using AL.Aplicacion.Excepciones
 @using AL.Aplicacion.Entidades
+@using AL.Aplicacion.Enumerativos
+@inject IAlojamientoRepositorio AlojamientoRepositorio
+
 @rendermode InteractiveServer
 
 @inject FiltrarAlojamientoCasoDeUso FiltrarAlojamientoCasoDeUso
@@ -12,13 +15,10 @@
         <label class="form-label">Tipo de filtro</label>
         <select class="form-select" @bind="filtroSeleccionado">
             <option disabled selected value="">Seleccionar...</option>
-            <option value="Pais">País</option>
-            <option value="Ciudad">Ciudad</option>
-            <option value="PrecioMinimo">Precio Mínimo</option>
-            <option value="PrecioMaximo">Precio Máximo</option>
-            <option value="CantidadDormitorios">Dormitorios</option>
-            <option value="Capacidad">Capacidad</option>
-            <option value="Estacionamiento">Estacionamiento</option>
+            @foreach (var filtro in todosLosFiltros.Where(f => !filtrosAplicados.ContainsKey(f.ToString())))
+            {
+                <option value="@filtro.ToString()">@nombresVisibles[filtro]</option>
+            }
         </select>
     </div>
 
@@ -49,7 +49,7 @@
         @foreach (var f in filtrosAplicados)
         {
             <li class="list-group-item d-flex justify-content-between align-items-center">
-                @f.Key: @f.Value
+                @nombresVisibles[(TipoFiltro)Enum.Parse(typeof(TipoFiltro), f.Key)]: @f.Value
                 <button class="btn btn-sm btn-outline-danger" @onclick="@(() => RemoverFiltro(f.Key))">❌</button>
             </li>
         }
@@ -70,35 +70,45 @@
         @foreach (var a in alojamientos)
         {
             <div class="card m-2 p-2 col-md-4" style="cursor: pointer;" @onclick="() => IrADetalle(a.Id)">
-                <h5>@a.Nombre</h5>
-                <p>@a.Ciudad, @a.Pais</p>
-                <p>Precio: $@a.PrecioPorNoche por noche</p>
-                <p>Dormitorios: @a.CantidadDormitorios | Capacidad: @a.CapacidadMaxima</p>
-                <p>@(a.Estacionamiento ? "Con estacionamiento" : "Sin estacionamiento")</p>
+                <div class="card">
+                    <img src="@(a.Imagenes.FirstOrDefault() ?? "imagenes/default-image.jpg")" class="card-img-top" />
+                    <div class="card-body">
+                        <h5>@a.Nombre</h5>
+                        <p>@a.Ciudad, @a.Pais</p>
+                        <p>Precio: $@a.PrecioPorNoche por noche</p>
+                        <p>Dormitorios: @a.CantidadDormitorios | Capacidad: @a.CapacidadMaxima</p>
+                        <p>@(a.Estacionamiento ? "Con estacionamiento" : "Sin estacionamiento")</p>
+                    </div>
+                </div>
             </div>
         }
-
     </div>
-}
-else if (buscado && alojamientos?.Count == 0)
-{
-    <p class="text-muted mt-3">No se encontraron alojamientos con esos criterios.</p>
 }
 
 @code {
+    [Parameter] public string? ciudad {get  ; set;}
+    [Parameter] public DateTime? desde{ get; set; }
+    [Parameter] public DateTime? hasta {get;set;}
     private string? filtroSeleccionado;
     private string? valorFiltro;
     private bool valorBooleano;
-    private Dictionary<string, string> filtrosAplicados = new();
     private Filtro filtro = new();
-    private List<Alojamiento>? alojamientos;
+    private List<Alojamiento> alojamientos=new();
     private string? ErrorMessage;
-    private bool buscado = false;
-
+    private Dictionary<string, string> filtrosAplicados = new();
+    private List<TipoFiltro> todosLosFiltros = Enum.GetValues<TipoFiltro>().ToList();
+    private Dictionary<TipoFiltro, string> nombresVisibles = new()
+    {
+        [TipoFiltro.PrecioMinimo] = "Precio Mínimo",
+        [TipoFiltro.PrecioMaximo] = "Precio Máximo",
+        [TipoFiltro.CantidadDormitorios] = "Dormitorios",
+        [TipoFiltro.Capacidad] = "Capacidad",
+        [TipoFiltro.Estacionamiento] = "Estacionamiento"
+    };
     private void AgregarFiltro()
     {
         if (string.IsNullOrEmpty(filtroSeleccionado))
-            return; // No agregar si no hay filtro seleccionado
+            return;
 
         if (filtroSeleccionado == "Estacionamiento")
         {
@@ -109,7 +119,6 @@ else if (buscado && alojamientos?.Count == 0)
             filtrosAplicados[filtroSeleccionado] = valorFiltro!;
         }
 
-        // Limpiar selección
         filtroSeleccionado = null;
         valorFiltro = null;
         valorBooleano = false;
@@ -129,12 +138,12 @@ else if (buscado && alojamientos?.Count == 0)
         {
             switch (f.Key)
             {
-                case "Pais":
+                /*case "Pais":
                     filtro.Pais = f.Value;
                     break;
                 case "Ciudad":
                     filtro.Ciudad = f.Value;
-                    break;
+                    break;*/
                 case "PrecioMinimo":
                     filtro.PrecioMinimo = int.TryParse(f.Value, out var min) ? min : 0;
                     break;
@@ -155,7 +164,26 @@ else if (buscado && alojamientos?.Count == 0)
 
         try
         {
-            alojamientos = FiltrarAlojamientoCasoDeUso.Ejecutar(filtro);
+            var uri = Navigation.ToAbsoluteUri(Navigation.Uri);
+            var query = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query);
+
+            ciudad = query["ciudad"];
+            desde = DateTime.TryParse(query["desde"], out var d) ? d : (DateTime?)null;
+            hasta = DateTime.TryParse(query["hasta"], out var h) ? h : (DateTime?)null;
+            try{
+                List<Alojamiento> alojamientosDeLaBusqueda = new List<Alojamiento>();
+                if (!string.IsNullOrWhiteSpace(ciudad) && desde.HasValue && hasta.HasValue)
+                {
+                    alojamientosDeLaBusqueda = AlojamientoRepositorio.ObtenerPorCiudadYDisponibilidad(ciudad, desde.Value, hasta.Value);
+                }
+                alojamientos = FiltrarAlojamientoCasoDeUso.Ejecutar(filtro, alojamientosDeLaBusqueda);
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = "";
+                ErrorMessage=$"{ex.Message}";
+            }
+            
         }
         catch (FiltroException ex)
         {
@@ -163,7 +191,7 @@ else if (buscado && alojamientos?.Count == 0)
             ErrorMessage = ex.Message;
         }
 
-        buscado = true;
+ 
     }
     @inject NavigationManager Navigation
 
@@ -171,4 +199,10 @@ else if (buscado && alojamientos?.Count == 0)
     {
         Navigation.NavigateTo($"/alojamiento/{id}");
     }
+
+    /*@if (!string.IsNullOrEmpty(ErrorMessage))
+    {
+        <div class="alert alert-danger mt-3">@ErrorMessage</div>
+    }
+    */
 }

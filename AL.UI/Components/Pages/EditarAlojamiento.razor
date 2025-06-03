@@ -16,6 +16,10 @@
             <label>Nombre</label>
             <InputText @bind-Value="alojamiento.Nombre" class="form-control" />
         </div>
+        <div class="mb-2"> 
+            <label>País</label>
+            <InputText @bind-Value="alojamiento.Pais" class="form-control" />
+        </div>
         <div class="mb-2">
             <label>Ciudad</label>
             <InputText @bind-Value="alojamiento.Ciudad" class="form-control" />
@@ -44,29 +48,117 @@
             <label>Precio por Noche</label>
             <InputNumber @bind-Value="alojamiento.PrecioPorNoche" class="form-control" />
         </div>
+        <div class="mb-2">
+            <label>Descripción</label>
+            <InputTextArea @bind-Value="alojamiento.Descripcion" class="form-control" rows="4" /> 
+        </div>
+        <div class="mb-2">
+            <label>Servicios</label>
+            <InputTextArea @bind-Value="alojamiento.Servicios" class="form-control" rows="4" />
+        </div>
+        <div class="mb-2">
+            <InputCheckbox @bind-Value="alojamiento.Estacionamiento" />
+            <label class="ms-2">¿Tiene estacionamiento?</label>
+        </div>
+        <div class="mb-2">
+            <label>Tipo de reembolso:</label>
+            <InputSelect @bind-Value="alojamiento.TipoDeReembolso" class="form-control">
+                <option value="">Seleccione...</option>
+                <option value="NoReembolsable">Sin Reembolso</option>
+                <option value="ReembolsoParcial">Con Reembolso Parcial</option>
+                <option value="ReembolsoTotal">Con Reembolso Total</option>
+            </InputSelect>
+        </div>
+        @if (alojamiento.Imagenes != null && alojamiento.Imagenes.Any())
+        {
+            <h5>Fotos actuales:</h5>
+            <div style="display:flex; gap:10px; flex-wrap: wrap;">
+            @foreach (var img in alojamiento.Imagenes)
+            {
+                <div style="position: relative; display: inline-block;">
+                    <img src="@img" style="max-width: 120px; max-height: 120px; border: 1px solid #ccc; border-radius: 8px;" />
+                    <button class="btn btn-danger btn-sm" style="position:absolute; top:0; right:0;" @onclick="() => EliminarImagen(img)">X</button>
+                </div>
+            }
+        </div>
+        }
 
-        <button type="submit" class="btn btn-primary">Guardar cambios</button>
-        <button type="button" class="btn btn-secondary" @onclick="Volver">Volver</button>
+        <h5>Agregar nuevas fotos:</h5>
+        <InputFile OnChange="OnInputFileChange" multiple accept="image/*" />
+        @if (_previewUrls.Any())
+        {
+            <div style="display:flex; gap:10px; flex-wrap: wrap;">
+            @foreach (var url in _previewUrls)
+            {
+                <img src="@url" style="max-width: 120px; max-height: 120px; border: 1px solid #ccc; border-radius: 8px;" />
+            }
+            </div>
+        }
+        @if (!string.IsNullOrEmpty(SuccessMessage))
+        {
+            <div class="alert alert-success" role="alert">
+                @SuccessMessage
+            </div>
+        }
+        @if (!string.IsNullOrEmpty(ErrorMessage))
+        {
+            <div class="alert alert-danger" role="alert">
+                @((MarkupString)ErrorMessage)
+            </div>
+        }
+        <div>
+            <button type="submit" class="btn btn-primary">Guardar cambios</button>
+            <button type="button" class="btn btn-secondary" @onclick="Volver">Volver</button>
+        </div>
     </EditForm>
 }
 else
 {
     <p>Cargando alojamiento...</p>
 }
-@if (!string.IsNullOrEmpty(SuccessMessage))
-{
-    <div class="alert alert-success" role="alert">
-        @SuccessMessage
-    </div>
-}
+
+
 @code {
     [Parameter]
     public int AlojamientoId { get; set; }
     private RolUsuario rol => ServicioSesion.Rol;
-    private Alojamiento? alojamiento = new Alojamiento();
+    private Alojamiento alojamiento = new Alojamiento();
     private String nombreOriginal = string.Empty;
     string SuccessMessage {get;set;}=null!;
+    string ErrorMessage { get; set; } = null!;
     private bool _usuarioInicializado = false;
+
+    private List<IBrowserFile> _imagenes = new();
+    private List<string> _previewUrls = new();
+
+    private void EliminarImagen(string img)
+{
+    alojamiento.Imagenes.Remove(img);
+}
+
+    private async Task OnInputFileChange(InputFileChangeEventArgs e)
+    {
+        var uploadsPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+        if (!Directory.Exists(uploadsPath))
+            Directory.CreateDirectory(uploadsPath);
+
+        foreach (var imagen in e.GetMultipleFiles())
+        {
+            var uniqueFileName = $"{Guid.NewGuid()}_{imagen.Name}";
+            var filePath = Path.Combine(uploadsPath, uniqueFileName);
+
+        using (var stream = imagen.OpenReadStream(5 * 1024 * 1024))
+        using (var fileStream = File.Create(filePath))
+        {
+            await stream.CopyToAsync(fileStream);
+        }
+
+        var relativePath = $"/uploads/{uniqueFileName}";
+        alojamiento.Imagenes.Add(relativePath);
+    }
+
+    StateHasChanged(); // actualiza la vista
+}
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -82,7 +174,7 @@ else
         var _alojamiento = await alojamientoRepo.ObtenerPorId(AlojamientoId);
         if (_alojamiento == null)
         {
-            Console.WriteLine("Alojamiento no encontrado.");
+            ErrorMessage = "Alojamiento no encontrado.";
         }
         else{
             nombreOriginal = _alojamiento.Nombre;
@@ -90,16 +182,42 @@ else
         }
     }
 
-    private void Guardar()
+    private async Task GuardarImagenesNuevas()
     {
+        var uploadsPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+        if (!Directory.Exists(uploadsPath))
+            Directory.CreateDirectory(uploadsPath);
+
+        foreach (var imagen in _imagenes)
+        {
+            var uniqueFileName = $"{Guid.NewGuid()}_{imagen.Name}";
+            var filePath = Path.Combine(uploadsPath, uniqueFileName);
+
+            using (var stream = imagen.OpenReadStream(5 * 1024 * 1024))
+            using (var fileStream = File.Create(filePath))
+            {
+                await stream.CopyToAsync(fileStream);
+            }
+
+            var relativePath = $"/uploads/{uniqueFileName}";
+            alojamiento.Imagenes.Add(relativePath);
+        }
+    }
+
+    private async Task Guardar()
+    {
+        
         try
         {
-           alojamientoEdicion.Ejecutar(alojamiento!, ServicioSesion.Rol, nombreOriginal);
-           SuccessMessage="Alojamiento actualizado correctamente.";
+            await GuardarImagenesNuevas(); // primero sube las nuevas imágenes
+            alojamientoEdicion.Ejecutar(alojamiento!, ServicioSesion.Rol, nombreOriginal);
+            ErrorMessage = "";
+            SuccessMessage="Se ha actualizado la información exitosamente.";
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex.Message);
+            SuccessMessage = "";
+            ErrorMessage= $"{ex.Message}";
         }
     }
         private void Volver()

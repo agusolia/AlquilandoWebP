@@ -42,7 +42,7 @@ public class AlojamientoRepositorio:IAlojamientoRepositorio
         }
     }
     
-    //Creo que este método va a servir para "Buscar Alojamiento" en la UI
+    //Creo que este método va a servir para "Buscar Alojamiento" en la UI, depués podríamos configurar para que ignore las tildes
     public List<Alojamiento> ObtenerPorCiudadYDisponibilidad(String ciudad, DateTime fechaDesde,DateTime fechaHasta)
     {
         using (var db = new EntidadesContext())

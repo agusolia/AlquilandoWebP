@@ -23,10 +23,14 @@
         <InputText @bind-Value="busqueda.Ciudad" class="form-control" placeholder="Ciudad" />
       </div>
       <div class="col-md-3">
-        <InputDate @bind-Value="busqueda.FechaDesde" class="form-control" />
+        <InputDate @bind-Value="busqueda.FechaDesde"
+          class="form-control"
+          max="@busqueda.FechaHasta.ToString("yyyy-MM-dd")" />
       </div>
       <div class="col-md-3">
-        <InputDate @bind-Value="busqueda.FechaHasta" class="form-control" />
+        <InputDate @bind-Value="busqueda.FechaHasta"
+          class="form-control"
+          min="@busqueda.FechaDesde.ToString("yyyy-MM-dd")" />
       </div>
       <div class="col-md-2">
         <button type="submit" class="btn btn-primary w-100">Buscar</button>
