@@ -7,4 +7,5 @@ public interface ITarjetaRepositorio
 {
     public int Agregar(Tarjeta t);
     public String ObtenerPorIdUltimosCuatro(int id);
+    Tarjeta? ObtenerPorId(int id);
 }

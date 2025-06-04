@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "2iq1Zay4ed0X74MqwchQbG4Y/cLTIOtBna7lbgfppRM=",
+  "Hash": "pTC086SuvftRJptJWrGD3K1ZWXksBjzTzdrpy9qSpf4=",
   "Source": "AL.UI",
   "BasePath": "_content/AL.UI",
   "Mode": "Default",
@@ -10,17 +10,17 @@
     {
       "Name": "AL.UI\\wwwroot",
       "Source": "AL.UI",
-      "ContentRoot": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\agust\\OneDrive\\Desktop\\Proyecto Ing. en Software II\\AlquilandoWeb\\AL.UI\\wwwroot\\",
       "BasePath": "_content/AL.UI",
       "Pattern": "**"
     }
   ],
   "Assets": [
     {
-      "Identity": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\obj\\Debug\\net8.0\\scopedcss\\bundle\\AL.UI.styles.css",
+      "Identity": "C:\\Users\\agust\\OneDrive\\Desktop\\Proyecto Ing. en Software II\\AlquilandoWeb\\AL.UI\\obj\\Debug\\net8.0\\scopedcss\\bundle\\AL.UI.styles.css",
       "SourceId": "AL.UI",
       "SourceType": "Computed",
-      "ContentRoot": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\obj\\Debug\\net8.0\\scopedcss\\bundle\\",
+      "ContentRoot": "C:\\Users\\agust\\OneDrive\\Desktop\\Proyecto Ing. en Software II\\AlquilandoWeb\\AL.UI\\obj\\Debug\\net8.0\\scopedcss\\bundle\\",
       "BasePath": "_content/AL.UI",
       "RelativePath": "AL.UI.styles.css",
       "AssetKind": "All",
@@ -33,13 +33,13 @@
       "AssetTraitValue": "ApplicationBundle",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\obj\\Debug\\net8.0\\scopedcss\\bundle\\AL.UI.styles.css"
+      "OriginalItemSpec": "C:\\Users\\agust\\OneDrive\\Desktop\\Proyecto Ing. en Software II\\AlquilandoWeb\\AL.UI\\obj\\Debug\\net8.0\\scopedcss\\bundle\\AL.UI.styles.css"
     },
     {
-      "Identity": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\AL.UI.bundle.scp.css",
+      "Identity": "C:\\Users\\agust\\OneDrive\\Desktop\\Proyecto Ing. en Software II\\AlquilandoWeb\\AL.UI\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\AL.UI.bundle.scp.css",
       "SourceId": "AL.UI",
       "SourceType": "Computed",
-      "ContentRoot": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\",
+      "ContentRoot": "C:\\Users\\agust\\OneDrive\\Desktop\\Proyecto Ing. en Software II\\AlquilandoWeb\\AL.UI\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\",
       "BasePath": "_content/AL.UI",
       "RelativePath": "AL.UI.bundle.scp.css",
       "AssetKind": "All",
@@ -52,13 +52,13 @@
       "AssetTraitValue": "ProjectBundle",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\AL.UI.bundle.scp.css"
+      "OriginalItemSpec": "C:\\Users\\agust\\OneDrive\\Desktop\\Proyecto Ing. en Software II\\AlquilandoWeb\\AL.UI\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\AL.UI.bundle.scp.css"
     },
     {
-      "Identity": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\wwwroot\\alquilando.png",
+      "Identity": "C:\\Users\\agust\\OneDrive\\Desktop\\Proyecto Ing. en Software II\\AlquilandoWeb\\AL.UI\\wwwroot\\alquilando.png",
       "SourceId": "AL.UI",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\agust\\OneDrive\\Desktop\\Proyecto Ing. en Software II\\AlquilandoWeb\\AL.UI\\wwwroot\\",
       "BasePath": "_content/AL.UI",
       "RelativePath": "alquilando.png",
       "AssetKind": "All",
@@ -74,10 +74,10 @@
       "OriginalItemSpec": "wwwroot\\alquilando.png"
     },
     {
-      "Identity": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\wwwroot\\app.css",
+      "Identity": "C:\\Users\\agust\\OneDrive\\Desktop\\Proyecto Ing. en Software II\\AlquilandoWeb\\AL.UI\\wwwroot\\app.css",
       "SourceId": "AL.UI",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\agust\\OneDrive\\Desktop\\Proyecto Ing. en Software II\\AlquilandoWeb\\AL.UI\\wwwroot\\",
       "BasePath": "_content/AL.UI",
       "RelativePath": "app.css",
       "AssetKind": "All",
@@ -93,10 +93,10 @@
       "OriginalItemSpec": "wwwroot\\app.css"
     },
     {
-      "Identity": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\wwwroot\\bootstrap\\bootstrap.min.css",
+      "Identity": "C:\\Users\\agust\\OneDrive\\Desktop\\Proyecto Ing. en Software II\\AlquilandoWeb\\AL.UI\\wwwroot\\bootstrap\\bootstrap.min.css",
       "SourceId": "AL.UI",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\agust\\OneDrive\\Desktop\\Proyecto Ing. en Software II\\AlquilandoWeb\\AL.UI\\wwwroot\\",
       "BasePath": "_content/AL.UI",
       "RelativePath": "bootstrap/bootstrap.min.css",
       "AssetKind": "All",
@@ -112,10 +112,10 @@
       "OriginalItemSpec": "wwwroot\\bootstrap\\bootstrap.min.css"
     },
     {
-      "Identity": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\wwwroot\\bootstrap\\bootstrap.min.css.map",
+      "Identity": "C:\\Users\\agust\\OneDrive\\Desktop\\Proyecto Ing. en Software II\\AlquilandoWeb\\AL.UI\\wwwroot\\bootstrap\\bootstrap.min.css.map",
       "SourceId": "AL.UI",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\agust\\OneDrive\\Desktop\\Proyecto Ing. en Software II\\AlquilandoWeb\\AL.UI\\wwwroot\\",
       "BasePath": "_content/AL.UI",
       "RelativePath": "bootstrap/bootstrap.min.css.map",
       "AssetKind": "All",
@@ -131,10 +131,10 @@
       "OriginalItemSpec": "wwwroot\\bootstrap\\bootstrap.min.css.map"
     },
     {
-      "Identity": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\wwwroot\\favicon.ico",
+      "Identity": "C:\\Users\\agust\\OneDrive\\Desktop\\Proyecto Ing. en Software II\\AlquilandoWeb\\AL.UI\\wwwroot\\favicon.ico",
       "SourceId": "AL.UI",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\agust\\OneDrive\\Desktop\\Proyecto Ing. en Software II\\AlquilandoWeb\\AL.UI\\wwwroot\\",
       "BasePath": "_content/AL.UI",
       "RelativePath": "favicon.ico",
       "AssetKind": "All",
@@ -150,10 +150,10 @@
       "OriginalItemSpec": "wwwroot\\favicon.ico"
     },
     {
-      "Identity": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\wwwroot\\imagenes\\departamentoA.jpg",
+      "Identity": "C:\\Users\\agust\\OneDrive\\Desktop\\Proyecto Ing. en Software II\\AlquilandoWeb\\AL.UI\\wwwroot\\imagenes\\departamentoA.jpg",
       "SourceId": "AL.UI",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\agust\\OneDrive\\Desktop\\Proyecto Ing. en Software II\\AlquilandoWeb\\AL.UI\\wwwroot\\",
       "BasePath": "_content/AL.UI",
       "RelativePath": "imagenes/departamentoA.jpg",
       "AssetKind": "All",
@@ -169,10 +169,10 @@
       "OriginalItemSpec": "wwwroot\\imagenes\\departamentoA.jpg"
     },
     {
-      "Identity": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\wwwroot\\imagenes\\departamentoB.jpg",
+      "Identity": "C:\\Users\\agust\\OneDrive\\Desktop\\Proyecto Ing. en Software II\\AlquilandoWeb\\AL.UI\\wwwroot\\imagenes\\departamentoB.jpg",
       "SourceId": "AL.UI",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\agust\\OneDrive\\Desktop\\Proyecto Ing. en Software II\\AlquilandoWeb\\AL.UI\\wwwroot\\",
       "BasePath": "_content/AL.UI",
       "RelativePath": "imagenes/departamentoB.jpg",
       "AssetKind": "All",
@@ -188,10 +188,10 @@
       "OriginalItemSpec": "wwwroot\\imagenes\\departamentoB.jpg"
     },
     {
-      "Identity": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\wwwroot\\imagenes\\departamentoC.jpg",
+      "Identity": "C:\\Users\\agust\\OneDrive\\Desktop\\Proyecto Ing. en Software II\\AlquilandoWeb\\AL.UI\\wwwroot\\imagenes\\departamentoC.jpg",
       "SourceId": "AL.UI",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\agust\\OneDrive\\Desktop\\Proyecto Ing. en Software II\\AlquilandoWeb\\AL.UI\\wwwroot\\",
       "BasePath": "_content/AL.UI",
       "RelativePath": "imagenes/departamentoC.jpg",
       "AssetKind": "All",
@@ -207,10 +207,10 @@
       "OriginalItemSpec": "wwwroot\\imagenes\\departamentoC.jpg"
     },
     {
-      "Identity": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\wwwroot\\index.html",
+      "Identity": "C:\\Users\\agust\\OneDrive\\Desktop\\Proyecto Ing. en Software II\\AlquilandoWeb\\AL.UI\\wwwroot\\index.html",
       "SourceId": "AL.UI",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\agust\\OneDrive\\Desktop\\Proyecto Ing. en Software II\\AlquilandoWeb\\AL.UI\\wwwroot\\",
       "BasePath": "_content/AL.UI",
       "RelativePath": "index.html",
       "AssetKind": "All",
@@ -226,10 +226,10 @@
       "OriginalItemSpec": "wwwroot\\index.html"
     },
     {
-      "Identity": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\wwwroot\\logo.jpg",
+      "Identity": "C:\\Users\\agust\\OneDrive\\Desktop\\Proyecto Ing. en Software II\\AlquilandoWeb\\AL.UI\\wwwroot\\logo.jpg",
       "SourceId": "AL.UI",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\agust\\OneDrive\\Desktop\\Proyecto Ing. en Software II\\AlquilandoWeb\\AL.UI\\wwwroot\\",
       "BasePath": "_content/AL.UI",
       "RelativePath": "logo.jpg",
       "AssetKind": "All",
@@ -243,25 +243,6 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\logo.jpg"
-    },
-    {
-      "Identity": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\wwwroot\\uploads\\a824d8f2-39b5-4533-bde3-e78cf39465c1_imagenMuestra.jpg",
-      "SourceId": "AL.UI",
-      "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\wwwroot\\",
-      "BasePath": "_content/AL.UI",
-      "RelativePath": "uploads/a824d8f2-39b5-4533-bde3-e78cf39465c1_imagenMuestra.jpg",
-      "AssetKind": "All",
-      "AssetMode": "All",
-      "AssetRole": "Primary",
-      "AssetMergeBehavior": "PreferTarget",
-      "AssetMergeSource": "",
-      "RelatedAsset": "",
-      "AssetTraitName": "",
-      "AssetTraitValue": "",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\uploads\\a824d8f2-39b5-4533-bde3-e78cf39465c1_imagenMuestra.jpg"
     }
   ]
 }

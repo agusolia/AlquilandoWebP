@@ -14,6 +14,14 @@ public class TarjetaRepositorio : ITarjetaRepositorio
             return t.Id;
         }
     }
+
+    public Tarjeta? ObtenerPorId(int id)
+    {
+        using (var db = new EntidadesContext())
+        {
+            return db.Tarjetas.Find(id);
+        }
+    }
     
     public String ObtenerPorIdUltimosCuatro(int id)
     {

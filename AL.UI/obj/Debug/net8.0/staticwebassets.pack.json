@@ -1,52 +1,48 @@
 {
   "Files": [
     {
-      "Id": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\AL.UI.bundle.scp.css",
+      "Id": "C:\\Users\\agust\\OneDrive\\Desktop\\Proyecto Ing. en Software II\\AlquilandoWeb\\AL.UI\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\AL.UI.bundle.scp.css",
       "PackagePath": "staticwebassets\\AL.UI.bundle.scp.css"
     },
     {
-      "Id": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\wwwroot\\alquilando.png",
+      "Id": "C:\\Users\\agust\\OneDrive\\Desktop\\Proyecto Ing. en Software II\\AlquilandoWeb\\AL.UI\\wwwroot\\alquilando.png",
       "PackagePath": "staticwebassets\\alquilando.png"
     },
     {
-      "Id": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\wwwroot\\app.css",
+      "Id": "C:\\Users\\agust\\OneDrive\\Desktop\\Proyecto Ing. en Software II\\AlquilandoWeb\\AL.UI\\wwwroot\\app.css",
       "PackagePath": "staticwebassets\\app.css"
     },
     {
-      "Id": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\wwwroot\\bootstrap\\bootstrap.min.css",
+      "Id": "C:\\Users\\agust\\OneDrive\\Desktop\\Proyecto Ing. en Software II\\AlquilandoWeb\\AL.UI\\wwwroot\\bootstrap\\bootstrap.min.css",
       "PackagePath": "staticwebassets\\bootstrap\\bootstrap.min.css"
     },
     {
-      "Id": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\wwwroot\\bootstrap\\bootstrap.min.css.map",
+      "Id": "C:\\Users\\agust\\OneDrive\\Desktop\\Proyecto Ing. en Software II\\AlquilandoWeb\\AL.UI\\wwwroot\\bootstrap\\bootstrap.min.css.map",
       "PackagePath": "staticwebassets\\bootstrap\\bootstrap.min.css.map"
     },
     {
-      "Id": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\wwwroot\\favicon.ico",
+      "Id": "C:\\Users\\agust\\OneDrive\\Desktop\\Proyecto Ing. en Software II\\AlquilandoWeb\\AL.UI\\wwwroot\\favicon.ico",
       "PackagePath": "staticwebassets\\favicon.ico"
     },
     {
-      "Id": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\wwwroot\\imagenes\\departamentoA.jpg",
+      "Id": "C:\\Users\\agust\\OneDrive\\Desktop\\Proyecto Ing. en Software II\\AlquilandoWeb\\AL.UI\\wwwroot\\imagenes\\departamentoA.jpg",
       "PackagePath": "staticwebassets\\imagenes\\departamentoA.jpg"
     },
     {
-      "Id": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\wwwroot\\imagenes\\departamentoB.jpg",
+      "Id": "C:\\Users\\agust\\OneDrive\\Desktop\\Proyecto Ing. en Software II\\AlquilandoWeb\\AL.UI\\wwwroot\\imagenes\\departamentoB.jpg",
       "PackagePath": "staticwebassets\\imagenes\\departamentoB.jpg"
     },
     {
-      "Id": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\wwwroot\\imagenes\\departamentoC.jpg",
+      "Id": "C:\\Users\\agust\\OneDrive\\Desktop\\Proyecto Ing. en Software II\\AlquilandoWeb\\AL.UI\\wwwroot\\imagenes\\departamentoC.jpg",
       "PackagePath": "staticwebassets\\imagenes\\departamentoC.jpg"
     },
     {
-      "Id": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\wwwroot\\index.html",
+      "Id": "C:\\Users\\agust\\OneDrive\\Desktop\\Proyecto Ing. en Software II\\AlquilandoWeb\\AL.UI\\wwwroot\\index.html",
       "PackagePath": "staticwebassets\\index.html"
     },
     {
-      "Id": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\wwwroot\\logo.jpg",
+      "Id": "C:\\Users\\agust\\OneDrive\\Desktop\\Proyecto Ing. en Software II\\AlquilandoWeb\\AL.UI\\wwwroot\\logo.jpg",
       "PackagePath": "staticwebassets\\logo.jpg"
-    },
-    {
-      "Id": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\wwwroot\\uploads\\a824d8f2-39b5-4533-bde3-e78cf39465c1_imagenMuestra.jpg",
-      "PackagePath": "staticwebassets\\uploads\\a824d8f2-39b5-4533-bde3-e78cf39465c1_imagenMuestra.jpg"
     },
     {
       "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.AL.UI.Microsoft.AspNetCore.StaticWebAssets.props",
