@@ -14,7 +14,6 @@ public class ReservasRepositorio: IReservasRepositorio
             db.SaveChanges();
         }
     }
-
     //Caso de uso reserva BAJA
     public void Eliminar(Reserva r){
         using(var db=new EntidadesContext()){  
@@ -28,33 +27,37 @@ public class ReservasRepositorio: IReservasRepositorio
 
     //Caso de uso Consulta por Id
     public Reserva? ObtenerPorId(int id){
-        using(var db=new EntidadesContext()){  
-            var expediente = db.Reservas.Where(t => t.Id == id).SingleOrDefault();
-            return expediente;
-        }
-    } 
+    using(var db=new EntidadesContext()){  
+        return db.Reservas
+                 .Include(r => r.ListaInformacionAdicional)
+                 .SingleOrDefault(r => r.Id == id);
+    }
+} 
     
     //Caso de uso consulta TODOS
     public List<Reserva> ObtenerTodos(){
-        using (var db=new EntidadesContext()){
-            List<Reserva> resultado = db.Reservas.ToList();
-            return resultado;  
-        }
+    using (var db=new EntidadesContext()){
+        return db.Reservas
+                 .Include(r => r.ListaInformacionAdicional)
+                 .ToList();  
     }
-    public List<Reserva> ObtenerReservasPorAlojamientoId(int alojamientoId)
-    {
-        using (var db = new EntidadesContext())
-        {
-            return db.Reservas.Where(r => r.IdAlojamiento == alojamientoId).ToList();
-        }
+}
+    public List<Reserva> ObtenerReservasPorAlojamientoId(int alojamientoId){
+    using (var db = new EntidadesContext()){
+        return db.Reservas
+                 .Include(r => r.ListaInformacionAdicional)
+                 .Where(r => r.IdAlojamiento == alojamientoId)
+                 .ToList();
     }
-    public List<Reserva> ObtenerReservasPorUsuarioId(int usuarioId)
-    {
-        using (var db = new EntidadesContext())
-        {
-            return db.Reservas.Where(r => r.IdUsuario == usuarioId).ToList();
-        }
+}
+    public List<Reserva> ObtenerReservasPorUsuarioId(int usuarioId){
+    using (var db = new EntidadesContext()){
+        return db.Reservas
+                 .Include(r => r.ListaInformacionAdicional)
+                 .Where(r => r.IdUsuario == usuarioId)
+                 .ToList();
     }
+}
 
     //Caso de uso reserva MODIFICACION (puede que no se use)
     public void Modificar(Reserva r)

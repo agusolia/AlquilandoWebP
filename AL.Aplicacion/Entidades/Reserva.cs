@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AL.Aplicacion.Entidades;
 
@@ -15,7 +16,6 @@ public class Reserva
     public String? EstadoReserva { get; set; }
     public int CantidadDeAdultos { get; set; }
     public int CantidadDeNiños { get; set; }
-    
-    public List<String>? ListaInformacionAdicional { get; set; }
-    
+    public List<FotoReserva>? ListaInformacionAdicional { get; set; } = new List<FotoReserva>();
+
 }

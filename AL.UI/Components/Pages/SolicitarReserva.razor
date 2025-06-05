@@ -5,6 +5,8 @@
 @inject NavigationManager NavigationManager
 @inject ServicioArchivos servicioArchivos
 
+@rendermode InteractiveServer
+
 
 <h3>Solicitar Reserva</h3>
 
@@ -31,7 +33,23 @@ else
             <label>Cantidad de niños:</label>
             <InputNumber @bind-Value="reserva.CantidadDeNiños" min="0" />
         </div>
+         @if (alojamiento.TieneInformacionAdicional)
+        {
+            <p><strong>Información adicional requerida:</strong> @alojamiento.InformacionAdicional</p>
 
+            <InputFile OnChange="OnInputFileChange" multiple accept="image/*" />
+
+            @if (imagenesSubidas.Count > 0)
+            {
+                <p>Imágenes seleccionadas:</p>
+                <ul>
+                    @foreach (var img in imagenesSubidas)
+                    {
+                        <li>@img.Name (@(img.Size / 1024) KB)</li>
+                    }
+                </ul>
+            }
+        }
         <button type="submit">Reservar</button>
     </EditForm>
 
@@ -57,7 +75,12 @@ else
     private Alojamiento? alojamiento;
     private Reserva reserva = new();
     private string mensaje = "";
+   private List<IBrowserFile> imagenesSubidas = new();
 
+    private void OnInputFileChange(InputFileChangeEventArgs e)
+        {
+            imagenesSubidas = e.GetMultipleFiles().ToList();
+        }
     protected override async Task OnInitializedAsync()
     {
         alojamiento = await alojamientoRepositorio.ObtenerPorId(AlojamientoId);
@@ -83,6 +106,18 @@ else
             await servicioSesion.InicializarUsuarioAsync();
             reserva.IdUsuario = servicioSesion.Id;
 
+             if (alojamiento?.TieneInformacionAdicional == true && imagenesSubidas.Count > 0)
+            {
+                // Crear lista de objetos FotoReserva
+                reserva.ListaInformacionAdicional = new List<FotoReserva>();
+
+                foreach (var archivo in imagenesSubidas)
+                {
+                    var ruta = await servicioArchivos.GuardarArchivoAsync(archivo);
+                    reserva.ListaInformacionAdicional.Add(new FotoReserva { RutaFoto = ruta });
+                }
+            }
+
             mensaje = reservaAlta.Ejecutar(reserva);
         }
         catch (ValidacionException ex)
@@ -93,6 +128,6 @@ else
         {
             mensaje = $"Error inesperado: {ex.Message}";
         }
-    }
+}
 }
 

@@ -30,3 +30,5 @@ C:\Users\agust\OneDrive\Desktop\Proyecto Ing. en Software II\AlquilandoWeb\AL.Re
 C:\Users\agust\OneDrive\Desktop\Proyecto Ing. en Software II\AlquilandoWeb\AL.Repositorios\obj\Debug\net8.0\refint\AL.Repositorios.dll
 C:\Users\agust\OneDrive\Desktop\Proyecto Ing. en Software II\AlquilandoWeb\AL.Repositorios\obj\Debug\net8.0\AL.Repositorios.pdb
 C:\Users\agust\OneDrive\Desktop\Proyecto Ing. en Software II\AlquilandoWeb\AL.Repositorios\obj\Debug\net8.0\ref\AL.Repositorios.dll
+C:\Users\agust\OneDrive\Desktop\Proyecto Ing. en Software II\AlquilandoWeb\AL.Repositorios\bin\Debug\net8.0\AL.Repositorios.runtimeconfig.json
+C:\Users\agust\OneDrive\Desktop\Proyecto Ing. en Software II\AlquilandoWeb\AL.Repositorios\obj\Debug\net8.0\AL.Repositorios.genruntimeconfig.cache
