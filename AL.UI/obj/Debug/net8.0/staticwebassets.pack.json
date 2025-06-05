@@ -45,6 +45,10 @@
       "PackagePath": "staticwebassets\\logo.jpg"
     },
     {
+      "Id": "C:\\Users\\agust\\OneDrive\\Desktop\\Proyecto Ing. en Software II\\AlquilandoWeb\\AL.UI\\wwwroot\\uploads\\ecf1f40f-17ae-4ead-829b-abebc391468a_Captura de pantalla 2025-06-05 001758.png",
+      "PackagePath": "staticwebassets\\uploads\\ecf1f40f-17ae-4ead-829b-abebc391468a_Captura de pantalla 2025-06-05 001758.png"
+    },
+    {
       "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.AL.UI.Microsoft.AspNetCore.StaticWebAssets.props",
       "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
     },

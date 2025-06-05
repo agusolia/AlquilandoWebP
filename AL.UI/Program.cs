@@ -20,11 +20,13 @@ builder.Services.AddTransient<BuscarAlojamientoCasoDeUso>();
 builder.Services.AddTransient<FiltrarAlojamientoCasoDeUso>();
 builder.Services.AddTransient<AlojamientoEdicion>();
 builder.Services.AddTransient<CancelarReservaCasoDeUso>();
+builder.Services.AddTransient<ReservaAlta>();
 
 builder.Services.AddSingleton<IUsuarioRepositorio, UsuarioRepositorio>();
 builder.Services.AddScoped<ITarjetaRepositorio, TarjetaRepositorio>();
 builder.Services.AddScoped<IAlojamientoRepositorio, AlojamientoRepositorio>();
 builder.Services.AddScoped<IReservasRepositorio, ReservasRepositorio>();
+builder.Services.AddSingleton<ServicioArchivos>();
 
 builder.Services.AddTransient<IUsuarioValidador, UsuarioValidador>();
 builder.Services.AddTransient<IAlojamientoValidador, AlojamientoValidador>();
@@ -34,6 +36,8 @@ builder.Services.AddTransient<IHashService, HashService>();
 builder.Services.AddScoped<IServicioSesion,ServicioSesion>();
 builder.Services.AddScoped<IServicioReserva,ServicioReserva>();
 builder.Services.AddScoped<ProtectedSessionStorage>();
+builder.Services.AddScoped<IServicioPago, ServicioPago>();
+
 
 // Add services to the container.
 builder.Services.AddRazorComponents()

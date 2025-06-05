@@ -1,0 +1,97 @@
+@page "/SolicitarReserva/{AlojamientoId:int}"
+@inject IAlojamientoRepositorio alojamientoRepositorio
+@inject IServicioSesion servicioSesion
+@inject ReservaAlta reservaAlta
+@inject NavigationManager NavigationManager
+@inject ServicioArchivos servicioArchivos
+
+<h3>Solicitar Reserva</h3>
+
+@if (alojamiento == null)
+{
+    <p>Cargando alojamiento...</p>
+}
+else
+{
+    <p><strong>Desde:</strong> @desde?.ToString("dd/MM/yyyy")</p>
+    <p><strong>Hasta:</strong> @hasta?.ToString("dd/MM/yyyy")</p>
+    <p><strong>Total:</strong> $@CalcularTotal()</p>
+
+    <EditForm Model="reserva" OnValidSubmit="ProcesarReserva">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div>
+            <label>Cantidad de adultos:</label>
+            <InputNumber @bind-Value="reserva.CantidadDeAdultos" min="1" />
+        </div>
+
+        <div>
+            <label>Cantidad de niños:</label>
+            <InputNumber @bind-Value="reserva.CantidadDeNiños" min="0" />
+        </div>
+
+        <button type="submit">Reservar</button>
+    </EditForm>
+
+    @if (!string.IsNullOrWhiteSpace(mensaje))
+    {
+        <p style="margin-top:10px;"><strong>@mensaje</strong></p>
+    }
+}
+
+@using AL.Aplicacion.Excepciones
+@code {
+    [Parameter]
+    public int AlojamientoId { get; set; }
+
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public DateTime? desde { get; set; }
+
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public DateTime? hasta { get; set; }
+
+    private Alojamiento? alojamiento;
+    private Reserva reserva = new();
+    private string mensaje = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        alojamiento = await alojamientoRepositorio.ObtenerPorId(AlojamientoId);
+
+        reserva.IdAlojamiento = AlojamientoId;
+        reserva.FechaInicioEstadia = desde ?? DateTime.Today;
+        reserva.FechaFinEstadia = hasta ?? DateTime.Today.AddDays(1);
+    }
+
+    private double CalcularTotal()
+    {
+        if (alojamiento == null || !desde.HasValue || !hasta.HasValue)
+            return 0;
+
+        int dias = (hasta.Value - desde.Value).Days;
+        return dias > 0 ? dias * alojamiento.PrecioPorNoche : 0;
+    }
+
+    private async Task ProcesarReserva()
+    {
+        try
+        {
+            await servicioSesion.InicializarUsuarioAsync();
+            reserva.IdUsuario = servicioSesion.Id;
+
+            mensaje = reservaAlta.Ejecutar(reserva);
+        }
+        catch (ValidacionException ex)
+        {
+            mensaje = $"Error de validación: {ex.Message}";
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error inesperado: {ex.Message}";
+        }
+    }
+}
+
