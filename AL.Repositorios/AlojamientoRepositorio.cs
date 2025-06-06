@@ -82,7 +82,7 @@ public class AlojamientoRepositorio:IAlojamientoRepositorio
         {
             return db.Alojamientos
             .Include(a => a.Reservas)
-            .Where(a => a.Reservas==null || !a.Reservas.Any(r => r.FechaInicioEstadia <= fechaHasta
+            .Where(a => a.Reservas==null || !a.Reservas.Any(r => r.EstadoReserva == "Confirmada" && r.FechaInicioEstadia <= fechaHasta
                                         && r.FechaFinEstadia>= fechaDesde))
             .Where(a => a.Ciudad != null && a.Ciudad.ToLower() == ciudad.ToLower())
             .ToList();
