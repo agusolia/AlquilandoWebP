@@ -61,6 +61,7 @@ else
             await ServicioSesion.InicializarUsuarioAsync();
             _usuarioInicializado = true;
             _alojamientos = AlojamientoRepositorio.ObtenerTodos();
+            
             StateHasChanged(); // Refresca la UI si es necesario
         }
     }

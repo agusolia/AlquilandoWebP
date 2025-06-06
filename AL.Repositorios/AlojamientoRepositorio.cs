@@ -26,13 +26,13 @@ public class AlojamientoRepositorio:IAlojamientoRepositorio
         }
     }
     //Consulta por Id, para que el administrador pueda ver los detalles de un alojamiento
-    public Alojamiento? ObtenerPorId(int id)
+    public async Task<Alojamiento?> ObtenerPorId(int id)
     {
         using (var db = new EntidadesContext())
         {
-            return db.Alojamientos
+            return await db.Alojamientos
             .Include(a => a.Reservas)
-            .FirstOrDefault(a => a.Id == id);
+            .FirstOrDefaultAsync(a => a.Id == id);
         }
     }
     public Alojamiento? ObtenerPorNombre(string nombre)

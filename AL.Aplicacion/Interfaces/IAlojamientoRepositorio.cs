@@ -13,7 +13,7 @@ public interface IAlojamientoRepositorio
     List<Alojamiento> ObtenerPorCiudadYDisponibilidad(String ciudad, DateTime fechaDesde, DateTime fechaHasta);
     List<Alojamiento> ObtenerTodos();
     public List<Alojamiento> ListarAlojamientosConSusReservas();
-    Alojamiento? ObtenerPorId(int id);
+    Task<Alojamiento?> ObtenerPorId(int id);
     public Boolean alojamientoDisponible(int id, DateTime fechaDesde, DateTime fechaHasta);
 
     public List<Alojamiento> ObtenerPorCiudad(string ciudad);

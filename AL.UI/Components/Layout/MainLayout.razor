@@ -1,4 +1,6 @@
 ﻿@inherits LayoutComponentBase
+@inject NavigationManager NavigationManager
+@inject IServicioSesion ServicioSesion
 
 <div class="page">
     <div class="sidebar text-white"
@@ -19,17 +21,27 @@
         </div>
     </div>
 
+ <main>
+<div class="top-row px-4">
+ <nav class="d-flex justify-content-end align-items-center gap-2">
 
-    <main>
-        <div class="top-row px-4">
-            <a href="/Registrarse" class="ms-3" target="_blank">Registrarse</a>
-            <a href="/IniciarSesion" class="ms-3">Iniciar sesión</a>
-        </div>
-
-        <article class="content px-4">
+    @if (rol==RolUsuario.Administrador || rol==RolUsuario.Usuario)
+    {
+        <a href="/" class="nav-link">Cuenta</a>
+        <button class="nav-link btn btn-link" @onclick="CerrarSesion">Cerrar sesión</button>
+    }
+    else
+    {
+        <a href="/Registrarse" class="nav-link">Registrarse</a>
+        <a href="/IniciarSesion" class="nav-link">Iniciar sesión</a>
+    }
+</nav>
+ </div>
+         <article class="content px-4">
             @Body
         </article>
-    </main>
+  </main>
+
 </div>
 
 <div id="blazor-error-ui">
@@ -37,3 +49,24 @@
     <a href="" class="reload">Reload</a>
     <a class="dismiss">🗙</a>
 </div>
+
+@code {
+    public RolUsuario rol => ServicioSesion.Rol;
+
+    private void CerrarSesion()
+    {
+        ServicioSesion.Logout();
+        NavigationManager.NavigateTo("/");
+    }
+    private bool _usuarioInicializado = false;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && !_usuarioInicializado)
+        {
+            await ServicioSesion.InicializarUsuarioAsync();
+            _usuarioInicializado = true;
+            StateHasChanged(); // Refresca la UI si es necesario
+        }
+    }
+}

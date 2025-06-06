@@ -2,6 +2,12 @@
 @inject IServicioSesion ServicioSesion
 @inject NavigationManager NavigationManager
 
+@rendermode InteractiveServer
+
+<div class="d-flex justify-content-end">
+    <button @onclick="CerrarSesion" class="btn btn-primary">Cerrar Sesión</button>
+</div>
+
 <h3>Cuenta Administrador</h3>
 
 <div class="row">
@@ -43,4 +49,11 @@
             StateHasChanged(); // Refresca la UI si es necesario
         }
     }
+
+    private void CerrarSesion()
+    {
+        ServicioSesion.Logout();
+        NavigationManager.NavigateTo("/");
+    }
+
 }

@@ -37,6 +37,14 @@
       "PackagePath": "staticwebassets\\imagenes\\departamentoC.jpg"
     },
     {
+      "Id": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\wwwroot\\imagenes\\reservas\\03b1c91a-1060-4f3b-9cf2-5e5e802f98be_Captura de pantalla 2025-02-06 181756.png",
+      "PackagePath": "staticwebassets\\imagenes\\reservas\\03b1c91a-1060-4f3b-9cf2-5e5e802f98be_Captura de pantalla 2025-02-06 181756.png"
+    },
+    {
+      "Id": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\wwwroot\\imagenes\\reservas\\6bf9cf19-f016-4f6f-944a-230bded66e62_favicon.png",
+      "PackagePath": "staticwebassets\\imagenes\\reservas\\6bf9cf19-f016-4f6f-944a-230bded66e62_favicon.png"
+    },
+    {
       "Id": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\wwwroot\\imagenes\\reservas\\c3f0ef41-5dc8-41c6-85e2-0c6b011401ad_Captura de pantalla 2025-06-04 161820.png",
       "PackagePath": "staticwebassets\\imagenes\\reservas\\c3f0ef41-5dc8-41c6-85e2-0c6b011401ad_Captura de pantalla 2025-06-04 161820.png"
     },

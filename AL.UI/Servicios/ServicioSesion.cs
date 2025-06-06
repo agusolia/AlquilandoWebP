@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using AL.Aplicacion.Enumerativos;
 using AL.Aplicacion.Interfaces;
+using System.Threading.Tasks;
 
 namespace AL.UI.Servicios;
 
@@ -10,18 +11,19 @@ public class ServicioSesion: IServicioSesion
     private readonly IHashService _hash;
     private readonly ProtectedSessionStorage _sessionStorage;
 
+
     public ServicioSesion(ProtectedSessionStorage sessionStorage, IUsuarioRepositorio repo, IHashService hash)
     {
         _repo = repo;
         _hash = hash;
         _sessionStorage = sessionStorage;
-        
+
         // Intenta recuperar el rol al crear el servicio
         //var result = _localStorage.GetAsync<string>("rol").Result;
         //if (result.Success && Enum.TryParse(result.Value, out RolUsuario rol))
-          //  Rol = rol;
+        //  Rol = rol;
         //else
-            Rol = RolUsuario.Invitado;
+        Rol = RolUsuario.Invitado;
     }
 
     public int Id { get; set; }
@@ -32,7 +34,11 @@ public class ServicioSesion: IServicioSesion
     {
         var result = IniciarSesion(email, contraseña);
         if (result)
+        {
             await GuardarUsuarioAsync();
+
+
+        }
         return result;
     }
     
@@ -52,6 +58,7 @@ public class ServicioSesion: IServicioSesion
         {
             Id = usuario.Id;
             Rol = usuario.Rol;
+
             return true;
         }
         
@@ -78,9 +85,10 @@ public class ServicioSesion: IServicioSesion
         Rol = RolUsuario.Invitado;
         Id = 0;
         await _sessionStorage.DeleteAsync("rol");
+
     }
-    public void Logout()
+    public async Task Logout()
     {
-        LogoutAsync().GetAwaiter().GetResult();
+        await LogoutAsync();
     }
 }

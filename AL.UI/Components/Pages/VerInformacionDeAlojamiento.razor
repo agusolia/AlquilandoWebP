@@ -64,7 +64,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        alojamiento = alojamientoRepo.ObtenerPorId(AlojamientoId);
+        alojamiento = await alojamientoRepo.ObtenerPorId(AlojamientoId);
         if (alojamiento == null)
         {
             Console.WriteLine("Alojamiento no encontrado.");
