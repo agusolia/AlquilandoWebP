@@ -42,7 +42,7 @@ else
                 <p class="text-muted">@alojamiento.Descripcion</p>
 
                 <!-- Botón para reservar -->
-                <NavLink class="btn btn-primary btn-lg mt-3 w-100" href="/home"> 
+                <NavLink class="btn btn-primary" href="@UrlReserva">
                     Solicitar reserva
                 </NavLink>
             </div>
@@ -56,9 +56,15 @@ else
 
     private Alojamiento? alojamiento;
 
+    [Parameter, SupplyParameterFromQuery] public DateTime? desde { get; set; }
+
+    [Parameter, SupplyParameterFromQuery] public DateTime? hasta { get; set; }
+    private string UrlReserva => 
+            $"/SolicitarReserva/{AlojamientoId}?desde={desde:yyyy-MM-dd}&hasta={hasta:yyyy-MM-dd}";
+
     protected override async Task OnInitializedAsync()
     {
-        alojamiento = await alojamientoRepo.ObtenerPorId(AlojamientoId);
+        alojamiento = alojamientoRepo.ObtenerPorId(AlojamientoId);
         if (alojamiento == null)
         {
             Console.WriteLine("Alojamiento no encontrado.");

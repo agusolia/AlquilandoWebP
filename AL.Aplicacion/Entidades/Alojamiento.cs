@@ -20,7 +20,10 @@ public class Alojamiento
     public Boolean Estacionamiento { get; set; } = false;
     public double PrecioPorNoche { get; set; }
     public TipoReembolso? TipoDeReembolso { get; set; } 
-    public List<String> Imagenes { get; set; } = new List<string>();
+    public bool TieneInformacionAdicional { get; set; } = false;
+    public string? InformacionAdicional { get; set; }
     public List<Reserva> Reservas { get; set; } = new List<Reserva>();
+    public List<String> Imagenes { get; set; } = new List<string>();
+
 
 }

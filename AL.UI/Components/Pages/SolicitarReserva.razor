@@ -1,0 +1,143 @@
+﻿@page "/SolicitarReserva/{AlojamientoId:int}"
+@inject IAlojamientoRepositorio alojamientoRepositorio
+@inject IServicioSesion servicioSesion
+@inject ReservaAlta reservaAlta
+@inject NavigationManager NavigationManager
+@using AL.UI.Servicios
+@rendermode InteractiveServer
+
+
+<h3>Solicitar Reserva</h3>
+
+@if (alojamiento == null)
+{
+    <p>Cargando alojamiento...</p>
+}
+else
+{
+    <p><strong>Desde:</strong> @desde?.ToString("dd/MM/yyyy")</p>
+    <p><strong>Hasta:</strong> @hasta?.ToString("dd/MM/yyyy")</p>
+    <p><strong>Total:</strong> $@CalcularTotal()</p>
+
+    <EditForm Model="reserva" OnValidSubmit="ProcesarReserva">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div>
+            <label>Cantidad de adultos:</label>
+            <InputNumber @bind-Value="reserva.CantidadDeAdultos" min="1" />
+        </div>
+
+        <div>
+            <label>Cantidad de niños:</label>
+            <InputNumber @bind-Value="reserva.CantidadDeNiños" min="0" />
+        </div>
+        @if (alojamiento.TieneInformacionAdicional)
+        {
+            <p><strong>Información adicional requerida:</strong> @alojamiento.InformacionAdicional</p>
+
+            <InputFile OnChange="OnInputFileChange" multiple accept="image/*" />
+
+            @if (imagenesSubidas.Count > 0)
+            {
+                <p>Imágenes seleccionadas:</p>
+                <ul>
+                    @foreach (var img in imagenesSubidas)
+                    {
+                        <li>@img.Name (@(img.Size / 1024) KB)</li>
+                    }
+                </ul>
+            }
+        }
+        <button type="submit">Reservar</button>
+    </EditForm>
+
+    @if (!string.IsNullOrWhiteSpace(mensaje))
+    {
+        <p style="margin-top:10px;"><strong>@mensaje</strong></p>
+    }
+}
+
+@code {
+    [Parameter]
+    public int AlojamientoId { get; set; }
+
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public DateTime? desde { get; set; } 
+
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public DateTime? hasta { get; set; }
+
+    private Alojamiento? alojamiento=new();
+    private Reserva reserva = new();
+    private string mensaje = "";
+   private List<IBrowserFile> imagenesSubidas = new();
+    private void OnInputFileChange(InputFileChangeEventArgs e)
+        {
+            imagenesSubidas = e.GetMultipleFiles().ToList();
+        }
+   protected override void OnInitialized()
+    {
+        alojamiento = alojamientoRepositorio.ObtenerPorId(AlojamientoId);
+        if (alojamiento == null)
+        {
+            Console.WriteLine(AlojamientoId);
+            mensaje = "Alojamiento no encontrado.";
+            return;
+        }
+        reserva.IdAlojamiento = alojamiento.Id;
+        reserva.FechaInicioEstadia = desde ?? DateTime.Now;
+        reserva.FechaFinEstadia = hasta ?? DateTime.Now.AddDays(1);
+    }
+
+    private double CalcularTotal()
+    {
+        if (alojamiento == null || !desde.HasValue || !hasta.HasValue)
+            return 0;
+
+        int dias = (hasta.Value - desde.Value).Days;
+        reserva.MontoEstadia=dias * alojamiento.PrecioPorNoche;
+        return dias > 0 ? dias * alojamiento.PrecioPorNoche : 0;
+    }
+
+    private async Task ProcesarReserva()
+    {
+        try
+        {
+            await servicioSesion.InicializarUsuarioAsync();
+            reserva.IdUsuario = servicioSesion.Id;
+            if(!alojamientoRepositorio.alojamientoDisponible(AlojamientoId, desde.Value, hasta.Value) )
+            {
+                mensaje = "Alojamiento no disponible en las fechas seleccionadas.";
+                return;
+            }
+            if (alojamiento?.TieneInformacionAdicional == true && imagenesSubidas.Count > 0)
+            {
+                // Crear lista de rutas de archivos (string)
+                
+                string _rutaBase = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "imagenes", "reservas");
+                foreach (var archivo in imagenesSubidas)
+                {
+                    var nombreUnico = $"{Guid.NewGuid()}_{archivo.Name}";
+                    var rutaCompleta = Path.Combine(_rutaBase, nombreUnico);
+
+                    await using var stream = new FileStream(rutaCompleta, FileMode.Create);
+                    await archivo.OpenReadStream(10 * 1024 * 1024).CopyToAsync(stream); // max 10MB
+
+                    // Retorna la ruta relativa para usar en la UI
+                    var ruta= $"/imagenes/reservas/{nombreUnico}";
+                    reserva.ListaInformacionAdicional.Add(ruta);
+                }
+            }
+
+            mensaje = reservaAlta.Ejecutar(reserva);
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error de validación: {ex.Message}";
+        }
+
+    }
+}

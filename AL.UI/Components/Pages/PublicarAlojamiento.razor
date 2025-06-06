@@ -74,6 +74,15 @@
             <option value="ReembolsoParcial">Con Reembolso Parcial</option>
             <option value="ReembolsoTotal">Con Reembolso Total</option>
         </select> </p>
+    <input type="checkbox" @bind="_alojamiento.TieneInformacionAdicional" />
+        <label class="ms-2">¿Requiere que el huésped suba información adicional?</label>
+
+    @if (_alojamiento.TieneInformacionAdicional)
+    {
+        <p> <label>Información adicional requerida:</label>
+            <textarea class="form-control" @bind="_alojamiento.InformacionAdicional" placeholder="Ej: Foto de DNI, certificado de vacunación, etc." rows="3"></textarea>
+        </p>
+    }
     <p> <label>Ingrese 1 imágen:</label>
     <InputFile OnChange="OnInputFileChange" accept="image/*" /> </p>
     @if (!string.IsNullOrEmpty(_previewUrl))

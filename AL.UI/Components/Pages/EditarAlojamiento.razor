@@ -171,7 +171,7 @@ else
     }
     protected override async Task OnInitializedAsync()
     {
-        var _alojamiento = await alojamientoRepo.ObtenerPorId(AlojamientoId);
+        var _alojamiento = alojamientoRepo.ObtenerPorId(AlojamientoId);
         if (_alojamiento == null)
         {
             ErrorMessage = "Alojamiento no encontrado.";

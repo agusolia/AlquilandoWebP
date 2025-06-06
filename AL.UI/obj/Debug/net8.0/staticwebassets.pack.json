@@ -37,12 +37,32 @@
       "PackagePath": "staticwebassets\\imagenes\\departamentoC.jpg"
     },
     {
+      "Id": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\wwwroot\\imagenes\\reservas\\c3f0ef41-5dc8-41c6-85e2-0c6b011401ad_Captura de pantalla 2025-06-04 161820.png",
+      "PackagePath": "staticwebassets\\imagenes\\reservas\\c3f0ef41-5dc8-41c6-85e2-0c6b011401ad_Captura de pantalla 2025-06-04 161820.png"
+    },
+    {
+      "Id": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\wwwroot\\imagenes\\reservas\\e8ce8d4d-e407-424d-9687-b8be3463d887_favicon.png",
+      "PackagePath": "staticwebassets\\imagenes\\reservas\\e8ce8d4d-e407-424d-9687-b8be3463d887_favicon.png"
+    },
+    {
       "Id": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\wwwroot\\index.html",
       "PackagePath": "staticwebassets\\index.html"
     },
     {
       "Id": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\wwwroot\\logo.jpg",
       "PackagePath": "staticwebassets\\logo.jpg"
+    },
+    {
+      "Id": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\wwwroot\\uploads\\87a972ed-0469-405d-88d7-c6d5f300ec21_dpto3.jpeg",
+      "PackagePath": "staticwebassets\\uploads\\87a972ed-0469-405d-88d7-c6d5f300ec21_dpto3.jpeg"
+    },
+    {
+      "Id": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\wwwroot\\uploads\\c64a301d-4eba-415a-8afc-86a90ed83405_Apartamento CABA.jpeg",
+      "PackagePath": "staticwebassets\\uploads\\c64a301d-4eba-415a-8afc-86a90ed83405_Apartamento CABA.jpeg"
+    },
+    {
+      "Id": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\wwwroot\\uploads\\fd97a776-a516-4bf1-9f8c-a42b901276b9_imagenMuestra.jpg",
+      "PackagePath": "staticwebassets\\uploads\\fd97a776-a516-4bf1-9f8c-a42b901276b9_imagenMuestra.jpg"
     },
     {
       "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.AL.UI.Microsoft.AspNetCore.StaticWebAssets.props",

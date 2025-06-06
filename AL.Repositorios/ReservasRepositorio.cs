@@ -18,9 +18,9 @@ public class ReservasRepositorio: IReservasRepositorio
     //Caso de uso reserva BAJA
     public void Eliminar(Reserva r){
         using(var db=new EntidadesContext()){  
-            var expediente = db.Alojamientos.Where(t => t.Id == r.Id).SingleOrDefault();
-            if(expediente != null){
-                 db.Remove(expediente);
+            var reserva = db.Reservas.Where(re => re.Id == r.Id).SingleOrDefault();
+            if(reserva != null){
+                 db.Remove(reserva);
                  db.SaveChanges();
         }
         }
@@ -29,8 +29,8 @@ public class ReservasRepositorio: IReservasRepositorio
     //Caso de uso Consulta por Id
     public Reserva? ObtenerPorId(int id){
         using(var db=new EntidadesContext()){  
-            var expediente = db.Reservas.Where(t => t.Id == id).SingleOrDefault();
-            return expediente;
+            var reservas = db.Reservas.Where(r => r.Id == id).SingleOrDefault();
+            return reservas;
         }
     } 
     

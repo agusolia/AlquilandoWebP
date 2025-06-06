@@ -78,6 +78,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xSZXN1bHRhZG9zLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/CONSU/proyectoIS2/AL/AL.UI/Components/Pages/SolicitarReserva.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xTb2xpY2l0YXJSZXNlcnZhLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/CONSU/proyectoIS2/AL/AL.UI/Components/Pages/VerInformacionDeAlojamiento.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xWZXJJbmZvcm1hY2lvbkRlQWxvamFtaWVudG8ucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 

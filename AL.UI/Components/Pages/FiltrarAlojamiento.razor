@@ -197,7 +197,7 @@
 
     private void IrADetalle(int id)
     {
-        Navigation.NavigateTo($"/alojamiento/{id}");
+        Navigation.NavigateTo($"/alojamiento/{id}?desde={desde:yyyy-MM-dd}&hasta={hasta:yyyy-MM-dd}");
     }
 
     /*@if (!string.IsNullOrEmpty(ErrorMessage))

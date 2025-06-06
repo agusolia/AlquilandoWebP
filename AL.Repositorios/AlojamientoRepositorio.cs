@@ -26,11 +26,13 @@ public class AlojamientoRepositorio:IAlojamientoRepositorio
         }
     }
     //Consulta por Id, para que el administrador pueda ver los detalles de un alojamiento
-    public async Task<Alojamiento?> ObtenerPorId(int id)
+    public Alojamiento? ObtenerPorId(int id)
     {
         using (var db = new EntidadesContext())
         {
-            return await db.Alojamientos.FindAsync(id);
+            return db.Alojamientos
+            .Include(a => a.Reservas)
+            .FirstOrDefault(a => a.Id == id);
         }
     }
     public Alojamiento? ObtenerPorNombre(string nombre)
@@ -42,17 +44,47 @@ public class AlojamientoRepositorio:IAlojamientoRepositorio
         }
     }
     
+    public Boolean alojamientoDisponible(int id, DateTime fechaDesde, DateTime fechaHasta)
+    {
+        using (var db = new EntidadesContext())
+        {
+            var reservas = db.Reservas
+                .Where(r => r.IdAlojamiento == id && 
+                            r.FechaInicioEstadia.Date <= fechaHasta.Date && 
+                            r.FechaFinEstadia.Date >= fechaDesde.Date)
+                .ToList();
+            
+            return !reservas.Any();
+        }
+    }
+    public List<Alojamiento> ObtenerPorCiudad(String ciudad)
+    {
+        using (var db = new EntidadesContext())
+        {
+            return db.Alojamientos
+                .Where(a => a.Ciudad != null && a.Ciudad.ToLower() == ciudad.ToLower())
+                .ToList();
+        }
+    }
+    public List<Alojamiento> ObtenerPorDisponibilidad(List<Alojamiento> alojamientos, DateTime fechaDesde, DateTime fechaHasta)
+    {
+        return alojamientos
+            .Where(a => a.Reservas == null || !a.Reservas.Any(r =>
+                r.FechaInicioEstadia.Date <= fechaHasta.Date &&
+                r.FechaFinEstadia.Date >= fechaDesde.Date))
+            .ToList();
+    }
+
     //Creo que este método va a servir para "Buscar Alojamiento" en la UI, depués podríamos configurar para que ignore las tildes
-    public List<Alojamiento> ObtenerPorCiudadYDisponibilidad(String ciudad, DateTime fechaDesde,DateTime fechaHasta)
+    public List<Alojamiento> ObtenerPorCiudadYDisponibilidad(String ciudad, DateTime fechaDesde, DateTime fechaHasta)
     {
         using (var db = new EntidadesContext())
         {
             return db.Alojamientos
             .Include(a => a.Reservas)
+            .Where(a => a.Reservas==null || !a.Reservas.Any(r => r.FechaInicioEstadia <= fechaHasta
+                                        && r.FechaFinEstadia>= fechaDesde))
             .Where(a => a.Ciudad != null && a.Ciudad.ToLower() == ciudad.ToLower())
-            .Where(a => a.Reservas == null || !a.Reservas.Any(r =>
-                r.FechaInicioEstadia.Date <= fechaHasta.Date && r.FechaFinEstadia.Date >= fechaDesde.Date
-            ))
             .ToList();
         }
     }

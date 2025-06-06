@@ -56,10 +56,10 @@ else
     [Parameter] public string? ciudad {get  ; set;}
     [Parameter] public DateTime? desde{ get; set; }
     [Parameter] public DateTime? hasta {get;set;}
-    private List<Alojamiento> alojamientos = new();
+    private List<Alojamiento> alojamientos = null!;
     private string? ErrorMessage { get; set; }
 
-    protected override void OnInitialized()
+    protected override void OnParametersSet()
     {
         var uri = Navigation.ToAbsoluteUri(Navigation.Uri);
         var query = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query);
@@ -68,23 +68,25 @@ else
         desde = DateTime.TryParse(query["desde"], out var d) ? d : (DateTime?)null;
         hasta = DateTime.TryParse(query["hasta"], out var h) ? h : (DateTime?)null;
         try{
+            
             if (!string.IsNullOrWhiteSpace(ciudad) && desde.HasValue && hasta.HasValue)
             {
                 alojamientos = Buscar.Ejecutar(ciudad, desde.Value, hasta.Value);
             }
+
+
         }
         catch (Exception ex)
         {
             ErrorMessage = "";
-            ErrorMessage=$"{ex.Message}";
+            ErrorMessage = $"{ex.Message}";
         }
 
     }
     void VerDetalle(int id)
     {
-        Navigation.NavigateTo($"/DetalleAlojamiento/{id}");
+        Navigation.NavigateTo($"/alojamiento/{id}?desde={desde:yyyy-MM-dd}&hasta={hasta:yyyy-MM-dd}");
     }
-
     void IrAFiltros()
     {
         // Reenvía los parámetros de búsqueda actuales

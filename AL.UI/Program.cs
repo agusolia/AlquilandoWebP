@@ -20,16 +20,19 @@ builder.Services.AddTransient<BuscarAlojamientoCasoDeUso>();
 builder.Services.AddTransient<FiltrarAlojamientoCasoDeUso>();
 builder.Services.AddTransient<AlojamientoEdicion>();
 builder.Services.AddTransient<CancelarReservaCasoDeUso>();
+builder.Services.AddTransient<ReservaAlta>();
 
 builder.Services.AddSingleton<IUsuarioRepositorio, UsuarioRepositorio>();
-builder.Services.AddScoped<ITarjetaRepositorio, TarjetaRepositorio>();
-builder.Services.AddScoped<IAlojamientoRepositorio, AlojamientoRepositorio>();
-builder.Services.AddScoped<IReservasRepositorio, ReservasRepositorio>();
+builder.Services.AddSingleton<ITarjetaRepositorio, TarjetaRepositorio>();
+builder.Services.AddSingleton<IAlojamientoRepositorio, AlojamientoRepositorio>();
+builder.Services.AddSingleton<IReservasRepositorio, ReservasRepositorio>();
 
 builder.Services.AddTransient<IUsuarioValidador, UsuarioValidador>();
 builder.Services.AddTransient<IAlojamientoValidador, AlojamientoValidador>();
 builder.Services.AddTransient<IAlojamientoValidadorEdicion, AlojamientoValidadorEdicion>();
 
+builder.Services.AddScoped<IServicioPago, ServicioPago>();
+builder.Services.AddSingleton<ServicioArchivos>();
 builder.Services.AddTransient<IHashService, HashService>();
 builder.Services.AddScoped<IServicioSesion,ServicioSesion>();
 builder.Services.AddScoped<IServicioReserva,ServicioReserva>();

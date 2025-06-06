@@ -1,6 +1,3 @@
-using System;
-using System;
-
 namespace AL.Aplicacion.Entidades;
 
 public class Filtro

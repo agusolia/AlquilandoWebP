@@ -11,6 +11,9 @@ public interface IAlojamientoRepositorio
     Alojamiento? ObtenerPorNombre(string nombre);
     List<Alojamiento> ObtenerPorCiudadYDisponibilidad(String ciudad, DateTime fechaDesde, DateTime fechaHasta);
     List<Alojamiento> ObtenerTodos();
-    public List<Alojamiento> ListarAlojamientosConSusReservas();    
-    Task<Alojamiento?> ObtenerPorId(int id);
+    public List<Alojamiento> ListarAlojamientosConSusReservas();
+    Alojamiento? ObtenerPorId(int id);
+    public Boolean alojamientoDisponible(int id, DateTime fechaDesde, DateTime fechaHasta);
+    
+
 }
