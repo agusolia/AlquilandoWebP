@@ -61,7 +61,7 @@ public class AlojamientoRepositorio:IAlojamientoRepositorio
     {
         using (var db = new EntidadesContext())
         {
-            return db.Alojamientos
+            return db.Alojamientos.Include(a => a.Reservas)
                 .Where(a => a.Ciudad != null && a.Ciudad.ToLower() == ciudad.ToLower())
                 .ToList();
         }
@@ -80,12 +80,21 @@ public class AlojamientoRepositorio:IAlojamientoRepositorio
     {
         using (var db = new EntidadesContext())
         {
-            return db.Alojamientos
-            .Include(a => a.Reservas)
-            .Where(a => a.Reservas==null || !a.Reservas.Any(r => r.EstadoReserva == "Confirmada" && r.FechaInicioEstadia <= fechaHasta
-                                        && r.FechaFinEstadia>= fechaDesde))
-            .Where(a => a.Ciudad != null && a.Ciudad.ToLower() == ciudad.ToLower())
-            .ToList();
+            var alojamientos = db.Alojamientos
+                .Where(a => a.Ciudad != null && a.Ciudad.ToLower() == ciudad.ToLower())
+                .ToList();
+
+            var alojamientoIds = alojamientos.Select(a => a.Id).ToList();
+
+            var reservas = db.Reservas
+                .Where(r => alojamientoIds.Contains(r.IdAlojamiento) &&
+                            r.FechaInicioEstadia <= fechaHasta &&
+                            r.FechaFinEstadia >= fechaDesde)
+                .ToList();
+
+            var idsNoDisponibles = reservas.Select(r => r.IdAlojamiento).Distinct().ToHashSet();
+
+            return alojamientos.Where(a => !idsNoDisponibles.Contains(a.Id)).ToList();
         }
     }
     public List<Alojamiento> ListarAlojamientosConSusReservas()

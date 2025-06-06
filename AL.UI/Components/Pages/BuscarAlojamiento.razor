@@ -1,6 +1,6 @@
 ﻿@page "/buscar"
 @rendermode InteractiveServer
-@inject BuscarAlojamientoCasoDeUso BuscarAlojamientoUseCase
+@inject BuscarAlojamientoCasoDeUso BuscarAlojamientoCasoDeUso
 @inject IAlojamientoRepositorio AlojamientoRepositorio
 
 <div class="container mt-5" style="max-width: 500px;">
@@ -62,19 +62,8 @@
     {
         try
         {
-            var aux= AlojamientoRepositorio.ObtenerPorCiudadYDisponibilidad(ciudad, FechaDesde, FechaHasta);
-            
-            if(aux == null || !aux.Any())
-            {
-                throw new ArgumentException("No se encontraron alojamientos disponibles para la búsqueda.");
-            }
-            foreach (var alojamiento in aux)
-            {
-                if (AlojamientoRepositorio.alojamientoDisponible(alojamiento.Id, FechaDesde, FechaHasta))
-                {
-                    Resultados.Add(alojamiento);
-                }
-            }
+            Resultados= BuscarAlojamientoCasoDeUso.Ejecutar(ciudad, FechaDesde, FechaHasta);
+        
 
         }
         catch (ArgumentException ex)
