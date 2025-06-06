@@ -26,34 +26,38 @@ public class ReservasRepositorio: IReservasRepositorio
     }
 
     //Caso de uso Consulta por Id
-    public Reserva? ObtenerPorId(int id){
-    using(var db=new EntidadesContext()){  
-        return db.Reservas
-                 .Include(r => r.ListaInformacionAdicional)
+    public Reserva? ObtenerPorId(int id)
+    {
+        using(var db=new EntidadesContext())
+    {  
+            return db.Reservas
                  .SingleOrDefault(r => r.Id == id);
     }
-} 
+    }
     
     //Caso de uso consulta TODOS
-    public List<Reserva> ObtenerTodos(){
-    using (var db=new EntidadesContext()){
+    public List<Reserva> ObtenerTodos()
+    {
+    using (var db=new EntidadesContext())
+    {
         return db.Reservas
-                 .Include(r => r.ListaInformacionAdicional)
                  .ToList();  
     }
-}
-    public List<Reserva> ObtenerReservasPorAlojamientoId(int alojamientoId){
-    using (var db = new EntidadesContext()){
+    }
+    public List<Reserva> ObtenerReservasPorAlojamientoId(int alojamientoId)
+{
+    using (var db = new EntidadesContext())
+    {
         return db.Reservas
-                 .Include(r => r.ListaInformacionAdicional)
                  .Where(r => r.IdAlojamiento == alojamientoId)
                  .ToList();
     }
-}
-    public List<Reserva> ObtenerReservasPorUsuarioId(int usuarioId){
-    using (var db = new EntidadesContext()){
+    }
+    public List<Reserva> ObtenerReservasPorUsuarioId(int usuarioId)
+{
+    using (var db = new EntidadesContext())
+    {
         return db.Reservas
-                 .Include(r => r.ListaInformacionAdicional)
                  .Where(r => r.IdUsuario == usuarioId)
                  .ToList();
     }

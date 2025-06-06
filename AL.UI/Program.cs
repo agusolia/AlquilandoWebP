@@ -20,7 +20,7 @@ builder.Services.AddTransient<BuscarAlojamientoCasoDeUso>();
 builder.Services.AddTransient<FiltrarAlojamientoCasoDeUso>();
 builder.Services.AddTransient<AlojamientoEdicion>();
 builder.Services.AddTransient<CancelarReservaCasoDeUso>();
-builder.Services.AddTransient<ReservaAlta>();
+builder.Services.AddScoped<ReservaAlta>();
 
 builder.Services.AddSingleton<IUsuarioRepositorio, UsuarioRepositorio>();
 builder.Services.AddScoped<ITarjetaRepositorio, TarjetaRepositorio>();
@@ -37,6 +37,7 @@ builder.Services.AddScoped<IServicioSesion,ServicioSesion>();
 builder.Services.AddScoped<IServicioReserva,ServicioReserva>();
 builder.Services.AddScoped<ProtectedSessionStorage>();
 builder.Services.AddScoped<IServicioPago, ServicioPago>();
+builder.Services.AddControllers();
 
 
 // Add services to the container.

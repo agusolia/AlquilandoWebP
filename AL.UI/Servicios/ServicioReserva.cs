@@ -29,7 +29,7 @@ public class ServicioReserva : IServicioReserva
         return _reservasRepositorio.ObtenerReservasPorUsuarioId(_sesion.Id);
     }
 
-    public string SolicitarReserva(Reserva reserva)
+    public async Task<String> SolicitarReserva(Reserva reserva)
     {
         reserva.IdUsuario = _sesion.Id;
 
@@ -38,9 +38,10 @@ public class ServicioReserva : IServicioReserva
             _tarjetaRepositorio,
             _sesion,
             _usuarioRepositorio,
-            _servicioPago
+            _servicioPago,
+            _alojamientoRepositorio
         );
-        return reservaAlta.Ejecutar(reserva);
+        return await reservaAlta.Ejecutar(reserva);
     }
     public string CancelarReservaConDemanda(int idReserva)
     {

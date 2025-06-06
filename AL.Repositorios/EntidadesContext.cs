@@ -11,7 +11,6 @@ public class EntidadesContext : DbContext
     public DbSet<Alojamiento> Alojamientos { get; set; }
     public DbSet<Usuario> Usuarios { get; set; }
     public DbSet<Tarjeta> Tarjetas { get; set; }
-    public DbSet<FotoReserva> FotosReserva { get; set; }
 
 
 #nullable enable
@@ -19,12 +18,5 @@ public class EntidadesContext : DbContext
     {
         optionsBuilder.UseSqlite("data source=Entidades.sqlite");
     }
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-{
-    modelBuilder.Entity<Reserva>()
-        .HasMany(r => r.ListaInformacionAdicional)
-        .WithOne(f => f.Reserva)
-        .HasForeignKey(f => f.ReservaId)
-        .OnDelete(DeleteBehavior.Cascade);
-}
+
 }
