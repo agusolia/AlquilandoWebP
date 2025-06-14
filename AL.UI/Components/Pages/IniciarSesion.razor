@@ -39,13 +39,16 @@
             var result = await ServicioSesion.Loggin(Email, Password);
             if (result)
             {
+                ServicioSesion.IniciarSesion();
                 // Redirige según el rol
                 if (ServicioSesion.Rol == RolUsuario.Administrador)
                 {
+
                     NavigationManager.NavigateTo("/CuentaAdministrador");
                 }
                 else
                 {
+
                     NavigationManager.NavigateTo("/misreservas");
                 }
             }

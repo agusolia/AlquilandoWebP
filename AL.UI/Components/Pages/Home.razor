@@ -1,5 +1,6 @@
 ﻿@page "/"
 @rendermode InteractiveServer
+@inject IServicioSesion ServicioSesion
 @using Microsoft.AspNetCore.Components
 @inject IAlojamientoRepositorio AlojamientoRepositorio
 @inject NavigationManager NavigationManager
@@ -40,6 +41,8 @@
 </div>
 
 @code {
+  private bool IsLoggedIn = false;
+  private Usuario usuario=null!;
   private BusquedaAlojamiento busqueda = new BusquedaAlojamiento
   {
     FechaDesde = DateTime.Today,
@@ -53,6 +56,22 @@
     public DateTime FechaDesde { get; set; }
     public DateTime FechaHasta { get; set; }
   }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && !IsLoggedIn)
+        {
+            await ServicioSesion.InicializarUsuarioAsync();
+            if(ServicioSesion.Usuario!=null){
+              usuario = ServicioSesion.Usuario;
+              ServicioSesion.IniciarSesion();
+            } 
+            IsLoggedIn = true;
+            
+            StateHasChanged(); // Refresca la UI si es necesario
+        }
+
+    }
 
   private void BuscarAlojamientos()
   {

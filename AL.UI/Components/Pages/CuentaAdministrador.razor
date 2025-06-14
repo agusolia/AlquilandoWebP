@@ -31,6 +31,8 @@
 
 @code {
     private bool _usuarioInicializado = false;
+
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender && !_usuarioInicializado)
@@ -49,10 +51,6 @@
         }
     }
 
-    private void CerrarSesion()
-    {
-        ServicioSesion.Logout();
-        NavigationManager.NavigateTo("/");
-    }
+
 
 }

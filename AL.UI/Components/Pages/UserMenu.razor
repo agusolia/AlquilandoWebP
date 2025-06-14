@@ -1,42 +1,54 @@
 ﻿@using AL.Aplicacion.Entidades
 @inject IServicioSesion Sesion
 @inject NavigationManager Nav
+@rendermode InteractiveServer
+@implements IDisposable
 
+@if (Sesion.SesionIniciada)
+{
 
-
-<div class="top-row px-4">
-    <header class="d-flex justify-content-end p-2">
-        <!-- Menú de usuario -->
         <div class="ms-5">
-            <a href="/misreservas" class="btn btn-secondary me-2">Cuenta</a>
+            <a href="/misreservas" class="btn btn-secondary">Cuenta</a>
             <button @onclick="CerrarSesion" class="btn btn-primary">Cerrar Sesión</button>
         </div>
-    </header>
-</div>
+    
+}
+else
+{
+    <a href="/IniciarSesion" class="btn btn-outline-primary">Iniciar Sesión</a>
+    <a href="/Registrarse" class="btn btn-danger">Registrarse</a>
+}
+
 
 
 @code {
 
-    private Usuario? usuario;
-    private string UsuarioIniciales = "US";
-    private RolUsuario rol => Sesion.Rol;
-    private bool _usuarioInicializado = false;
 
+    private RolUsuario rol => Sesion.Rol;
+    private Usuario usuario=null!;
+    private bool IsLoggedIn = false;
+
+    protected override void OnInitialized()
+    {
+        Sesion.OnChange += Recargar;
+    }
+
+    private void Recargar()
+    {
+        InvokeAsync(StateHasChanged);
+    }
+    public void Dispose()
+    {
+        Sesion.OnChange -= Recargar;
+    }
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if(firstRender && !_usuarioInicializado){   
-           
-            await Sesion.InicializarUsuarioAsync(); 
-            _usuarioInicializado = true;    
-            usuario = await Sesion.GetValue<Usuario>("usuarioLogueado");
-            if (usuario != null && !string.IsNullOrWhiteSpace(usuario.Nombre))
-            {
-                var partes = usuario.Nombre.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-                UsuarioIniciales = string.Concat(partes.Select(p => p[0])).ToUpper();
-            }
-             _usuarioInicializado = true;
-            //await JS.InvokeVoidAsync("initDropdowns"); @inject IJSRuntime JS
-            StateHasChanged();
+        if (firstRender && !IsLoggedIn)
+        {
+            await Sesion.InicializarUsuarioAsync();
+            if(Sesion.Usuario!=null) usuario = Sesion.Usuario;
+            IsLoggedIn = true;
+            StateHasChanged(); // Refresca la UI si es necesario
         }
 
     }
@@ -47,17 +59,5 @@
         Nav.NavigateTo("/", forceLoad: true);
     }
 
-    /*{
-    @if (Sesion.Rol == RolUsuario.Usuario)
-{
-    <div class="top-row px-4">
-        <header class="d-flex justify-content-end p-2">
-            <!-- Menú de usuario -->
-            <div class="ms-5">
-                <a href="/CuentaAdministrador" class="btn btn-secondary me-2">Cuenta</a>
-                    <button @onclick="CerrarSesion" class="btn btn-primary">Cerrar Sesión</button>
-            </div>
-        </header>
-    </div>
-}*/
+
 }

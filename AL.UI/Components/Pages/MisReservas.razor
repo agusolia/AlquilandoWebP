@@ -8,9 +8,6 @@
 @inject IUsuarioRepositorio UsuarioRepositorio
 @inject ITarjetaRepositorio TarjetaRepositorio
 
-<div class="d-flex justify-content-end">
-    <button @onclick="CerrarSesion" class="btn btn-primary">Cerrar Sesión</button>
-</div>
 
 <h3>Datos personales</h3>
 @if (_usuario == null)
@@ -85,6 +82,12 @@ else
     Usuario _usuario = new Usuario();
     String _numeroTarjeta = string.Empty;
 
+    protected override void OnInitialized()
+    {
+        ServicioSesion.IniciarSesion();
+        StateHasChanged();
+    }
+    
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender && !_usuarioInicializado)
@@ -110,9 +113,4 @@ else
         OnInitialized();
     }
 
-    private void CerrarSesion()
-    {
-        ServicioSesion.Logout();
-        NavigationManager.NavigateTo("/");
-    }
 }

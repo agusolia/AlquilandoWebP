@@ -2,6 +2,7 @@
 @rendermode InteractiveServer
 @inject IAlojamientoRepositorio AlojamientoRepositorio
 @inject BuscarAlojamientoCasoDeUso Buscar
+@inject IServicioSesion ServicioSesion
 @inject NavigationManager Navigation
 
 <PageTitle>Resultados de Búsqueda</PageTitle> 
@@ -58,6 +59,23 @@ else
     [Parameter] public DateTime? hasta {get;set;}
     private List<Alojamiento> alojamientos = null!;
     private string? ErrorMessage { get; set; }
+    private bool IsLoggedIn = false;
+    private Usuario usuario=null!;
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && !IsLoggedIn)
+        {
+            await ServicioSesion.InicializarUsuarioAsync();
+            if(ServicioSesion.Usuario!=null){
+              usuario = ServicioSesion.Usuario;
+              ServicioSesion.IniciarSesion();
+            } 
+            IsLoggedIn = true;
+            
+            StateHasChanged(); // Refresca la UI si es necesario
+        }
+
+    }
 
     protected override void OnParametersSet()
     {

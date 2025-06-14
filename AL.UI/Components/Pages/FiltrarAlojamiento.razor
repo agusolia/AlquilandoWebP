@@ -3,6 +3,7 @@
 @using AL.Aplicacion.Entidades
 @using AL.Aplicacion.Enumerativos
 @inject IAlojamientoRepositorio AlojamientoRepositorio
+@inject IServicioSesion ServicioSesion
 
 @rendermode InteractiveServer
 
@@ -89,6 +90,8 @@
     [Parameter] public string? ciudad {get  ; set;}
     [Parameter] public DateTime? desde{ get; set; }
     [Parameter] public DateTime? hasta {get;set;}
+    private bool IsLoggedIn = false;
+    private Usuario usuario=null!;
     private string? filtroSeleccionado;
     private string? valorFiltro;
     private bool valorBooleano;
@@ -97,6 +100,21 @@
     private string? ErrorMessage;
     private Dictionary<string, string> filtrosAplicados = new();
     private List<TipoFiltro> todosLosFiltros = Enum.GetValues<TipoFiltro>().ToList();
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && !IsLoggedIn)
+        {
+            await ServicioSesion.InicializarUsuarioAsync();
+            if(ServicioSesion.Usuario!=null){
+              usuario = ServicioSesion.Usuario;
+              ServicioSesion.IniciarSesion();
+            } 
+            IsLoggedIn = true;
+            
+            StateHasChanged(); // Refresca la UI si es necesario
+        }
+
+    }
     private Dictionary<TipoFiltro, string> nombresVisibles = new()
     {
         [TipoFiltro.PrecioMinimo] = "Precio Mínimo",

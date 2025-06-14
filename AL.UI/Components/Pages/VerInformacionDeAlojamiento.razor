@@ -1,6 +1,7 @@
 ﻿@page "/alojamiento/{AlojamientoId:int}"
 @inject IAlojamientoRepositorio alojamientoRepo
 @using AL.Aplicacion.Entidades
+@inject IServicioSesion ServicioSesion
 
 <h3 class="mt-4 fw-bold">@alojamiento?.Nombre</h3>
 
@@ -55,6 +56,8 @@ else
     public int AlojamientoId { get; set; }
 
     private Alojamiento? alojamiento;
+    private bool IsLoggedIn = false;
+    private Usuario usuario=null!;
 
     [Parameter, SupplyParameterFromQuery] public DateTime? desde { get; set; }
 
@@ -69,5 +72,21 @@ else
         {
             Console.WriteLine("Alojamiento no encontrado.");
         }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && !IsLoggedIn)
+        {
+            await ServicioSesion.InicializarUsuarioAsync();
+            if(ServicioSesion.Usuario!=null){
+              usuario = ServicioSesion.Usuario;
+              ServicioSesion.IniciarSesion();
+            } 
+            IsLoggedIn = true;
+            
+            StateHasChanged(); // Refresca la UI si es necesario
+        }
+
     }
 }

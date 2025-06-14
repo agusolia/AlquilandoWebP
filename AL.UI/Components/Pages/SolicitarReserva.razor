@@ -92,6 +92,8 @@ else
     private string mensaje = "";
    private List<IBrowserFile> imagenesSubidas = new();
     private bool mostrarInfoInquilinos = false;
+    private bool IsLoggedIn = false;
+    private Usuario usuario=null!;
     private void OnInputFileChange(InputFileChangeEventArgs e)
         {
             imagenesSubidas = e.GetMultipleFiles().ToList();
@@ -109,6 +111,21 @@ else
         reserva.IdAlojamiento = alojamiento.Id;
         reserva.FechaInicioEstadia = desde ?? DateTime.Now;
         reserva.FechaFinEstadia = hasta ?? DateTime.Now.AddDays(1);
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && !IsLoggedIn)
+        {
+            await servicioSesion.InicializarUsuarioAsync();
+            if(servicioSesion.Usuario!=null){
+              usuario = servicioSesion.Usuario;
+              servicioSesion.IniciarSesion();
+            } 
+            IsLoggedIn = true;
+            
+            StateHasChanged(); // Refresca la UI si es necesario
+        }
+
     }
 
     private double CalcularTotal()
