@@ -1,12 +1,10 @@
 ﻿@page "/CuentaAdministrador"
+@layout AL.UI.Components.Layout.AdminLayout
 @inject IServicioSesion ServicioSesion
 @inject NavigationManager NavigationManager
+@inject IUsuarioRepositorio UsuarioRepositorio
 
 @rendermode InteractiveServer
-
-<div class="d-flex justify-content-end">
-    <button @onclick="CerrarSesion" class="btn btn-primary">Cerrar Sesión</button>
-</div>
 
 <h3>Cuenta Administrador</h3>
 
@@ -33,17 +31,18 @@
 
 @code {
     private bool _usuarioInicializado = false;
-
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender && !_usuarioInicializado)
         {
             await ServicioSesion.InicializarUsuarioAsync();
+
             _usuarioInicializado = true;
 
             if (ServicioSesion.Rol != RolUsuario.Administrador)
             {
                 NavigationManager.NavigateTo("/", true);
+
             }
 
             StateHasChanged(); // Refresca la UI si es necesario

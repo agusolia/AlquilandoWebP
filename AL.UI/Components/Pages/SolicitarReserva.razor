@@ -1,5 +1,6 @@
 ﻿@page "/SolicitarReserva/{AlojamientoId:int}"
 @inject IAlojamientoRepositorio alojamientoRepositorio
+@inject IUsuarioRepositorio UsuarioRepositorio
 @inject IServicioSesion servicioSesion
 @inject ReservaAlta reservaAlta
 @inject NavigationManager NavigationManager
@@ -25,7 +26,7 @@ else
 
         <div>
             <label>Cantidad de adultos:</label>
-            <InputNumber @bind-Value="reserva.CantidadDeAdultos" min="1" />
+            <InputNumber @bind-Value="reserva.CantidadDeAdultos" min="0" />
         </div>
 
         <div>
@@ -53,6 +54,13 @@ else
                     }
                 </ul>
             }
+            </div>
+        }
+        @if (mostrarInfoInquilinos){
+            <div class="alert alert-warning mt-3">
+            Información de inquilinos(Nombre y DNI):
+                
+            <p>Información: <input placeholder="Informacion" @bind="reserva.InformacionInquilinos" class="form-control" required type="text"></p>
             </div>
         }
         <div>
@@ -83,6 +91,7 @@ else
     private Reserva reserva = new();
     private string mensaje = "";
    private List<IBrowserFile> imagenesSubidas = new();
+    private bool mostrarInfoInquilinos = false;
     private void OnInputFileChange(InputFileChangeEventArgs e)
         {
             imagenesSubidas = e.GetMultipleFiles().ToList();
@@ -96,6 +105,7 @@ else
             mensaje = "Alojamiento no encontrado.";
             return;
         }
+       
         reserva.IdAlojamiento = alojamiento.Id;
         reserva.FechaInicioEstadia = desde ?? DateTime.Now;
         reserva.FechaFinEstadia = hasta ?? DateTime.Now.AddDays(1);
@@ -140,7 +150,21 @@ else
                     reserva.ListaInformacionAdicional.Add(ruta);
                 }
             }
-
+            if (UsuarioRepositorio.tieneReservasSolapadas(reserva.FechaInicioEstadia, reserva.FechaFinEstadia, servicioSesion.Id))
+            {
+                mostrarInfoInquilinos = true;
+              
+                StateHasChanged();
+                return; // Opcional: si quieres que no siga con la reserva hasta completar la info
+            }
+            else
+            {
+                mostrarInfoInquilinos = false;
+            }
+            if(reserva.CantidadDeAdultos <= 0)
+            {
+                reserva.CantidadDeAdultos = 1; // Asegurar al menos un adulto
+            }
             mensaje = reservaAlta.Ejecutar(reserva);
         }
         catch (Exception ex)

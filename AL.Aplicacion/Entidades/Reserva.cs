@@ -12,6 +12,7 @@ public class Reserva
     public String? EstadoReserva { get; set; }
     public int CantidadDeAdultos { get; set; }
     public int CantidadDeNiños { get; set; }
+    public String InformacionInquilinos { get; set; }= string.Empty;
     
      public List<String> ListaInformacionAdicional { get; set; } = new List<String>();
     

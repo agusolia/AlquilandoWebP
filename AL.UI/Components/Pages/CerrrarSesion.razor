@@ -1,0 +1,18 @@
+﻿@page "/CerrarSesion"
+@inject IServicioSesion ServicioSesion
+@inject NavigationManager NavigationManager
+
+
+@code {
+    private bool _logoutDone = false;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && !_logoutDone)
+        {
+            _logoutDone = true;
+            await ServicioSesion.LogoutAsync();
+            NavigationManager.NavigateTo("/");
+        }
+    }
+}

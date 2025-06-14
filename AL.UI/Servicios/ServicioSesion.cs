@@ -2,6 +2,9 @@ using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using AL.Aplicacion.Enumerativos;
 using AL.Aplicacion.Interfaces;
 using System.Threading.Tasks;
+using Microsoft.JSInterop;
+using System.Text.Json;
+using AL.Aplicacion.Entidades;
 
 namespace AL.UI.Servicios;
 
@@ -10,13 +13,15 @@ public class ServicioSesion: IServicioSesion
     private readonly IUsuarioRepositorio _repo;
     private readonly IHashService _hash;
     private readonly ProtectedSessionStorage _sessionStorage;
+    private readonly IJSRuntime _js;
 
 
-    public ServicioSesion(ProtectedSessionStorage sessionStorage, IUsuarioRepositorio repo, IHashService hash)
+    public ServicioSesion(ProtectedSessionStorage sessionStorage, IUsuarioRepositorio repo, IHashService hash,IJSRuntime js)
     {
         _repo = repo;
         _hash = hash;
         _sessionStorage = sessionStorage;
+        _js = js ?? throw new ArgumentNullException(nameof(js)); // evita null
 
         // Intenta recuperar el rol al crear el servicio
         //var result = _localStorage.GetAsync<string>("rol").Result;
@@ -29,6 +34,8 @@ public class ServicioSesion: IServicioSesion
     public int Id { get; set; }
 
     public RolUsuario Rol { get; set; }
+    public Usuario Usuario { get; set; } = null!;// Agregado para mantener una referencia al usuario actual
+    public event Action? OnChange;
 
     public async Task<bool> Loggin(String email, String contraseña)
     {
@@ -36,7 +43,7 @@ public class ServicioSesion: IServicioSesion
         if (result)
         {
             await GuardarUsuarioAsync();
-
+            OnChange?.Invoke();
 
         }
         return result;
@@ -58,7 +65,8 @@ public class ServicioSesion: IServicioSesion
         {
             Id = usuario.Id;
             Rol = usuario.Rol;
-
+            Usuario = usuario; // Asigna el usuario actual
+            OnChange?.Invoke();
             return true;
         }
         
@@ -68,6 +76,7 @@ public class ServicioSesion: IServicioSesion
     {
         await _sessionStorage.SetAsync("rol", Rol.ToString());
         await _sessionStorage.SetAsync("id", Id);
+        await _sessionStorage.SetAsync("usuarioLogueado", Usuario);
     }
     public async Task InicializarUsuarioAsync()
     {
@@ -79,12 +88,28 @@ public class ServicioSesion: IServicioSesion
         var resultId = await _sessionStorage.GetAsync<int>("id");
         if (resultId.Success)
             Id = resultId.Value;
+        var resultUsuario = await _sessionStorage.GetAsync<Usuario>("usuarioLogueado");
+        if (resultUsuario.Success && resultUsuario.Value != null)
+            Usuario = resultUsuario.Value;
+        else
+            Usuario = null!; // Inicializa un nuevo usuario si no hay datos guardados
     }
+    public async Task<T> GetValue<T>(string key)
+    {
+    var result = await _sessionStorage.GetAsync<T>(key);
+    if (result.Success)
+        return result.Value!;
+    return default(T)!;
+    }
+    
     public async Task LogoutAsync()
     {
         Rol = RolUsuario.Invitado;
         Id = 0;
+        await _sessionStorage.DeleteAsync("id");
         await _sessionStorage.DeleteAsync("rol");
+        await _sessionStorage.DeleteAsync("usuarioLogueado");
+        OnChange?.Invoke();
 
     }
     public async Task Logout()

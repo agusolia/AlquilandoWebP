@@ -34,11 +34,11 @@ main[b-fnhsotggqe] {
     align-items: center;
 }
 
-    .top-row[b-fnhsotggqe]  a, .top-row[b-fnhsotggqe]  .btn-link {
+.top-row[b-fnhsotggqe]  a, .top-row[b-fnhsotggqe]  .btn-link {
         white-space: nowrap;
         margin-left: 1.5rem;
         text-decoration: none;
-    }
+}
 
     .top-row[b-fnhsotggqe]  a:hover, .top-row[b-fnhsotggqe]  .btn-link:hover {
         text-decoration: underline;
