@@ -91,8 +91,9 @@ else
     private Alojamiento? alojamiento=new();
     private Reserva reserva = new();
     private string mensaje = "";
-   private List<IBrowserFile> imagenesSubidas = new();
+    private List<IBrowserFile> imagenesSubidas = new();
     private bool mostrarInfoInquilinos = false;
+
     private bool IsLoggedIn = false;
     private Usuario usuario=null!;
     private void OnInputFileChange(InputFileChangeEventArgs e)
@@ -170,15 +171,15 @@ else
             }
             if (UsuarioRepositorio.tieneReservasSolapadas(reserva.FechaInicioEstadia, reserva.FechaFinEstadia, servicioSesion.Id))
             {
-                mostrarInfoInquilinos = true;
-              
-                StateHasChanged();
-                return; // Opcional: si quieres que no siga con la reserva hasta completar la info
+                if (string.IsNullOrWhiteSpace(reserva.InformacionInquilinos))
+                {
+                    mostrarInfoInquilinos = true;
+                    mensaje = "Debe ingresar la información de los inquilinos para continuar.";
+                    StateHasChanged();
+                    return;
+                }
             }
-            else
-            {
-                mostrarInfoInquilinos = false;
-            }
+
             if (reserva.CantidadDeAdultos <= 0)
             {
                 mensaje = "Debe ingresar al menos un adulto para realizar la reserva.";
