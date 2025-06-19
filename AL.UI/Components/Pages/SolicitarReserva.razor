@@ -26,13 +26,14 @@ else
 
         <div>
             <label>Cantidad de adultos:</label>
-            <InputNumber @bind-Value="reserva.CantidadDeAdultos" min="0" />
+            <InputNumber @bind-Value="reserva.CantidadDeAdultos" class="form-control" />
         </div>
 
         <div>
             <label>Cantidad de niños:</label>
-            <InputNumber @bind-Value="reserva.CantidadDeNiños" min="0" />
+            <InputNumber @bind-Value="reserva.CantidadDeNiños" class="form-control" />
         </div>
+
         @if (alojamiento.TieneInformacionAdicional)
         {
             <div class="mt-3 p-3 border rounded bg-light"> 
@@ -178,15 +179,17 @@ else
             {
                 mostrarInfoInquilinos = false;
             }
-            if(reserva.CantidadDeAdultos <= 0)
+            if (reserva.CantidadDeAdultos <= 0)
             {
-                reserva.CantidadDeAdultos = 1; // Asegurar al menos un adulto
+                mensaje = "Debe ingresar al menos un adulto para realizar la reserva.";
+                return;
             }
-            mensaje = reservaAlta.Ejecutar(reserva);
+
+            mensaje = await reservaAlta.Ejecutar(reserva);
         }
         catch (Exception ex)
         {
-            mensaje = $"Error de validación: {ex.Message}";
+            mensaje = $"No pudimos procesar la reserva: {ex.Message}";
         }
 
     }
