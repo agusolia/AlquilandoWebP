@@ -35,7 +35,7 @@ public class ReservasRepositorio: IReservasRepositorio
     } 
     
     //Caso de uso consulta TODOS
-    public List<Reserva> ObtenerTodos(){
+    public List<Reserva> ObtenerTodas(){
         using (var db=new EntidadesContext()){
             List<Reserva> resultado = db.Reservas.ToList();
             return resultado;  
@@ -61,6 +61,7 @@ public class ReservasRepositorio: IReservasRepositorio
     {
         using (var db = new EntidadesContext())
         {
+            Console.WriteLine($"Modificando reserva {r.Id} - Estado nuevo: {r.EstadoReserva}");
             db.Reservas.Update(r);
             db.SaveChanges();
         }

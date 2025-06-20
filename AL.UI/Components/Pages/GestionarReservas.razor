@@ -1,0 +1,65 @@
+@page "/gestionreservas"
+@using AL.Aplicacion.CasosDeUso
+@inject GestionarReservasCasoDeUso GestionarReservasUseCase
+@inject IServicioSesion ServicioSesion
+@inject NavigationManager NavigationManager
+
+<h3>Gestión de Reservas</h3>
+
+@if (reservas.Count == 0)
+{
+    <p>No hay reservas aún.</p>
+}
+else
+{
+    @foreach (var reserva in reservas) //*añadir boton para ver la informacion adicional y la informacion de los inquilinos*//
+    {
+        <div class="card p-3 my-3">
+            <p><strong>Usuario:</strong> @reserva.IdUsuario</p>
+            <p><strong>Alojamiento:</strong> @reserva.IdAlojamiento</p>
+            <p><strong>Desde:</strong> @reserva.FechaInicioEstadia.ToShortDateString()</p>
+            <p><strong>Hasta:</strong> @reserva.FechaFinEstadia.ToShortDateString()</p>
+            <p><strong>Monto:</strong> $@reserva.MontoEstadia</p>
+            <p><strong>Estado:</strong> @reserva.EstadoReserva</p>
+
+            @if (reserva.EstadoReserva == "Pendiente")
+            {
+                <button class="btn btn-success me-2" @onclick="() => Aceptar(reserva.Id)">Aceptar</button>
+                <button class="btn btn-danger" @onclick="() => Rechazar(reserva.Id)">Rechazar</button>
+            }
+            else if (reserva.EstadoReserva == "Confirmada")
+            {
+                <span class="badge bg-success">Confirmada</span>
+            }
+            else if (reserva.EstadoReserva == "Rechazada")
+            {
+                <span class="badge bg-danger">Rechazada</span>
+            }
+        </div>
+    }
+}
+
+@code {
+    List<Reserva> reservas = new();
+
+    protected override void OnInitialized()
+    {
+        ServicioSesion.IniciarSesion();
+        reservas = GestionarReservasUseCase.ObtenerTodas();
+    }
+
+    void Aceptar(int id)
+    {
+        Console.WriteLine($"Aceptar llamado para id: {id}");
+        GestionarReservasUseCase.AceptarReserva(id);
+        reservas = GestionarReservasUseCase.ObtenerTodas();
+        StateHasChanged();
+    }
+
+    void Rechazar(int id)
+    {
+        GestionarReservasUseCase.RechazarReserva(id);
+        reservas = GestionarReservasUseCase.ObtenerTodas();
+        StateHasChanged();
+    }
+}

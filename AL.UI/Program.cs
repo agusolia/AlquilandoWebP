@@ -37,6 +37,8 @@ builder.Services.AddTransient<IHashService, HashService>();
 builder.Services.AddScoped<IServicioSesion,ServicioSesion>();
 builder.Services.AddScoped<IServicioReserva,ServicioReserva>();
 builder.Services.AddScoped<ProtectedSessionStorage>();
+builder.Services.AddScoped<GestionarReservasCasoDeUso>();
+
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
