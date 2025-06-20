@@ -1,4 +1,5 @@
 @page "/gestionreservas"
+@rendermode InteractiveServer
 @using AL.Aplicacion.CasosDeUso
 @inject GestionarReservasCasoDeUso GestionarReservasUseCase
 @inject IServicioSesion ServicioSesion
@@ -41,6 +42,7 @@ else
 
 @code {
     List<Reserva> reservas = new();
+    string mensajeEstado = "";
 
     protected override void OnInitialized()
     {
@@ -50,7 +52,6 @@ else
 
     void Aceptar(int id)
     {
-        Console.WriteLine($"Aceptar llamado para id: {id}");
         GestionarReservasUseCase.AceptarReserva(id);
         reservas = GestionarReservasUseCase.ObtenerTodas();
         StateHasChanged();

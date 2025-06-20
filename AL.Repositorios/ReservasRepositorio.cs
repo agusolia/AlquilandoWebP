@@ -61,7 +61,6 @@ public class ReservasRepositorio: IReservasRepositorio
     {
         using (var db = new EntidadesContext())
         {
-            Console.WriteLine($"Modificando reserva {r.Id} - Estado nuevo: {r.EstadoReserva}");
             db.Reservas.Update(r);
             db.SaveChanges();
         }
