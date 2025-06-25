@@ -23,18 +23,32 @@ else
             <p><strong>Monto:</strong> $@reserva.MontoEstadia</p>
             <p><strong>Estado:</strong> @reserva.EstadoReserva</p>
 
-            @if (reserva.EstadoReserva == "Pendiente")
+           @if (reserva.EstadoReserva == "Pendiente")
             {
-                <button class="btn btn-success me-2" @onclick="() => Aceptar(reserva.Id)">Aceptar</button>
-                <button class="btn btn-danger" @onclick="() => Rechazar(reserva.Id)">Rechazar</button>
+            <div class="d-flex justify-content-start gap-2 mt-2">
+                <button class="btn btn-success btn-sm" style="width: auto; min-width: 90px;" @onclick="() => Aceptar(reserva.Id)">
+                    Aceptar
+                </button>
+                <button class="btn btn-danger btn-sm" style="width: auto; min-width: 90px;" @onclick="() => Rechazar(reserva.Id)">
+                    Rechazar
+                </button>
+            </div>
             }
             else if (reserva.EstadoReserva == "Confirmada")
             {
-                <span class="badge bg-success">Confirmada</span>
+            <div class="mt-2">
+                <span class="badge rounded-pill bg-success text-white px-3 py-2" style="font-size: 0.9rem;">
+                    ✔ Confirmada
+                </span>
+            </div>
             }
             else if (reserva.EstadoReserva == "Rechazada")
             {
-                <span class="badge bg-danger">Rechazada</span>
+            <div class="mt-2">
+                <span class="badge rounded-pill bg-danger text-white px-3 py-2" style="font-size: 0.9rem;">
+                    ✖ Rechazada
+                </span>
+            </div>
             }
         </div>
     }
