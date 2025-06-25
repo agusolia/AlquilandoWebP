@@ -15,13 +15,14 @@ public class Reserva
     [Required(ErrorMessage = "Ingrese al menos un adulto.")]
     [Range(1, int.MaxValue, ErrorMessage = "La cantidad de adultos debe ser al menos 1.")]
     public int? CantidadDeAdultos { get; set; }
-    
+
     [Required(ErrorMessage = "Por favor ingresá la cantidad de niños.")]
     [Range(0, int.MaxValue, ErrorMessage = "La cantidad de niños debe ser igual o mayor a 0")]
     public int? CantidadDeNiños { get; set; }
 
-
     public String InformacionInquilinos { get; set; } = string.Empty;
     public List<String> ListaInformacionAdicional { get; set; } = new List<String>();
+    //Nueva lista de inquilinos para completar la informacion de los mismos en forma de campos
+    public List<Inquilino> Inquilinos { get; set; } = new();
 
 }

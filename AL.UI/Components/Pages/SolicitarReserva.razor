@@ -5,6 +5,8 @@
 @inject ReservaAlta reservaAlta
 @inject NavigationManager NavigationManager
 @using AL.UI.Servicios
+@implements IDisposable
+
 @rendermode InteractiveServer
 
 
@@ -58,14 +60,27 @@ else
                 }
 
                 <!-- info inquilinos -->
-                @if (mostrarInfoInquilinos)
+                @if (mostrarInfoInquilinos && reserva.Inquilinos != null && reserva.Inquilinos.All(i => i != null))
                 {
                     <div class="alert alert-warning mt-3">
-                        Información de inquilinos (Nombre y DNI):
-                        <input placeholder="Información" @bind="reserva.InformacionInquilinos" class="form-control" required type="text" />
+                        <p>Ingresá los datos de los inquilinos (Nombre y DNI):</p>
+
+                        @for (int i = 0; i < reserva.Inquilinos.Count; i++)
+                        {
+                            var inquilino = reserva.Inquilinos[i];
+                            if (inquilino == null)
+                            {
+                                continue; // evita intentar renderizar nulos
+                            }
+                            <div class="mb-3 border rounded p-2 bg-light">
+                                <label><strong>Inquilino @(i + 1)</strong></label>
+                                <InputText @bind-Value="inquilino.Nombre" class="form-control mb-2" placeholder="Nombre completo" />
+                                <InputText @bind-Value="inquilino.Dni" class="form-control" placeholder="DNI" />
+                            </div>
+                        }
                     </div>
                 }
-
+                <!-- boton de reservar -->
                 <div class="mt-3">
                     <button type="submit" class="btn btn-primary">Reservar</button>
                 </div>
@@ -135,12 +150,14 @@ else
         }
        
         reserva.IdAlojamiento = alojamiento.Id;
+        reserva.Inquilinos = new List<Inquilino>(); // evita null
         reserva.FechaInicioEstadia = desde ?? DateTime.Now;
         reserva.FechaFinEstadia = hasta ?? DateTime.Now.AddDays(1);
     }
+    private bool _isDisposed = false;
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender && !IsLoggedIn)
+        if (firstRender && !IsLoggedIn && !_isDisposed)
         {
             await servicioSesion.InicializarUsuarioAsync();
             if(servicioSesion.Usuario!=null){
@@ -148,12 +165,15 @@ else
               servicioSesion.IniciarSesion();
             } 
             IsLoggedIn = true;
-            
-            StateHasChanged(); // Refresca la UI si es necesario
+            if (!_isDisposed)
+                StateHasChanged();
         }
 
     }
-
+    public void Dispose()
+    {
+        _isDisposed = true;
+    }
     private double CalcularTotal()
     {
         if (alojamiento == null || !desde.HasValue || !hasta.HasValue)
@@ -195,15 +215,27 @@ else
             }
             if (UsuarioRepositorio.tieneReservasSolapadas(reserva.FechaInicioEstadia, reserva.FechaFinEstadia, servicioSesion.Id))
             {
-                if (string.IsNullOrWhiteSpace(reserva.InformacionInquilinos))
+                int total = (reserva.CantidadDeAdultos ?? 0) + (reserva.CantidadDeNiños ?? 0);
+
+                if (!mostrarInfoInquilinos)
                 {
+                    reserva.Inquilinos = Enumerable.Range(0, total).Select(_ => new Inquilino()).ToList();
                     mostrarInfoInquilinos = true;
-                    mensaje = "Debe ingresar la información de los inquilinos para continuar.";
+                    mensaje = "Debe ingresar los datos de los inquilinos para continuar.";
                     StateHasChanged();
                     return;
                 }
+
+                // Validación
+                if (reserva.Inquilinos.Any(i => string.IsNullOrWhiteSpace(i.Nombre) || string.IsNullOrWhiteSpace(i.Dni)))
+                {
+                    mensaje = "Todos los campos de nombre y DNI deben estar completos.";
+                    return;
+                }
+                reserva.InformacionInquilinos = System.Text.Json.JsonSerializer.Serialize(reserva.Inquilinos);
             }
 
+            // Validar datos
             mensaje = await reservaAlta.Ejecutar(reserva);
         }
         catch (Exception ex)
