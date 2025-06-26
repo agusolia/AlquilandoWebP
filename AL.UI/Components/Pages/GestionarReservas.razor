@@ -13,7 +13,7 @@
 }
 else
 {
-    @foreach (var reserva in reservas) //*añadir boton para ver la informacion adicional y la informacion de los inquilinos*//
+    @foreach (var reserva in reservas) //*corregir boton para ver la informacion de los inquilinos*//
     {
         <div class="card p-3 my-3">
             <p><strong>Usuario:</strong> @reserva.IdUsuario</p>
@@ -50,6 +50,57 @@ else
                 </span>
             </div>
             }
+            <div class="d-flex gap-2 mt-3">
+                @if (reserva.ListaInformacionAdicional.Count > 0)
+                {
+                    <button class="btn btn-outline-primary btn-sm" @onclick="() => VerInformacionAdicional(reserva.Id)">
+                        Ver Información Adicional
+                    </button>
+                }
+
+            @if (reserva.Inquilinos?.Count > 0)
+            {
+                <button class="btn btn-outline-secondary btn-sm" @onclick="() => VerInquilinos(reserva.Id)">
+                    Ver Inquilinos
+                </button>
+            }
+        </div>
+
+            @if (mostrarInformacionAdicional && reservaSeleccionada?.Id == reserva.Id)
+            {
+                <div class="card p-3 my-3 bg-light border-primary">
+                    <h5>Información Adicional (Fotos)</h5>
+                    @if (reservaSeleccionada.ListaInformacionAdicional.Any())
+                    {
+                        <div class="d-flex flex-wrap gap-2">
+                            @foreach (var foto in reservaSeleccionada.ListaInformacionAdicional)
+                            {
+                                <img src="@foto" alt="Foto adicional" width="150" class="img-thumbnail" />
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <p>No hay información adicional disponible.</p>
+                    }
+                </div>
+            }
+
+            @if (mostrarInquilinos && reservaSeleccionada?.Id == reserva.Id)
+            {
+                <div class="card p-3 my-3 bg-light border-secondary">
+                    <h5>Información de Inquilinos</h5>
+                    <ul class="list-group">
+                        @foreach (var inquilino in reservaSeleccionada.Inquilinos)
+                        {
+                            <li class="list-group-item">
+                                <strong>Nombre:</strong> @inquilino.Nombre<br />
+                                <strong>Documento:</strong> @inquilino.Dni
+                            </li>
+                        }
+                    </ul>
+                </div>
+            }
         </div>
     }
 }
@@ -57,6 +108,23 @@ else
 @code {
     List<Reserva> reservas = new();
     string mensajeEstado = "";
+    Reserva? reservaSeleccionada = null;
+    bool mostrarInformacionAdicional = false;
+    bool mostrarInquilinos = false;
+
+    void VerInformacionAdicional(int id)
+    {
+        reservaSeleccionada = reservas.FirstOrDefault(r => r.Id == id);
+        mostrarInformacionAdicional = true;
+        mostrarInquilinos = false;
+    }
+
+    void VerInquilinos(int id)
+    {
+        reservaSeleccionada = reservas.FirstOrDefault(r => r.Id == id);
+        mostrarInquilinos = true;
+        mostrarInformacionAdicional = false;
+    }
 
     protected override void OnInitialized()
     {
