@@ -2,6 +2,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using AL.Aplicacion.Entidades;
 using AL.Aplicacion.Interfaces;
+using System.Text.Json;
 namespace AL.Repositorios;
 
 public class ReservasRepositorio: IReservasRepositorio
@@ -38,6 +39,20 @@ public class ReservasRepositorio: IReservasRepositorio
     public List<Reserva> ObtenerTodas(){
         using (var db=new EntidadesContext()){
             List<Reserva> resultado = db.Reservas.ToList();
+            foreach (var res in resultado)
+            {
+                if (!string.IsNullOrWhiteSpace(res.InformacionInquilinos))
+                {
+                    try
+                    {
+                        res.Inquilinos = JsonSerializer.Deserialize<List<Inquilino>>(res.InformacionInquilinos) ?? new();
+                    }
+                    catch
+                    {
+                        res.Inquilinos = new();
+                    }
+                }
+            }
             return resultado;  
         }
     }
