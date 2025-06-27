@@ -30,13 +30,13 @@ else
                 <!-- adultos -->
                 <div class="mb-3">
                     <label>Cantidad de adultos:</label>
-                    <InputNumber @bind-Value="reserva.CantidadDeAdultos" class="form-control" />
+                    <InputNumber @bind-Value="reserva.CantidadDeAdultos" class="form-control" disabled="@(!editarCantidades)" />
                 </div>
 
                 <!-- niños -->
                 <div class="mb-3">
                     <label>Cantidad de niños:</label>
-                    <InputNumber @bind-Value="reserva.CantidadDeNiños" class="form-control" />
+                    <InputNumber @bind-Value="reserva.CantidadDeNiños" class="form-control" disabled="@(!editarCantidades)" />
                 </div>
 
                 <!-- info adicional -->
@@ -64,6 +64,10 @@ else
                 {
                     <div class="alert alert-warning mt-3">
                         <p>Ingresá los datos de los inquilinos (Nombre y DNI):</p>
+                        <!-- Botón para editar cantidades -->
+                        <button type="button" class="btn btn-outline-secondary mb-3" @onclick="EditarCantidades">
+                            Editar Cantidades
+                        </button>
 
                         @for (int i = 0; i < reserva.Inquilinos.Count; i++)
                         {
@@ -135,6 +139,8 @@ else
 
     private bool IsLoggedIn = false;
     private Usuario usuario=null!;
+    private bool editarCantidades = true; // inicialmente se puede editar
+
     private void OnInputFileChange(InputFileChangeEventArgs e)
         {
             imagenesSubidas = e.GetMultipleFiles().ToList();
@@ -183,11 +189,24 @@ else
         reserva.MontoEstadia=dias * alojamiento.PrecioPorNoche;
         return dias > 0 ? dias * alojamiento.PrecioPorNoche : 0;
     }
-
+    private void EditarCantidades()
+    {
+        editarCantidades = true;
+        mostrarInfoInquilinos = false;
+        reserva.Inquilinos.Clear(); // limpiamos los datos anteriores
+        mensaje = "";
+    }
     private async Task ProcesarReserva()
     {
         try
         {
+            int totalPersonas = (reserva.CantidadDeAdultos ?? 0) + (reserva.CantidadDeNiños ?? 0);
+            if (totalPersonas > alojamiento!.CapacidadMaxima)
+            {
+                mensaje = $"La cantidad total de personas ({totalPersonas}) supera la capacidad máxima del alojamiento ({alojamiento.CapacidadMaxima}).";
+                return;
+            }
+
             await servicioSesion.InicializarUsuarioAsync();
             reserva.IdUsuario = servicioSesion.Id;
             if (!desde.HasValue || !hasta.HasValue || !alojamientoRepositorio.alojamientoDisponible(AlojamientoId, desde.Value, hasta.Value))
@@ -221,6 +240,7 @@ else
                 {
                     reserva.Inquilinos = Enumerable.Range(0, total).Select(_ => new Inquilino()).ToList();
                     mostrarInfoInquilinos = true;
+                    editarCantidades = false;
                     mensaje = "Debe ingresar los datos de los inquilinos para continuar.";
                     StateHasChanged();
                     return;
@@ -235,7 +255,7 @@ else
                 reserva.InformacionInquilinos = System.Text.Json.JsonSerializer.Serialize(reserva.Inquilinos);
             }
 
-            // Validar datos
+            // Validar datos (incluyendo que la cantidad de adultos y niños no superen la capacidad maxima)
             mensaje = await reservaAlta.Ejecutar(reserva);
         }
         catch (Exception ex)

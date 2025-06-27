@@ -34,7 +34,7 @@ public class ReservaAlta
         if (alojamiento == null)
             throw new ValidacionException("El alojamiento no existe");
         
-        int totalPersonas = reserva.CantidadDeAdultos + reserva.CantidadDeNiños ?? 0;
+        int totalPersonas = reserva.CantidadDeAdultos ?? 0 + reserva.CantidadDeNiños ?? 0;
         if (totalPersonas > alojamiento.CapacidadMaxima)
             throw new ValidacionException($"La cantidad de personas ({totalPersonas}) excede la capacidad permitida ({alojamiento.CapacidadMaxima}).");
             
