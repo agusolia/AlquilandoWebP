@@ -8,8 +8,15 @@
 @rendermode InteractiveServer
 
 @inject FiltrarAlojamientoCasoDeUso FiltrarAlojamientoCasoDeUso
+@inject NavigationManager Navigation
 
-<h3>Filtrar por</h3>
+<h3>
+    Filtrar para 
+    "@(string.IsNullOrEmpty(ciudad) ? "..." : ciudad)" 
+    entre 
+    @(desde.HasValue ? desde.Value.ToString("dd/MM/yyyy") : "...") y 
+    @(hasta.HasValue ? hasta.Value.ToString("dd/MM/yyyy") : "...")
+</h3>
 
 <div class="row g-2 align-items-end mb-3">
     <div class="col-md-3">
@@ -39,7 +46,7 @@
 
     <div class="col-md-2">
         <button class="btn btn-secondary" @onclick="AgregarFiltro"
-            disabled="@string.IsNullOrEmpty(filtroSeleccionado)">+ Agregar filtro</button>
+                disabled="@string.IsNullOrEmpty(filtroSeleccionado)">+ Agregar filtro</button>
     </div>
 </div>
 
@@ -64,6 +71,15 @@
     <div class="alert alert-danger mt-3">@ErrorMessage</div>
 }
 
+@if (mostrarResumen && !string.IsNullOrEmpty(ciudad) && desde.HasValue && hasta.HasValue)
+{
+    <div class="alert alert-info mt-4">
+        🔍 Filtrando alojamientos para <strong>@ciudad</strong> entre
+        <strong>@desde.Value.ToString("dd/MM/yyyy")</strong> y
+        <strong>@hasta.Value.ToString("dd/MM/yyyy")</strong>.
+    </div>
+}
+
 @if (alojamientos?.Any() == true)
 {
     <h4 class="mt-4">Resultados</h4>
@@ -73,8 +89,16 @@
             <div class="card m-2 p-2 col-md-4" style="cursor: pointer;" @onclick="() => IrADetalle(a.Id)">
                 <div class="card">
                     <img src="@(a.Imagenes.FirstOrDefault() ?? "imagenes/default-image.jpg")" class="card-img-top" />
-                    <div class="card-body">
-                        <h5>@a.Nombre</h5>
+                        <div class="card-body">
+                                                <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h5 class="mb-0">@a.Nombre</h5>
+                            <span>
+                                <span style="color: gold; font-size: 1.3rem;">★</span>
+                                <span class="ms-1 fw-bold" style="font-size: 1.1rem;">
+                                    @(AlojamientoRepositorio.ObtenerPromedio(a).ToString("0.00") ?? "-")
+                                </span>
+                            </span>
+                        </div>
                         <p>@a.Ciudad, @a.Pais</p>
                         <p>Precio: $@a.PrecioPorNoche por noche</p>
                         <p>Dormitorios: @a.CantidadDormitorios | Capacidad: @a.CapacidadMaxima</p>
@@ -87,34 +111,22 @@
 }
 
 @code {
-    [Parameter] public string? ciudad {get  ; set;}
-    [Parameter] public DateTime? desde{ get; set; }
-    [Parameter] public DateTime? hasta {get;set;}
+    [Parameter] public string? ciudad { get; set; }
+    [Parameter] public DateTime? desde { get; set; }
+    [Parameter] public DateTime? hasta { get; set; }
+
     private bool IsLoggedIn = false;
-    private Usuario usuario=null!;
+    private Usuario usuario = null!;
     private string? filtroSeleccionado;
     private string? valorFiltro;
     private bool valorBooleano;
     private Filtro filtro = new();
-    private List<Alojamiento> alojamientos=new();
+    private List<Alojamiento> alojamientos = new();
     private string? ErrorMessage;
+    private bool mostrarResumen = false;
     private Dictionary<string, string> filtrosAplicados = new();
     private List<TipoFiltro> todosLosFiltros = Enum.GetValues<TipoFiltro>().ToList();
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender && !IsLoggedIn)
-        {
-            await ServicioSesion.InicializarUsuarioAsync();
-            if(ServicioSesion.Usuario!=null){
-              usuario = ServicioSesion.Usuario;
-              ServicioSesion.IniciarSesion();
-            } 
-            IsLoggedIn = true;
-            
-            StateHasChanged(); // Refresca la UI si es necesario
-        }
 
-    }
     private Dictionary<TipoFiltro, string> nombresVisibles = new()
     {
         [TipoFiltro.PrecioMinimo] = "Precio Mínimo",
@@ -123,6 +135,32 @@
         [TipoFiltro.Capacidad] = "Capacidad",
         [TipoFiltro.Estacionamiento] = "Estacionamiento"
     };
+
+    protected override void OnParametersSet()
+    {
+        var uri = Navigation.ToAbsoluteUri(Navigation.Uri);
+        var query = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query);
+
+        ciudad = query["ciudad"];
+        desde = DateTime.TryParse(query["desde"], out var d) ? d : (DateTime?)null;
+        hasta = DateTime.TryParse(query["hasta"], out var h) ? h : (DateTime?)null;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && !IsLoggedIn)
+        {
+            await ServicioSesion.InicializarUsuarioAsync();
+            if (ServicioSesion.Usuario != null)
+            {
+                usuario = ServicioSesion.Usuario;
+                ServicioSesion.IniciarSesion();
+            }
+            IsLoggedIn = true;
+            StateHasChanged();
+        }
+    }
+
     private void AgregarFiltro()
     {
         if (string.IsNullOrEmpty(filtroSeleccionado))
@@ -150,18 +188,13 @@
     private void AplicarFiltros()
     {
         ErrorMessage = null;
+        mostrarResumen = true;
+        filtro = new Filtro();
 
-        filtro = new Filtro(); // Reset
         foreach (var f in filtrosAplicados)
         {
             switch (f.Key)
             {
-                /*case "Pais":
-                    filtro.Pais = f.Value;
-                    break;
-                case "Ciudad":
-                    filtro.Ciudad = f.Value;
-                    break;*/
                 case "PrecioMinimo":
                     filtro.PrecioMinimo = int.TryParse(f.Value, out var min) ? min : 0;
                     break;
@@ -182,45 +215,26 @@
 
         try
         {
-            var uri = Navigation.ToAbsoluteUri(Navigation.Uri);
-            var query = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query);
-
-            ciudad = query["ciudad"];
-            desde = DateTime.TryParse(query["desde"], out var d) ? d : (DateTime?)null;
-            hasta = DateTime.TryParse(query["hasta"], out var h) ? h : (DateTime?)null;
-            try{
-                List<Alojamiento> alojamientosDeLaBusqueda = new List<Alojamiento>();
-                if (!string.IsNullOrWhiteSpace(ciudad) && desde.HasValue && hasta.HasValue)
-                {
-                    alojamientosDeLaBusqueda = AlojamientoRepositorio.ObtenerPorCiudadYDisponibilidad(ciudad, desde.Value, hasta.Value);
-                }
-                alojamientos = FiltrarAlojamientoCasoDeUso.Ejecutar(filtro, alojamientosDeLaBusqueda);
-            }
-            catch (Exception ex)
+            List<Alojamiento> alojamientosDeLaBusqueda = new();
+            if (!string.IsNullOrWhiteSpace(ciudad) && desde.HasValue && hasta.HasValue)
             {
-                ErrorMessage = "";
-                ErrorMessage=$"{ex.Message}";
+                alojamientosDeLaBusqueda = AlojamientoRepositorio.ObtenerPorCiudadYDisponibilidad(ciudad, desde.Value, hasta.Value);
             }
-            
+            alojamientos = FiltrarAlojamientoCasoDeUso.Ejecutar(filtro, alojamientosDeLaBusqueda);
         }
         catch (FiltroException ex)
         {
             alojamientos = new List<Alojamiento>();
             ErrorMessage = ex.Message;
         }
-
- 
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Error inesperado: {ex.Message}";
+        }
     }
-    @inject NavigationManager Navigation
 
     private void IrADetalle(int id)
     {
         Navigation.NavigateTo($"/alojamiento/{id}?desde={desde:yyyy-MM-dd}&hasta={hasta:yyyy-MM-dd}");
     }
-
-    /*@if (!string.IsNullOrEmpty(ErrorMessage))
-    {
-        <div class="alert alert-danger mt-3">@ErrorMessage</div>
-    }
-    */
 }

@@ -22,8 +22,9 @@ public class Alojamiento
     public TipoReembolso? TipoDeReembolso { get; set; } 
     public bool TieneInformacionAdicional { get; set; } = false;
     public string? InformacionAdicional { get; set; }
+    public List<int> Puntuaciones { get; set; } = new List<int>();
     public List<Reserva> Reservas { get; set; } = new List<Reserva>();
     public List<String> Imagenes { get; set; } = new List<string>();
 
-
+    public EstadoPublicacion Estado { get; set; } = EstadoPublicacion.Publicado;
 }

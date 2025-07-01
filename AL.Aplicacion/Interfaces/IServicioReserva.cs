@@ -1,4 +1,3 @@
-using System;
 using AL.Aplicacion.Entidades;
 namespace AL.Aplicacion.Interfaces;
 

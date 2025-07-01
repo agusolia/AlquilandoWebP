@@ -9,8 +9,12 @@ public interface IReservasRepositorio
     void Eliminar(Reserva reserva);
     void Modificar(Reserva reserva);
     Reserva? ObtenerPorId(int id);
-    List <Reserva> ObtenerTodos();
+    List<Reserva> ObtenerTodos();
     //Los siguientes métodos los agrego por si los necesitamos en el futuro
     List<Reserva> ObtenerReservasPorAlojamientoId(int alojamientoId);
     List<Reserva> ObtenerReservasPorUsuarioId(int usuarioId);
+    void CancelarReservasFuturas(int usuarioId, DateTime fechaDesde);
+    bool TieneReservaEnCurso(int alojamientoId);
+    bool TieneReservasFuturas(int alojamientoId);
+    void CancelarReservasFuturasPorAlojamiento(int alojamientoId);
 }

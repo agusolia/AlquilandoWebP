@@ -41,7 +41,12 @@ else
                 <p class="mb-3"><strong>Precio por noche:</strong> $@alojamiento.PrecioPorNoche</p>
 
                 <p class="text-muted">@alojamiento.Descripcion</p>
-
+                <div class="d-flex align-items-center justify-content-end mb-2">
+                    <span style="color: gold; font-size: 1.3rem;">★</span>
+                    <span class="ms-1 fw-bold" style="font-size: 1.1rem;">
+                        @(alojamientoRepo.ObtenerPromedio(alojamiento).ToString("0.00") ?? "-")
+                    </span>
+                </div>
                 <!-- Botón para reservar -->
                 <NavLink class="btn btn-primary" href="@UrlReserva">
                     Solicitar reserva

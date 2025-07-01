@@ -14,4 +14,5 @@ public interface IUsuarioRepositorio
     public Usuario? IniciarSesion(string correo);
     public bool BuscarPorCorreoElectronico(string correo);
     public bool tieneReservasSolapadas(DateTime fechaInicio, DateTime fechaFin, int idUsuario);
+    public void Actualizar(Usuario u);
 }

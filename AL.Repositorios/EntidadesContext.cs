@@ -11,6 +11,7 @@ public class EntidadesContext:DbContext
     public DbSet <Alojamiento> Alojamientos { get; set; }   
     public DbSet <Usuario> Usuarios { get; set; }
     public DbSet <Tarjeta> Tarjetas { get; set; }
+    public DbSet <Mensaje> Mensajes { get; set; }
     
     #nullable enable
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

@@ -1,0 +1,37 @@
+using AL.Aplicacion.Interfaces;
+using AL.Aplicacion.Excepciones;
+namespace AL.Aplicacion.CasosDeUso;
+public class ArchivarPublicacionCasoDeUso
+{
+    private readonly IAlojamientoRepositorio _alojamientoRepositorio;
+    private readonly IReservasRepositorio _reservasRepositorio;
+
+    public ArchivarPublicacionCasoDeUso(IAlojamientoRepositorio alojamientoRepositorio, IReservasRepositorio reservasRepositorio)
+    {
+        _alojamientoRepositorio = alojamientoRepositorio;
+        _reservasRepositorio = reservasRepositorio;
+    }
+
+    public async Task Ejecutar(int alojamientoId)
+    {
+        var alojamiento = await _alojamientoRepositorio.ObtenerPorId(alojamientoId);
+
+        var hoy = DateTime.Today;
+        var reservas = _reservasRepositorio.ObtenerReservasPorAlojamientoId(alojamientoId);
+
+        bool tieneReservaEnCurso = reservas.Any(r => r.FechaInicioEstadia <= hoy && hoy <= r.FechaFinEstadia);
+        if (tieneReservaEnCurso)
+        {
+            throw new AlojamientoConReservaEnCursoException(alojamiento.Nombre);
+        }
+
+        bool tieneReservasFuturas = reservas.Any(r => r.FechaInicioEstadia > hoy);
+        if (tieneReservasFuturas)
+        {
+            _reservasRepositorio.CancelarReservasFuturas(alojamientoId, hoy);
+        }
+
+        alojamiento.Estado = Enumerativos.EstadoPublicacion.Archivado;
+        _alojamientoRepositorio.Modificar(alojamiento);
+    }
+}

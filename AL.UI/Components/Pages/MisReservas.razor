@@ -1,13 +1,13 @@
 ﻿@page "/misreservas"
-
+@using AL.UI.Components
 @rendermode InteractiveServer
 @inject NavigationManager NavigationManager
 @inject CancelarReservaCasoDeUso cancelarReservaUseCase
+@inject AlojamientoPuntuar AlojamientoPuntuar
 @inject IServicioSesion ServicioSesion
 @inject IReservasRepositorio ReservasRepositorio
 @inject IUsuarioRepositorio UsuarioRepositorio
 @inject ITarjetaRepositorio TarjetaRepositorio
-
 
 <h3>Datos personales</h3>
 @if (_usuario == null)
@@ -61,18 +61,52 @@ else
                 </div>
                 <span class="badge bg-secondary fs-6">@reserva.EstadoReserva</span>
             </div>
-            @if (reserva.FechaInicioEstadia > DateTime.Now)
-            {
-                <div class="d-flex justify-content-end align-items-end mt-2" style="height: 40px;">
+            <div class="d-flex justify-content-end align-items-end mt-2" style="height: 40px;">
+                @if (reserva.FechaInicioEstadia > DateTime.Now)
+                {
                     <button class="btn btn-danger rounded-0 px-4 py-2" style="min-width: 80px;" @onclick="() => Cancelar(reserva.Id)">
                         Cancelar
                     </button>
-                </div>
-            }
+                    <!-- Puntuar solo si aún no fue puntuada -->
+                }
+                    @if(reserva.Puntuacion==-1){ 
+                        <div>
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                var puntuacion = i; // Captura correcta del valor
+                                <button class="btn btn-link p-0"
+                                style="font-size: 1.5rem; color:@((puntuaciones.ContainsKey(reserva.Id) && puntuaciones[reserva.Id] >= puntuacion) ? "gold" : "#ccc")"
+                                @onclick="async () => await Puntuar(reserva.Id, puntuacion)">
+                                    ★
+                                </button>
+                            }
+                        </div>
+                    }
+                    else{
+                        <div>
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                <span style="font-size: 1.5rem; color:@(i <= reserva.Puntuacion ? "gold" : "#ccc")">★</span>
+                            }
+                        </div>
+                    }
+            </div>
         </div>
     }
 }
+@if (!string.IsNullOrEmpty(ErrorMessage))
+{
+    <div class="alert alert-danger" role="alert">
+        @((MarkupString)ErrorMessage)
+    </div>
+}
 
+@if (!string.IsNullOrEmpty(SuccessMessage))
+{
+    <div class="alert alert-success" role="alert">
+        @SuccessMessage
+    </div>
+}
 @code {
 
     public RolUsuario rol => ServicioSesion.Rol;
@@ -81,7 +115,9 @@ else
     private bool _usuarioInicializado = false;
     Usuario _usuario = new Usuario();
     String _numeroTarjeta = string.Empty;
-
+    String ErrorMessage { get; set; } = string.Empty;
+    String SuccessMessage { get; set; } = string.Empty;
+   private Dictionary<int, int> puntuaciones = new(); // idReserva -> puntuación
     protected override void OnInitialized()
     {
         ServicioSesion.IniciarSesion();
@@ -111,6 +147,27 @@ else
         var mensaje = cancelarReservaUseCase.CancelarReserva(idReserva);
         Console.WriteLine(mensaje);
         OnInitialized();
+    }
+    private async Task Puntuar(int idReserva, int valor){
+        if (valor < 1 || valor > 5) return;
+        try{
+            puntuaciones[idReserva] = valor;
+            await AlojamientoPuntuar.Ejecutar(idReserva, valor);
+            // Aquí puedes llamar a un método del repositorio para guardar la puntuación en la base de datos
+            // Por ejemplo: ReservasRepositorio.PuntuarReserva(idReserva, valor);
+            var reserva = reservas.FirstOrDefault(r => r.Id == idReserva);
+            if (reserva != null)
+                reserva.Puntuacion = valor;
+
+            ErrorMessage = string.Empty;
+            SuccessMessage = "¡Puntuación guardada correctamente!";
+            StateHasChanged();
+        }
+        catch(Exception ex)
+        {
+            SuccessMessage = string.Empty;
+            ErrorMessage = $"{ex.Message}";
+        }
     }
 
 }

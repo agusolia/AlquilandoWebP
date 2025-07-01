@@ -36,10 +36,18 @@ else
                     <td>
                         @if ( ServicioSesion.Rol == RolUsuario.Administrador)
                         {
-                            <div class="card" style="width: 10rem;">
+                            <div class="card" style="width: 12rem;">
                                 <div class="card-body">
                                     <h5 class="card-title">Editar</h5>
                                     <a href="/editar-alojamiento/@alojamiento.Id" class="btn btn-warning btn-sm">Ir</a>
+                                    @if (alojamiento.Estado == EstadoPublicacion.Publicado)
+                                    {
+                                        <button class="btn btn-danger btn-sm" @onclick="() => Archivar(alojamiento.Id)">Archivar</button>
+                                    }
+                                    else
+                                    {
+                                        <button class="btn btn-success btn-sm" @onclick="() => Desarchivar(alojamiento.Id)">Desarchivar</button>
+                                    }
                                 </div>
                             </div>
                         }
@@ -49,11 +57,15 @@ else
         </tbody>
     </table>
 }
-
+@if (!string.IsNullOrEmpty(mensaje))
+{
+    <div class="alert alert-info mt-2">@mensaje</div>
+}
 @code {
     private RolUsuario rol => ServicioSesion.Rol;
     List<Alojamiento>? _alojamientos= new();
     private bool _usuarioInicializado = false;
+    private string mensaje = "";
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -66,12 +78,6 @@ else
             StateHasChanged(); // Refresca la UI si es necesario
         }
     }
-    /*
-    protected override async Task OnInitializedAsync()
-    {
-      _alojamientos = AlojamientoRepositorio.ObtenerTodos();
-    }
-*/
     void EditarAlojamiento(int id)
     {
         Console.WriteLine($"Redirigiendo a editar alojamiento con ID: {id}");
@@ -80,5 +86,39 @@ else
     void VolverAtras()
     {
       NavigationManager.NavigateTo("/CuentaAdministrador");
+    }
+
+    async Task Archivar(int id)
+    {
+        try
+        {
+            // Acá vas a inyectar tu caso de uso real
+            // await ArchivarPublicacionCasoDeUso.Ejecutar(id);
+            mensaje = $"Publicación {id} archivada.";
+        }
+        catch (Exception ex)
+        {
+            mensaje = ex.Message;
+        }
+
+        _alojamientos = AlojamientoRepositorio.ObtenerTodos();
+        StateHasChanged();
+    }
+
+    async Task Desarchivar(int id)
+    {
+        try
+        {
+            // Acá vas a inyectar tu caso de uso real
+            // await DesarchivarPublicacionCasoDeUso.Ejecutar(id);
+            mensaje = $"Publicación {id} desarchivada.";
+        }
+        catch (Exception ex)
+        {
+            mensaje = ex.Message;
+        }
+
+        _alojamientos = AlojamientoRepositorio.ObtenerTodos();
+        StateHasChanged();
     }
 }

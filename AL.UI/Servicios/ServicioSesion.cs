@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using AL.Aplicacion.Enumerativos;
 using AL.Aplicacion.Interfaces;
-using Microsoft.JSInterop;
 using AL.Aplicacion.Entidades;
 namespace AL.UI.Servicios;
 
@@ -10,21 +9,15 @@ public class ServicioSesion: IServicioSesion
     private readonly IUsuarioRepositorio _repo;
     private readonly IHashService _hash;
     private readonly ProtectedSessionStorage _sessionStorage;
-    private readonly IJSRuntime _js;
 
 
-    public ServicioSesion(ProtectedSessionStorage sessionStorage, IUsuarioRepositorio repo, IHashService hash,IJSRuntime js)
+
+    public ServicioSesion(ProtectedSessionStorage sessionStorage, IUsuarioRepositorio repo, IHashService hash)
     {
         _repo = repo;
         _hash = hash;
         _sessionStorage = sessionStorage;
-        _js = js ?? throw new ArgumentNullException(nameof(js)); // evita null
 
-        // Intenta recuperar el rol al crear el servicio
-        //var result = _localStorage.GetAsync<string>("rol").Result;
-        //if (result.Success && Enum.TryParse(result.Value, out RolUsuario rol))
-        //  Rol = rol;
-        //else
         Rol = RolUsuario.Invitado;
     }
 

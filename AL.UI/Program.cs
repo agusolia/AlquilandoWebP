@@ -16,6 +16,7 @@ EntidadesSqlite.Inicializar();
 
 builder.Services.AddTransient<UsuarioAlta>();
 builder.Services.AddTransient<AlojamientoAlta>();
+builder.Services.AddTransient<AlojamientoPuntuar>();
 builder.Services.AddTransient<BuscarAlojamientoCasoDeUso>();
 builder.Services.AddTransient<FiltrarAlojamientoCasoDeUso>();
 builder.Services.AddTransient<AlojamientoEdicion>();

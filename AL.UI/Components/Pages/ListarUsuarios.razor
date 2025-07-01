@@ -1,0 +1,54 @@
+﻿@page "/listar-usuarios"
+
+@using AL.Aplicacion.Entidades
+@using AL.Aplicacion.Interfaces
+@using AL.Aplicacion.CasosDeUso
+@inject IUsuarioRepositorio UsuarioRepositorio
+@inject IReservasRepositorio ReservasRepositorio
+
+@* ARME ESTA PÁGINA CON COPILOT, supongo que desde la lista de usuarios (CU Listar Usuario) 
+muestro los botones para habilitar o deshabilitar usuarios *@
+<h3>Lista de Usuarios</h3>
+
+@if (usuarios == null)
+{
+    <p><em>Cargando...</em></p>
+}
+else if (!usuarios.Any())
+{
+    <p>No hay usuarios disponibles.</p>
+}
+else
+{
+    <ul>
+        @foreach (var usuario in usuarios)
+        {
+            <li>
+                @usuario.Nombre
+                <button @onclick="() => HabilitarUsuario(usuario.Id)">Habilitar</button>
+                <button @onclick="() => DeshabilitarUsuario(usuario.Id)">Deshabilitar</button>
+            </li>
+        }
+    </ul>
+}
+
+@code {
+    private List<Usuario> usuarios;
+
+    protected override async Task OnInitializedAsync()
+    {
+        //usuarios = await UsuarioRepositorio.ObtenerTodos();
+    }
+
+    private async Task HabilitarUsuario(int usuarioId)
+    {
+        var casoDeUso = new HabilitarUsuarioCasoDeUso(UsuarioRepositorio);
+        await casoDeUso.Ejecutar(usuarioId);
+    }
+
+    private async Task DeshabilitarUsuario(int usuarioId)
+    {
+        var casoDeUso = new DeshabilitarUsuarioCasoDeUso(UsuarioRepositorio, ReservasRepositorio);
+        await casoDeUso.Ejecutar(usuarioId);
+    }
+}
