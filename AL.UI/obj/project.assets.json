@@ -2385,19 +2385,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\CONSU\\.nuget\\packages\\": {}
+    "C:\\Users\\maria\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\AL.UI.csproj",
+      "projectUniqueName": "C:\\Users\\maria\\Downloads\\AlqConsu\\AlquilandoWeb\\AL.UI\\AL.UI.csproj",
       "projectName": "AL.UI",
-      "projectPath": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\AL.UI.csproj",
-      "packagesPath": "C:\\Users\\CONSU\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.UI\\obj\\",
+      "projectPath": "C:\\Users\\maria\\Downloads\\AlqConsu\\AlquilandoWeb\\AL.UI\\AL.UI.csproj",
+      "packagesPath": "C:\\Users\\maria\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\maria\\Downloads\\AlqConsu\\AlquilandoWeb\\AL.UI\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\CONSU\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\maria\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
@@ -2409,11 +2409,11 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.Aplicacion\\AL.Aplicacion.csproj": {
-              "projectPath": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.Aplicacion\\AL.Aplicacion.csproj"
+            "C:\\Users\\maria\\Downloads\\AlqConsu\\AlquilandoWeb\\AL.Aplicacion\\AL.Aplicacion.csproj": {
+              "projectPath": "C:\\Users\\maria\\Downloads\\AlqConsu\\AlquilandoWeb\\AL.Aplicacion\\AL.Aplicacion.csproj"
             },
-            "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.Repositorios\\AL.Repositorios.csproj": {
-              "projectPath": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.Repositorios\\AL.Repositorios.csproj"
+            "C:\\Users\\maria\\Downloads\\AlqConsu\\AlquilandoWeb\\AL.Repositorios\\AL.Repositorios.csproj": {
+              "projectPath": "C:\\Users\\maria\\Downloads\\AlqConsu\\AlquilandoWeb\\AL.Repositorios\\AL.Repositorios.csproj"
             }
           }
         }

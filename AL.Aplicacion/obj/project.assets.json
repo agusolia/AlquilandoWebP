@@ -8,19 +8,19 @@
     "net8.0": []
   },
   "packageFolders": {
-    "C:\\Users\\CONSU\\.nuget\\packages\\": {}
+    "C:\\Users\\maria\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.Aplicacion\\AL.Aplicacion.csproj",
+      "projectUniqueName": "C:\\Users\\maria\\Downloads\\AlqConsu\\AlquilandoWeb\\AL.Aplicacion\\AL.Aplicacion.csproj",
       "projectName": "AL.Aplicacion",
-      "projectPath": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.Aplicacion\\AL.Aplicacion.csproj",
-      "packagesPath": "C:\\Users\\CONSU\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\CONSU\\proyectoIS2\\AL\\AL.Aplicacion\\obj\\",
+      "projectPath": "C:\\Users\\maria\\Downloads\\AlqConsu\\AlquilandoWeb\\AL.Aplicacion\\AL.Aplicacion.csproj",
+      "packagesPath": "C:\\Users\\maria\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\maria\\Downloads\\AlqConsu\\AlquilandoWeb\\AL.Aplicacion\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\CONSU\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\maria\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"

@@ -70,7 +70,7 @@ public class ServicioSesion: IServicioSesion
     {
         await _sessionStorage.SetAsync("rol", Rol.ToString());
         await _sessionStorage.SetAsync("id", Id);
-        await _sessionStorage.SetAsync("usuarioLogueado", Usuario);
+        if (Usuario != null) { await _sessionStorage.SetAsync("usuarioLogueado", Usuario); }
     }
     public async Task InicializarUsuarioAsync()
     {
