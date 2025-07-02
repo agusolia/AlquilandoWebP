@@ -1,7 +1,8 @@
 ﻿@page "/PublicarAlojamiento"
 @rendermode InteractiveServer
 @inject NavigationManager NavigationManager
-@layout AL.UI.Components.Layout.AdminLayout
+@inject IUsuarioRepositorio UsuarioRepositorio
+
 @inject IServicioSesion ServicioSesion
 @inject AlojamientoAlta AlojamientoAlta
 @inject IAlojamientoRepositorio AlojamientoRepositorio
@@ -135,13 +136,29 @@
     string ErrorDescripcion { get; set; } = "";
     string ErrorServicios { get; set; } = "";
     string ErrorTipoReembolso { get; set; } = "";
+    protected override void OnInitialized()
+    {
+
+        ServicioSesion.IniciarSesion();
+
+    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender && !_usuarioInicializado)
         {
             await ServicioSesion.InicializarUsuarioAsync();
-            _usuarioInicializado = true;
+            var usuario = UsuarioRepositorio.ObtenerPorId(ServicioSesion.Id);
+            if (usuario != null)
+            {
+                _usuarioInicializado = true;
+                ServicioSesion.IniciarSesion();
+            }
+            if (ServicioSesion.Rol != RolUsuario.Administrador)
+            {
+                NavigationManager.NavigateTo("/", true);
+
+            }
             StateHasChanged(); // Refresca la UI si es necesario
         }
     }

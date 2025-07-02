@@ -14,9 +14,9 @@ public class ServicioChat(IReservasRepositorio reservasRepo):IServicioChat
     {
         return await reservasRepo.ObtenerConversacionAsync(reservaId);
     }
-    public async Task MarcarComoLeidosAsync(int reservaId)
+    public async Task MarcarComoLeidosAsync(int reservaId, int usuarioId)
     {
-        await reservasRepo.MarcarComoLeidosAsync(reservaId);
+        await reservasRepo.MarcarComoLeidosAsync(reservaId, usuarioId);
     }
     public async Task<int> ObtenerCantidadNoLeidosAsync(int usuarioId, int reservaId) // reservaId is optional, defaulting to 0
     {

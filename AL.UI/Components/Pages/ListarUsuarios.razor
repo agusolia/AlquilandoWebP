@@ -1,54 +1,91 @@
 ﻿@page "/listar-usuarios"
-
-@using AL.Aplicacion.Entidades
-@using AL.Aplicacion.Interfaces
-@using AL.Aplicacion.CasosDeUso
+@rendermode InteractiveServer
+@inject NavigationManager NavigationManager
+@inject IServicioSesion servicioSesion
 @inject IUsuarioRepositorio UsuarioRepositorio
 @inject IReservasRepositorio ReservasRepositorio
 
-@* ARME ESTA PÁGINA CON COPILOT, supongo que desde la lista de usuarios (CU Listar Usuario) 
-muestro los botones para habilitar o deshabilitar usuarios *@
-<h3>Lista de Usuarios</h3>
 
-@if (usuarios == null)
+
+<h3>Usuarios registrados</h3>
+
+@if (servicioSesion.Rol == RolUsuario.Administrador || servicioSesion.Rol == RolUsuario.Encargado)
 {
-    <p><em>Cargando...</em></p>
-}
-else if (!usuarios.Any())
-{
-    <p>No hay usuarios disponibles.</p>
-}
-else
-{
-    <ul>
-        @foreach (var usuario in usuarios)
-        {
-            <li>
-                @usuario.Nombre
-                <button @onclick="() => HabilitarUsuario(usuario.Id)">Habilitar</button>
-                <button @onclick="() => DeshabilitarUsuario(usuario.Id)">Deshabilitar</button>
-            </li>
-        }
-    </ul>
-}
+    <div class="mb-3">
+        <label class="form-label">Reservas realizadas en los últimos (meses):</label>
+        <InputNumber @bind-Value="cantidadMeses" class="form-control" />
+        <button class="btn btn-primary mt-2" @onclick="FiltrarUsuarios">Aplicar Filtro</button>
+    </div>
+
+    @if (usuariosFiltrados != null)
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Reservas Realizadas</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var u in usuariosFiltrados)
+                {
+                    <tr>
+                        <td>@u.Id</td>
+                        <td>@u.Nombre</td>
+                        <td>@u.Apellido</td>
+                        <td>@u.CorreoElectronico</td>
+                        <button @onclick="() => HabilitarUsuario(u.Id)">Habilitar</button>
+                        <button @onclick="() => DeshabilitarUsuario(u.Id)">Deshabilitar</button>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+}    
+
+
 
 @code {
-    private List<Usuario>? usuarios;
+    private int cantidadMeses = 1;
+    private List<Usuario> usuariosFiltrados = new();
+    private bool _usuarioInicializado = false;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        //usuarios = await UsuarioRepositorio.ObtenerTodos();
+        if (firstRender && !_usuarioInicializado)
+        {
+            await servicioSesion.InicializarUsuarioAsync();
+
+            var usuario = UsuarioRepositorio.ObtenerPorId(servicioSesion.Id);
+            if (usuario != null)
+            {
+                _usuarioInicializado = true;
+                servicioSesion.IniciarSesion();
+            }
+            if (servicioSesion.Rol != RolUsuario.Administrador)
+            {
+                NavigationManager.NavigateTo("/", true);
+
+            }
+            StateHasChanged(); // Refresca la UI si es necesario
+        }
     }
 
-    private async Task HabilitarUsuario(int usuarioId)
+    private void FiltrarUsuarios()
+    {
+        usuariosFiltrados = UsuarioRepositorio.ListarUsuariosConReservasEnUltimosMeses(cantidadMeses);
+    }
+    private void HabilitarUsuario(int usuarioId)
     {
         var casoDeUso = new HabilitarUsuarioCasoDeUso(UsuarioRepositorio);
-        await casoDeUso.Ejecutar(usuarioId);
+        casoDeUso.Ejecutar(usuarioId);
     }
 
-    private async Task DeshabilitarUsuario(int usuarioId)
+    private void DeshabilitarUsuario(int usuarioId)
     {
         var casoDeUso = new DeshabilitarUsuarioCasoDeUso(UsuarioRepositorio, ReservasRepositorio);
-        await casoDeUso.Ejecutar(usuarioId);
+        casoDeUso.Ejecutar(usuarioId);
     }
 }

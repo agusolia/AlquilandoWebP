@@ -29,6 +29,12 @@
             <label>Dirección</label>
             <InputText @bind-Value="alojamiento.Direccion" class="form-control" />
         </div>
+        @if (MostrarAdvertencia)
+        {
+            <div class="alert alert-warning mt-2">
+                Está por modificar la ubicación de este alojamiento. Tenga en cuenta que pueden existir reservas activas asociadas. ¿Está seguro de continuar con el cambio?
+            </div>
+        }
         <div class="mb-2">
             <label>Capacidad Máxima</label>
             <InputNumber @bind-Value="alojamiento.CapacidadMaxima" class="form-control" />
@@ -131,11 +137,16 @@ else
 
     private List<IBrowserFile> _imagenes = new();
     private List<string> _previewUrls = new();
+    private bool MostrarAdvertencia = false;
+    private void OnLocalidadChange(ChangeEventArgs e)
+    {
+        MostrarAdvertencia = true;
+    }
 
     private void EliminarImagen(string img)
-{
-    alojamiento.Imagenes.Remove(img);
-}
+    {
+        alojamiento.Imagenes.Remove(img);
+    }
 
     private async Task OnInputFileChange(InputFileChangeEventArgs e)
     {
@@ -167,6 +178,11 @@ else
         {
             await ServicioSesion.InicializarUsuarioAsync();
             _usuarioInicializado = true;
+            if (ServicioSesion.Rol != RolUsuario.Administrador)
+            {
+                NavigationManager.NavigateTo("/", true);
+
+            }
             StateHasChanged(); // Refresca la UI si es necesario
         }
     }

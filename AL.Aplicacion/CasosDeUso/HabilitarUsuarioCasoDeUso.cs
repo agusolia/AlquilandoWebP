@@ -13,7 +13,7 @@ public class HabilitarUsuarioCasoDeUso
         _usuarioRepositorio = usuarioRepositorio;
     }
 
-    public async Task Ejecutar(int usuarioId)
+    public void Ejecutar(int usuarioId)
     {
         var usuario = _usuarioRepositorio.ObtenerPorId(usuarioId);
         if (usuario == null)

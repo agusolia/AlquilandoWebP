@@ -25,11 +25,13 @@ builder.Services.AddTransient<ReservaAlta>();
 builder.Services.AddTransient<ReservaConsultaTodosPorUsuario>();
 builder.Services.AddTransient<ReservaEnviarMensaje>();
 builder.Services.AddTransient<ReservaConsultaTodos>();
+builder.Services.AddTransient<GestionarReservasCasoDeUso>();
 
 builder.Services.AddSingleton<IUsuarioRepositorio, UsuarioRepositorio>();
 builder.Services.AddSingleton<ITarjetaRepositorio, TarjetaRepositorio>();
 builder.Services.AddSingleton<IAlojamientoRepositorio, AlojamientoRepositorio>();
 builder.Services.AddSingleton<IReservasRepositorio, ReservasRepositorio>();
+
 
 builder.Services.AddTransient<IUsuarioValidador, UsuarioValidador>();
 builder.Services.AddTransient<IAlojamientoValidador, AlojamientoValidador>();
@@ -40,7 +42,8 @@ builder.Services.AddSingleton<ServicioArchivos>();
 builder.Services.AddTransient<IHashService, HashService>();
 builder.Services.AddScoped<IServicioSesion,ServicioSesion>();
 builder.Services.AddScoped<IServicioReserva, ServicioReserva>();
-builder.Services.AddScoped<IServicioChat,ServicioChat>();
+builder.Services.AddScoped<IServicioChat, ServicioChat>();
+builder.Services.AddTransient<IServicioActualizacionEstadoReserva, ServicioActualizacionEstadoReserva>();
 builder.Services.AddScoped<ProtectedSessionStorage>();
 
 // Add services to the container.

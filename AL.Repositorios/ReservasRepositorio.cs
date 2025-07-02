@@ -1,4 +1,4 @@
-using System;
+using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using AL.Aplicacion.Entidades;
 using AL.Aplicacion.Interfaces;
@@ -65,10 +65,10 @@ public class ReservasRepositorio : IReservasRepositorio
                 .Include(r => r.Chat) // Incluye el chat si es necesario
                 .Where(r => r.IdUsuario == usuarioId)
                 .ToList();
-            foreach (var reserva in reservas)
+            /*foreach (var reserva in reservas)
             {
-                reserva.MensajesNoLeidos = ObtenerCantidadNoLeidosAsync(usuarioId, reserva.Id).Result; 
-            }
+                reserva.MensajesNoLeidos = ObtenerCantidadNoLeidosAsync(usuarioId, reserva.Id).Result;
+            }*/
             return reservas;
         }
     }
@@ -147,25 +147,25 @@ public class ReservasRepositorio : IReservasRepositorio
             await db.SaveChangesAsync();
         }
     }
-    
-    public async Task MarcarComoLeidosAsync(int reservaId)
+
+    public async Task MarcarComoLeidosAsync(int reservaId, int usuarioId)
     {
         using (var db = new EntidadesContext())
         {
-            Reserva? reserva = await db.Reservas
-                .Include(r => r.Chat)
-                .SingleOrDefaultAsync(r => r.Id == reservaId);
-            if (reserva != null)
+            var mensajes = await db.Mensajes
+            .Where(m => m.IdReserva == reservaId && m.IdReceptor == usuarioId && !m.Leido)
+            .ToListAsync();
+
+            if (mensajes.Any())
             {
-                foreach (var m in reserva.Chat)
+                foreach (var m in mensajes)
                 {
                     m.Leido = true;
-                    db.Mensajes.Update(m); // Update each message as read
+                    db.Mensajes.Update(m);
                 }
+                await db.SaveChangesAsync();
             }
-            await db.SaveChangesAsync();
         }
-
     }
     public async Task<int> ObtenerCantidadNoLeidosAsync(int usuarioId, int reservaId)
     {
@@ -175,6 +175,26 @@ public class ReservasRepositorio : IReservasRepositorio
             .Where(m => m.IdReceptor == usuarioId && m.IdReserva==reservaId && !m.Leido)
             .CountAsync();
         }    
+    }
+    public List<Reserva> ObtenerTodas(){
+        using (var db=new EntidadesContext()){
+            List<Reserva> resultado = db.Reservas.ToList();
+            foreach (var res in resultado)
+            {
+                if (!string.IsNullOrWhiteSpace(res.InformacionInquilinos))
+                {
+                    try
+                    {
+                        res.Inquilinos = JsonSerializer.Deserialize<List<Inquilino>>(res.InformacionInquilinos) ?? new();
+                    }
+                    catch
+                    {
+                        res.Inquilinos = new();
+                    }
+                }
+            }
+            return resultado;  
+        }
     }
     
 }

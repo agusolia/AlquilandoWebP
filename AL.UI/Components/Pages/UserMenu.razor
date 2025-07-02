@@ -12,8 +12,11 @@
                 @if(rol==RolUsuario.Administrador){
                     <a href="/CuentaAdministrador" class="btn btn-secondary">Cuenta</a>
                 }
-                else{
+                else if(rol==RolUsuario.Usuario){
                     <a href="/misreservas" class="btn btn-secondary">Cuenta</a>
+                }
+                else if(rol==RolUsuario.Encargado){
+                    <a href="/CuentaEncargado" class="btn btn-secondary">Cuenta</a>
                 }
                 <button @onclick="CerrarSesion" class="btn btn-primary">Cerrar Sesión</button>
             </div>

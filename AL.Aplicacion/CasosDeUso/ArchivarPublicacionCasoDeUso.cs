@@ -20,7 +20,7 @@ public class ArchivarPublicacionCasoDeUso
         var reservas = _reservasRepositorio.ObtenerReservasPorAlojamientoId(alojamientoId);
 
         bool tieneReservaEnCurso = reservas.Any(r => r.FechaInicioEstadia <= hoy && hoy <= r.FechaFinEstadia);
-        if (tieneReservaEnCurso)
+        if (tieneReservaEnCurso && alojamiento != null)
         {
             throw new AlojamientoConReservaEnCursoException(alojamiento.Nombre);
         }
@@ -31,7 +31,10 @@ public class ArchivarPublicacionCasoDeUso
             _reservasRepositorio.CancelarReservasFuturas(alojamientoId, hoy);
         }
 
-        alojamiento.Estado = Enumerativos.EstadoPublicacion.Archivado;
-        _alojamientoRepositorio.Modificar(alojamiento);
+        if (alojamiento != null)
+        {
+            alojamiento.Estado = Enumerativos.EstadoPublicacion.Archivado;
+            _alojamientoRepositorio.Modificar(alojamiento);
+        }
     }
 }

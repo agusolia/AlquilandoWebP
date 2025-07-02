@@ -16,7 +16,7 @@ public class DeshabilitarUsuarioCasoDeUso
         _reservaRepositorio = reservaRepositorio;
     }
 
-    public async Task Ejecutar(int usuarioId)
+    public void Ejecutar(int usuarioId)
     {
         var usuario = _usuarioRepositorio.ObtenerPorId(usuarioId);
         if (usuario == null)

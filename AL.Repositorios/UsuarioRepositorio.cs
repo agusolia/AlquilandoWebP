@@ -128,7 +128,14 @@ public class UsuarioRepositorio : IUsuarioRepositorio
         {
             return db.Usuarios.FirstOrDefault(u => u.Rol == RolUsuario.Encargado);
         }
-        
+
+    }
+    public List<Usuario> ListarUsuariosConReservasEnUltimosMeses(int cantidadMeses) {
+        //Aplicar la logica para filtrar usuarios con reservas en los ultimos meses, lo dejo provisionalmente asi:
+        using (var db = new EntidadesContext())
+        {
+            return db.Usuarios.ToList();
+        }
      }
 
 }

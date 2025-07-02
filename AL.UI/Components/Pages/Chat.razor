@@ -6,7 +6,7 @@
 @inject IServicioSesion ServicioSesion  
 @inject ReservaEnviarMensaje ReservaEnviarMensaje
 @rendermode InteractiveServer
-
+@inject NavigationManager NavigationManager
 <style>
 .chat-container {
     display: flex;
@@ -87,7 +87,7 @@
 </style>
 
 <h3>Chat @(alojamiento?.Nombre)</h3>
-@if(chat.Count == 0)
+@if(chat.Count == 0 || tieneMensajes==0)
 {
     <p>No hay mensajes en esta conversación.</p>
 }
@@ -136,42 +136,115 @@ else
     private String nombreEmisor = string.Empty;
     private String nombreReceptor = string.Empty;
     Dictionary<int, string> nombres = new Dictionary<int, string>();
-    protected override async Task OnInitializedAsync()
+    int tieneMensajes=0;
+    /*protected override async Task OnInitializedAsync()
     {
         reserva = ReservaRepositorio.ObtenerPorId(IdReserva);
         if (reserva != null)
         {
             alojamiento = await AlojamientoRepositorio.ObtenerPorId(reserva.IdAlojamiento);
-            chat = await ServicioChat.ObtenerConversacionAsync(IdReserva);
+            var todosLosMensajes  = await ServicioChat.ObtenerConversacionAsync(IdReserva);
+                    // Filtrado según el rol
+            if (ServicioSesion.Rol == RolUsuario.Administrador || ServicioSesion.Rol == RolUsuario.Encargado)
+            {
+                chat = todosLosMensajes
+                        .Where(m => m.IdEmisor == ServicioSesion.Id // Mensajes enviados por el admin/encargado
+                        || ( m.IdReceptor == ServicioSesion.Id // Mensajes recibidos por el admin/encargado
+                        && UsuarioRepositorio.ObtenerPorId(m.IdEmisor)?.Rol == RolUsuario.Usuario // Solo si el emisor es Usuario
+                    )
+                )
+                .ToList();
+            }
+            else // Usuario común
+            {
+                chat = todosLosMensajes
+                    .Where(m => m.IdEmisor == ServicioSesion.Id || m.IdReceptor == ServicioSesion.Id)
+                    .ToList();
+            }
             foreach (var mensaje in chat)
             {
-                if (!nombres.ContainsKey(mensaje.IdEmisor))
+                if(mensaje.IdEmisor== ServicioSesion.Id || mensaje.IdReceptor == ServicioSesion.Id)
                 {
-                    var usuario = UsuarioRepositorio.ObtenerPorId(mensaje.IdEmisor);
-                    if (usuario != null && usuario.Rol == RolUsuario.Usuario)
+                    tieneMensajes += 1;
+                    if (!nombres.ContainsKey(mensaje.IdEmisor))
                     {
-                        nombres[mensaje.IdEmisor] = usuario.Nombre;
-                    }
-                    else if (usuario != null && (usuario.Rol == RolUsuario.Administrador || usuario.Rol == RolUsuario.Encargado))
-                    {
-                        nombres[mensaje.IdEmisor] = alojamiento?.Nombre ?? "Alojamiento Desconocido";
+                        var usuario = UsuarioRepositorio.ObtenerPorId(mensaje.IdEmisor);
+                        if (usuario != null && usuario.Rol == RolUsuario.Usuario)
+                        {
+                            nombres[mensaje.IdEmisor] = usuario.Nombre;
+                        }
+                        else if (usuario != null && (usuario.Rol == RolUsuario.Administrador || usuario.Rol == RolUsuario.Encargado))
+                        {
+                            nombres[mensaje.IdEmisor] = alojamiento?.Nombre ?? "Alojamiento Desconocido";
+                        }
                     }
                 }
+
             }
-            ServicioChat.MarcarComoLeidosAsync(IdReserva).Wait();
         }
-    }
+        StateHasChanged(); 
+    }*/
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender && !IsLoggedIn)
         {
             await ServicioSesion.InicializarUsuarioAsync();
+            if (ServicioSesion.Rol == RolUsuario.Invitado)
+            {
+                NavigationManager.NavigateTo("/", true);
+
+            }
+            
             if(ServicioSesion.Usuario!=null){
               usuario = ServicioSesion.Usuario;
+              IsLoggedIn = true;
               ServicioSesion.IniciarSesion();
-            } 
-            IsLoggedIn = true;
-            
+              
+            }
+            reserva = ReservaRepositorio.ObtenerPorId(IdReserva);
+            if (reserva != null)
+            {
+                alojamiento = await AlojamientoRepositorio.ObtenerPorId(reserva.IdAlojamiento);
+                var todosLosMensajes  = await ServicioChat.ObtenerConversacionAsync(IdReserva);
+                await ServicioChat.MarcarComoLeidosAsync(IdReserva,ServicioSesion.Id);
+                    // Filtrado según el rol
+            if (ServicioSesion.Rol == RolUsuario.Administrador || ServicioSesion.Rol == RolUsuario.Encargado)
+            {
+                chat = todosLosMensajes
+                        .Where(m => m.IdEmisor == ServicioSesion.Id // Mensajes enviados por el admin/encargado
+                        || ( m.IdReceptor == ServicioSesion.Id // Mensajes recibidos por el admin/encargado
+                        && UsuarioRepositorio.ObtenerPorId(m.IdEmisor)?.Rol == RolUsuario.Usuario // Solo si el emisor es Usuario
+                    )
+                )
+                .ToList();
+            }
+            else // Usuario común
+            {
+                chat = todosLosMensajes
+                    .Where(m => m.IdEmisor == ServicioSesion.Id || m.IdReceptor == ServicioSesion.Id)
+                    .ToList();
+            }
+            foreach (var mensaje in chat)
+            {
+                if(mensaje.IdEmisor== ServicioSesion.Id || mensaje.IdReceptor == ServicioSesion.Id)
+                {
+                    tieneMensajes += 1;
+                    if (!nombres.ContainsKey(mensaje.IdEmisor))
+                    {
+                        var usuario = UsuarioRepositorio.ObtenerPorId(mensaje.IdEmisor);
+                        if (usuario != null && usuario.Rol == RolUsuario.Usuario)
+                        {
+                            nombres[mensaje.IdEmisor] = usuario.Nombre;
+                        }
+                        else if (usuario != null && (usuario.Rol == RolUsuario.Administrador || usuario.Rol == RolUsuario.Encargado))
+                        {
+                            nombres[mensaje.IdEmisor] = alojamiento?.Nombre ?? "Alojamiento Desconocido";
+                        }
+                    }
+                }
+
+            }
+        }
             StateHasChanged(); // Refresca la UI si es necesario
         }
 

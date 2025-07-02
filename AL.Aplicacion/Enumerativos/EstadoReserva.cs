@@ -6,5 +6,6 @@ public enum EstadoReserva
     Pendiente,
     EnCurso,
     Cancelada,
+    Rechazada,
     Finalizada
 }

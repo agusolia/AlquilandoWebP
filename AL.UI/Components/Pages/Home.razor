@@ -64,10 +64,9 @@
             await ServicioSesion.InicializarUsuarioAsync();
             if(ServicioSesion.Usuario!=null){
               usuario = ServicioSesion.Usuario;
+              IsLoggedIn = true;
               ServicioSesion.IniciarSesion();
             } 
-            IsLoggedIn = true;
-            
             StateHasChanged(); // Refresca la UI si es necesario
         }
 

@@ -10,7 +10,6 @@ public interface IReservasRepositorio
     void Modificar(Reserva reserva);
     Reserva? ObtenerPorId(int id);
     List<Reserva> ObtenerTodos();
-    //Los siguientes métodos los agrego por si los necesitamos en el futuro
     List<Reserva> ObtenerReservasPorAlojamientoId(int alojamientoId);
     List<Reserva> ObtenerReservasPorUsuarioId(int usuarioId);
     void CancelarReservasFuturas(int usuarioId, DateTime fechaDesde);
@@ -19,6 +18,7 @@ public interface IReservasRepositorio
     void CancelarReservasFuturasPorAlojamiento(int alojamientoId);
     Task<List<Mensaje>> ObtenerConversacionAsync(int reservaId);
     Task EnviarMensajeAsync(Mensaje m, Reserva r);
-    Task MarcarComoLeidosAsync(int reservaId);
+    Task MarcarComoLeidosAsync(int reservaId, int usuarioId);
     Task<int> ObtenerCantidadNoLeidosAsync(int usuarioId, int reservaId);
+    List <Reserva> ObtenerTodas();
 }

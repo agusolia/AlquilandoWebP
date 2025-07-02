@@ -21,6 +21,10 @@ public class UsuarioAlta(IUsuarioRepositorio _repositorio, ITarjetaRepositorio _
             if (id == 1) {
                 Repositorio.AsignarRol(usuario.Id, RolUsuario.Administrador);
             }
+            else if(usuario.Nombre.ToLower().Contains("encargado")) //Si queremos registrar un encargado poner de nombre "Encargado 1" o "Encargada 1", "Encargada 2", etc.
+            {
+                Repositorio.AsignarRol(usuario.Id, RolUsuario.Encargado);
+            }
             else
             {
                 Repositorio.AsignarRol(usuario.Id, RolUsuario.Usuario);

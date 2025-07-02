@@ -17,4 +17,5 @@ public interface IUsuarioRepositorio
     public void Actualizar(Usuario u);
     public Usuario? ObtenerAdministrador();
     public Usuario? ObtenerEncargado();
+    public List<Usuario> ListarUsuariosConReservasEnUltimosMeses(int cantidadMeses);
 }

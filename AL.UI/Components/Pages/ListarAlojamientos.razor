@@ -73,6 +73,11 @@ else
         {
             await ServicioSesion.InicializarUsuarioAsync();
             _usuarioInicializado = true;
+            if (ServicioSesion.Rol != RolUsuario.Administrador)
+            {
+                NavigationManager.NavigateTo("/", true);
+
+            }
             _alojamientos = AlojamientoRepositorio.ObtenerTodos();
             
             StateHasChanged(); // Refresca la UI si es necesario

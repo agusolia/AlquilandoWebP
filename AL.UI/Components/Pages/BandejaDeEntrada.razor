@@ -13,11 +13,11 @@
 
 @if (_reservas is null)
 {
-    <p>Cargando reservas...</p>
+    <p>Cargando conversaciones...</p>
 }
 else if (!_reservas.Any())
 {
-    <p>No hay alojamientos publicados.</p>
+    <p>No hay conversaciones</p>
 }
 else
 {
@@ -28,7 +28,7 @@ else
             <div class="card p-2 my-2">
             <div class="d-flex justify-content-between align-items-start">
                 <div> 
-                    <p>Alojamiento: @((MarkupString)_datosAlojamiento[reserva.Id])</p>
+                    <p>Alojamiento: @(_datosAlojamiento[reserva.Id])</p>
                     <p>Desde: @reserva.FechaInicioEstadia.ToShortDateString()</p>
                     <p>Hasta: @reserva.FechaFinEstadia.ToShortDateString()</p>
                     <p>Monto: $@reserva.MontoEstadia</p>
@@ -71,14 +71,23 @@ else
         if (firstRender && !_usuarioInicializado)
         {
             await ServicioSesion.InicializarUsuarioAsync();
-            _usuarioInicializado = true;
-            _reservas = ReservaConsultaTodos.Ejecutar(ServicioSesion.Id); ;
+            if (ServicioSesion.Rol == RolUsuario.Invitado )
+            {
+                NavigationManager.NavigateTo("/", true);
+
+            }
+            if(ServicioSesion.Usuario!=null){
+              _usuarioInicializado = true;
+              ServicioSesion.IniciarSesion();
+            }
+
+            _reservas = ReservaConsultaTodos.Ejecutar(ServicioSesion.Id); 
             foreach (var reserva in _reservas)
             {
                 Alojamiento? alojamiento =await AlojamientoRepositorio.ObtenerPorId(reserva.IdAlojamiento);
                 if (alojamiento != null)
                 {
-                    _datosAlojamiento[reserva.Id] = $"{alojamiento.Nombre},{alojamiento.Ciudad},{alojamiento.Direccion}";
+                    _datosAlojamiento[reserva.Id] = $"{alojamiento.Nombre}, {alojamiento.Ciudad}, {alojamiento.Direccion}";
                 }
             }
             StateHasChanged(); // Refresca la UI si es necesario
