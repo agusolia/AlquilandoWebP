@@ -1,3 +1,5 @@
+using AL.Aplicacion.Enumerativos;
+
 namespace AL.Aplicacion.Entidades;
 
 public class Reserva
@@ -9,11 +11,12 @@ public class Reserva
     public DateTime FechaFinEstadia { get; set; }
     public double MontoEstadia { get; set; }
     public String? EstadoCheckOut { get; set; }
-    public String? EstadoReserva { get; set; }
+    public EstadoReserva EstadoReserva { get; set; }
     public int CantidadDeAdultos { get; set; }
     public int CantidadDeNiños { get; set; }
     public int Puntuacion { get; set; } = -1;
     public List<Mensaje> Chat { get; set; } = new List<Mensaje>();
+    public int MensajesNoLeidos { get; set; } = 0;
     public String InformacionInquilinos { get; set; } = string.Empty;
     
     public List<String> ListaInformacionAdicional { get; set; } = new List<String>();

@@ -3,8 +3,10 @@
 @rendermode InteractiveServer
 @inject NavigationManager NavigationManager
 @inject CancelarReservaCasoDeUso cancelarReservaUseCase
+@inject ReservaConsultaTodosPorUsuario ReservaConsultaTodosPorUsuario
 @inject AlojamientoPuntuar AlojamientoPuntuar
 @inject IServicioSesion ServicioSesion
+@inject IServicioChat ServicioChat
 @inject IReservasRepositorio ReservasRepositorio
 @inject IUsuarioRepositorio UsuarioRepositorio
 @inject ITarjetaRepositorio TarjetaRepositorio
@@ -69,27 +71,39 @@ else
                     </button>
                     <!-- Puntuar solo si aún no fue puntuada -->
                 }
-                    @if(reserva.Puntuacion==-1){ 
-                        <div>
-                            @for (int i = 1; i <= 5; i++)
-                            {
-                                var puntuacion = i; // Captura correcta del valor
-                                <button class="btn btn-link p-0"
-                                style="font-size: 1.5rem; color:@((puntuaciones.ContainsKey(reserva.Id) && puntuaciones[reserva.Id] >= puntuacion) ? "gold" : "#ccc")"
-                                @onclick="async () => await Puntuar(reserva.Id, puntuacion)">
-                                    ★
-                                </button>
-                            }
-                        </div>
-                    }
-                    else{
-                        <div>
-                            @for (int i = 1; i <= 5; i++)
-                            {
-                                <span style="font-size: 1.5rem; color:@(i <= reserva.Puntuacion ? "gold" : "#ccc")">★</span>
-                            }
-                        </div>
-                    }
+                @if(reserva.EstadoReserva == EstadoReserva.Finalizada || reserva.EstadoReserva == EstadoReserva.Confirmada || reserva.EstadoReserva == EstadoReserva.EnCurso){
+                    <button class="btn btn-outline-primary position-relative me-2" @onclick="() => IrAlChat(reserva.Id)">
+                        Chat
+                        @if (reserva.MensajesNoLeidos > 0)
+                        {
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                @reserva.MensajesNoLeidos
+                            <span class="visually-hidden">mensajes no leídos</span>
+                            </span>
+                        }
+                    </button>
+                }
+                @if(reserva.Puntuacion==-1){ 
+                    <div>
+                        @for (int i = 1; i <= 5; i++)
+                        {
+                            var puntuacion = i; // Captura correcta del valor
+                            <button class="btn btn-link p-0"
+                            style="font-size: 1.5rem; color:@((puntuaciones.ContainsKey(reserva.Id) && puntuaciones[reserva.Id] >= puntuacion) ? "gold" : "#ccc")"
+                            @onclick="async () => await Puntuar(reserva.Id, puntuacion)">
+                                ★
+                            </button>
+                        }
+                    </div>
+                }
+                else{
+                    <div>
+                        @for (int i = 1; i <= 5; i++)
+                        {
+                            <span style="font-size: 1.5rem; color:@(i <= reserva.Puntuacion ? "gold" : "#ccc")">★</span>
+                        }
+                    </div>
+                }
             </div>
         </div>
     }
@@ -137,7 +151,7 @@ else
                 _usuario = usuario;
                 _numeroTarjeta = TarjetaRepositorio.ObtenerPorIdUltimosCuatro(usuario.TarjetaId);
             }
-            reservas = cancelarReservaUseCase.ObtenerMisReservas();
+            reservas = ReservaConsultaTodosPorUsuario.Ejecutar(ServicioSesion.Id);
             StateHasChanged();
         }
     }
@@ -169,5 +183,8 @@ else
             ErrorMessage = $"{ex.Message}";
         }
     }
-
+    private void IrAlChat(int idReserva)
+    {
+        NavigationManager.NavigateTo($"/Chat/{idReserva}");
+    }
 }

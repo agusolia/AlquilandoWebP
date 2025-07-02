@@ -94,7 +94,7 @@ public class UsuarioRepositorio : IUsuarioRepositorio
             return usuario;
         }
     }
-    public bool tieneReservasSolapadas(DateTime fechaDesde, DateTime fechaHasta,int idUsuario)
+    public bool tieneReservasSolapadas(DateTime fechaDesde, DateTime fechaHasta, int idUsuario)
     {
         using (var db = new EntidadesContext())
         {
@@ -115,5 +115,20 @@ public class UsuarioRepositorio : IUsuarioRepositorio
             db.SaveChanges();
         }
     }
+    public Usuario? ObtenerAdministrador()
+    {
+        using (var db = new EntidadesContext())
+        {
+            return db.Usuarios.FirstOrDefault(u => u.Rol == RolUsuario.Administrador);
+        }
+    }
+    public Usuario? ObtenerEncargado()
+    {
+        using (var db = new EntidadesContext())
+        {
+            return db.Usuarios.FirstOrDefault(u => u.Rol == RolUsuario.Encargado);
+        }
+        
+     }
 
 }

@@ -36,7 +36,7 @@ public class ReservasRepositorio : IReservasRepositorio
     {
         using (var db = new EntidadesContext())
         {
-            var reservas = db.Reservas.Where(r => r.Id == id).SingleOrDefault();
+            var reservas = db.Reservas.Where(r => r.Id == id).Include(r => r.Chat).SingleOrDefault();
             return reservas;
         }
     }
@@ -61,7 +61,15 @@ public class ReservasRepositorio : IReservasRepositorio
     {
         using (var db = new EntidadesContext())
         {
-            return db.Reservas.Where(r => r.IdUsuario == usuarioId).ToList();
+            List<Reserva> reservas = db.Reservas
+                .Include(r => r.Chat) // Incluye el chat si es necesario
+                .Where(r => r.IdUsuario == usuarioId)
+                .ToList();
+            foreach (var reserva in reservas)
+            {
+                reserva.MensajesNoLeidos = ObtenerCantidadNoLeidosAsync(usuarioId, reserva.Id).Result; 
+            }
+            return reservas;
         }
     }
 
@@ -120,4 +128,53 @@ public class ReservasRepositorio : IReservasRepositorio
             db.SaveChanges();
         }
     }
+
+    public async Task<List<Mensaje>> ObtenerConversacionAsync(int reservaId)
+    {
+        using (var db = new EntidadesContext())
+        {
+            return await db.Mensajes
+                .Where(m => m.IdReserva == reservaId)
+                .OrderBy(m => m.FechaEnvio)
+                .ToListAsync();
+        }
+    }
+    public async Task EnviarMensajeAsync(Mensaje m, Reserva r)
+    {
+        using (var db = new EntidadesContext())
+        {
+            db.Mensajes.Add(m); // Update the reservation with the new message
+            await db.SaveChangesAsync();
+        }
+    }
+    
+    public async Task MarcarComoLeidosAsync(int reservaId)
+    {
+        using (var db = new EntidadesContext())
+        {
+            Reserva? reserva = await db.Reservas
+                .Include(r => r.Chat)
+                .SingleOrDefaultAsync(r => r.Id == reservaId);
+            if (reserva != null)
+            {
+                foreach (var m in reserva.Chat)
+                {
+                    m.Leido = true;
+                    db.Mensajes.Update(m); // Update each message as read
+                }
+            }
+            await db.SaveChangesAsync();
+        }
+
+    }
+    public async Task<int> ObtenerCantidadNoLeidosAsync(int usuarioId, int reservaId)
+    {
+        using (var db = new EntidadesContext())
+        {
+            return await db.Mensajes
+            .Where(m => m.IdReceptor == usuarioId && m.IdReserva==reservaId && !m.Leido)
+            .CountAsync();
+        }    
+    }
+    
 }

@@ -1,0 +1,203 @@
+﻿@page "/chat/{IdReserva:int}"
+@inject IReservasRepositorio ReservaRepositorio
+@inject IAlojamientoRepositorio AlojamientoRepositorio
+@inject IUsuarioRepositorio UsuarioRepositorio
+@inject IServicioChat ServicioChat
+@inject IServicioSesion ServicioSesion  
+@inject ReservaEnviarMensaje ReservaEnviarMensaje
+@rendermode InteractiveServer
+
+<style>
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px 0;
+    height: 400px;           /* Alto fijo, puedes ajustar el valor */
+    overflow-y: auto;        /* Scroll vertical si hay muchos mensajes */
+    background: #fff;        /* Fondo blanco como en la imagen */
+    border-radius: 12px;     /* Bordes redondeados suaves */
+    box-shadow: 0 2px 8px #0001; /* Sombra ligera opcional */
+}
+
+.mensaje {
+    max-width: 60%;
+    padding: 10px 16px;
+    border-radius: 18px;
+    margin-bottom: 4px;
+    word-break: break-word;
+    position: relative;
+    font-size: 1.25rem; /* Aumenta el tamaño de la letra */
+    display: inline-block;
+    clear: both;
+}
+
+.mensaje-emisor {
+    background: #58a14c;
+    color: white;
+    align-self: flex-end;
+    border-bottom-right-radius: 4px;
+    border-bottom-left-radius: 18px;
+    border-top-left-radius: 18px;
+    border-top-right-radius: 18px;
+}
+
+.mensaje-receptor {
+    background: #f1f0f0;
+    color: #222;
+    align-self: flex-start;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 18px;
+    border-top-left-radius: 18px;
+    border-top-right-radius: 18px;
+}
+
+.fecha {
+    font-size: 0.75rem;
+    color: #34333393;
+    position: absolute;
+    right: 12px;
+    bottom: 6px;
+    margin-left: 0;
+}
+
+.chat-footer {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.chat-footer input[type="text"] {
+    flex: 1;
+    padding: 8px;
+    border-radius: 16px;
+    border: 1px solid #ccc;
+    outline: none;
+}
+
+.chat-footer button {
+    background: #2196f3;
+    color: white;
+    border: none;
+    border-radius: 16px;
+    padding: 8px 20px;
+    cursor: pointer;
+    font-weight: bold;
+}
+</style>
+
+<h3>Chat @(alojamiento?.Nombre)</h3>
+@if(chat.Count == 0)
+{
+    <p>No hay mensajes en esta conversación.</p>
+}
+else
+{
+    <div class="chat-container">
+        @foreach (var mensaje in chat)
+        {
+            // If the connected user is the sender, display on the right; otherwise, display on the left
+            var esEmisor = mensaje.IdEmisor == ServicioSesion.Id;
+            <div class="mensaje @(esEmisor ? "mensaje-emisor" : "mensaje-receptor")">
+                <strong style="font-size:0.8em;">
+                    @if(esEmisor){
+                        @:Tu
+                    }
+                    else{
+                        @(nombres.ContainsKey(mensaje.IdEmisor) ? nombres[mensaje.IdEmisor] : "Desconocido")
+                    }
+                    
+                </strong>
+                <p>@mensaje.Contenido</p>
+                <span class="fecha">@mensaje.FechaEnvio.ToString("g")</span>
+            </div>
+        }
+    </div>
+}
+<div class="chat-footer">
+    <input type="text" @bind="nuevoMensaje" placeholder="Escribe un mensaje..." />
+    <button @onclick="EnviarMensaje">Enviar</button>
+</div>  
+@if (!string.IsNullOrEmpty(ErrorMessage))
+{
+    <div class="alert alert-danger" role="alert">
+        @((MarkupString)ErrorMessage)
+    </div>
+}
+@code {
+    [Parameter] public int IdReserva { get; set; }
+    private Reserva? reserva;
+    private Alojamiento? alojamiento = new Alojamiento();
+    private List<Mensaje> chat = new List<Mensaje>();
+    private string nuevoMensaje = string.Empty;
+    private bool IsLoggedIn = false;
+    private Usuario usuario=null!;
+    private String ErrorMessage = string.Empty;
+    private String nombreEmisor = string.Empty;
+    private String nombreReceptor = string.Empty;
+    Dictionary<int, string> nombres = new Dictionary<int, string>();
+    protected override async Task OnInitializedAsync()
+    {
+        reserva = ReservaRepositorio.ObtenerPorId(IdReserva);
+        if (reserva != null)
+        {
+            alojamiento = await AlojamientoRepositorio.ObtenerPorId(reserva.IdAlojamiento);
+            chat = await ServicioChat.ObtenerConversacionAsync(IdReserva);
+            foreach (var mensaje in chat)
+            {
+                if (!nombres.ContainsKey(mensaje.IdEmisor))
+                {
+                    var usuario = UsuarioRepositorio.ObtenerPorId(mensaje.IdEmisor);
+                    if (usuario != null && usuario.Rol == RolUsuario.Usuario)
+                    {
+                        nombres[mensaje.IdEmisor] = usuario.Nombre;
+                    }
+                    else if (usuario != null && (usuario.Rol == RolUsuario.Administrador || usuario.Rol == RolUsuario.Encargado))
+                    {
+                        nombres[mensaje.IdEmisor] = alojamiento?.Nombre ?? "Alojamiento Desconocido";
+                    }
+                }
+            }
+            ServicioChat.MarcarComoLeidosAsync(IdReserva).Wait();
+        }
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && !IsLoggedIn)
+        {
+            await ServicioSesion.InicializarUsuarioAsync();
+            if(ServicioSesion.Usuario!=null){
+              usuario = ServicioSesion.Usuario;
+              ServicioSesion.IniciarSesion();
+            } 
+            IsLoggedIn = true;
+            
+            StateHasChanged(); // Refresca la UI si es necesario
+        }
+
+    }
+    
+    private async Task EnviarMensaje()
+    {
+        if (!string.IsNullOrWhiteSpace(nuevoMensaje) && reserva != null)
+        {
+            Mensaje mensaje = new Mensaje
+            {
+                IdReserva = IdReserva,
+                IdEmisor = ServicioSesion.Id,
+                Contenido = nuevoMensaje,
+                FechaEnvio = DateTime.Now
+            };
+
+            await ReservaEnviarMensaje.Ejecutar(IdReserva,mensaje);
+            chat.Add(mensaje);
+            nuevoMensaje = string.Empty;
+            StateHasChanged(); // Refresca la UI para mostrar el nuevo mensaje
+        }
+        else
+        {
+            // Aquí podrías mostrar un mensaje de error si el mensaje está vacío
+            ErrorMessage = "El mensaje no puede estar vacío.";
+        }
+    }
+}

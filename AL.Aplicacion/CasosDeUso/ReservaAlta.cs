@@ -1,6 +1,7 @@
 using AL.Aplicacion.Entidades;
 using AL.Aplicacion.Interfaces;
 using AL.Aplicacion.Excepciones;
+using AL.Aplicacion.Enumerativos;
 
 namespace AL.Aplicacion.CasosDeUso;
 
@@ -42,14 +43,14 @@ public class ReservaAlta
 
         if (requiereInfoAdicional)
         {
-            reserva.EstadoReserva = "Pendiente";
+            reserva.EstadoReserva = EstadoReserva.Pendiente;
             
             _reservasRepositorio.Agregar(reserva);
             return "La solicitud de reserva fue enviada";
         }
         else
         {
-            reserva.EstadoReserva = "Confirmada";
+            reserva.EstadoReserva = EstadoReserva.Confirmada;
             _reservasRepositorio.Agregar(reserva);
             return "Reserva exitosa";
         }

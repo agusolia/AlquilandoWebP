@@ -17,4 +17,8 @@ public interface IReservasRepositorio
     bool TieneReservaEnCurso(int alojamientoId);
     bool TieneReservasFuturas(int alojamientoId);
     void CancelarReservasFuturasPorAlojamiento(int alojamientoId);
+    Task<List<Mensaje>> ObtenerConversacionAsync(int reservaId);
+    Task EnviarMensajeAsync(Mensaje m, Reserva r);
+    Task MarcarComoLeidosAsync(int reservaId);
+    Task<int> ObtenerCantidadNoLeidosAsync(int usuarioId, int reservaId);
 }
