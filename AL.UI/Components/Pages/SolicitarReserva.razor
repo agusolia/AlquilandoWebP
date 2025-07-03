@@ -4,6 +4,8 @@
 @inject IServicioSesion servicioSesion
 @inject ReservaAlta reservaAlta
 @inject NavigationManager NavigationManager
+@inject ServicioArchivos servicioArchivos
+
 @using AL.UI.Servicios
 @implements IDisposable
 
@@ -60,7 +62,21 @@ else
                             <div class="mb-3 border rounded p-2 bg-light">
                                 <label><strong>Inquilino @(i + 1)</strong></label>
                                 <InputText @bind-Value="inquilino.Nombre" class="form-control mb-2" placeholder="Nombre completo" />
-                                <InputText @bind-Value="inquilino.Dni" class="form-control" placeholder="DNI" />
+                               @if (alojamiento.TieneInformacionAdicional)
+                                {
+                                    <div class="mb-2">
+                                        <label>Foto frente del DNI:</label>
+                                        <InputFile OnChange="e => OnFileSelected(e, i, true)" class="form-control" />
+                                    </div>
+                                    <div class="mb-2">
+                                        <label>Foto dorso del DNI:</label>
+                                        <InputFile OnChange="e => OnFileSelected(e, i, false)" class="form-control" />
+                                    </div>
+                                }
+                                else
+                                {
+                                    <InputText @bind-Value="inquilino.Dni" class="form-control" placeholder="DNI" />
+                                }
                             </div>
                         }
                     </div>
@@ -123,6 +139,9 @@ else
     private bool IsLoggedIn = false;
     private Usuario usuario=null!;
     private bool editarCantidades = true; // inicialmente se puede editar
+    private Dictionary<int, IBrowserFile> dniFrenteArchivos = new();
+    private Dictionary<int, IBrowserFile> dniDorsoArchivos = new();
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -139,6 +158,18 @@ else
         reserva.FechaInicioEstadia = desde ?? DateTime.Now;
         reserva.FechaFinEstadia = hasta ?? DateTime.Now.AddDays(1);
     }
+    private void OnFileSelected(InputFileChangeEventArgs e, int index, bool esFrente)
+    {
+        if (e.FileCount > 0)
+        {
+            var archivo = e.File;
+            if (esFrente)
+                dniFrenteArchivos[index] = archivo;
+            else
+                dniDorsoArchivos[index] = archivo;
+        }
+    }
+
     private bool _isDisposed = false;
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -173,6 +204,8 @@ else
         editarCantidades = true;
         mostrarInfoInquilinos = false;
         reserva.Inquilinos.Clear(); // limpiamos los datos anteriores
+        dniFrenteArchivos.Clear();
+        dniDorsoArchivos.Clear();
         mensaje = "";
     }
     private async Task ProcesarReserva()
@@ -202,15 +235,55 @@ else
                 StateHasChanged();
                 return;
             }
-
-                // Validación
-            if (reserva.Inquilinos.Any(i => string.IsNullOrWhiteSpace(i.Nombre) || string.IsNullOrWhiteSpace(i.Dni)))
+            // Validación de datos de inquilinos
+            for (int i = 0; i < reserva.Inquilinos.Count; i++)
             {
-                mensaje = "Todos los campos de nombre y DNI deben estar completos.";
-                return;
-            }
-            reserva.InformacionInquilinos = System.Text.Json.JsonSerializer.Serialize(reserva.Inquilinos);
+                var inquilino = reserva.Inquilinos[i];
 
+                if (string.IsNullOrWhiteSpace(inquilino.Nombre))
+                {
+                    mensaje = $"El nombre del inquilino {i + 1} no puede estar vacío.";
+                    return;
+                }
+
+                if (alojamiento.TieneInformacionAdicional)
+                {
+                    if (!dniFrenteArchivos.ContainsKey(i) || !dniDorsoArchivos.ContainsKey(i))
+                    {
+                        mensaje = $"Debés subir la foto del frente y dorso del DNI para el inquilino {i + 1}.";
+                        return;
+                    }
+                }
+                else
+                {
+                    if (string.IsNullOrWhiteSpace(inquilino.Dni))
+                    {
+                        mensaje = $"El DNI del inquilino {i + 1} no puede estar vacío.";
+                        return;
+                    }
+                }
+            }
+            if (alojamiento.TieneInformacionAdicional)
+            {
+                reserva.ListaInformacionAdicional ??= new List<string>();
+
+                for (int i = 0; i < reserva.Inquilinos.Count; i++)
+                {
+                    if (!dniFrenteArchivos.ContainsKey(i) || !dniDorsoArchivos.ContainsKey(i))
+                    {
+                        mensaje = $"Debés subir las fotos del DNI del inquilino {i + 1}.";
+                        return;
+                    }
+
+                    var rutaFrente = await servicioArchivos.GuardarArchivoAsync(dniFrenteArchivos[i]);
+                    var rutaDorso = await servicioArchivos.GuardarArchivoAsync(dniDorsoArchivos[i]);
+
+                    reserva.ListaInformacionAdicional.Add($"Inquilino {i + 1}: {rutaFrente} (frente)");
+                    reserva.ListaInformacionAdicional.Add($"Inquilino {i + 1}: {rutaDorso} (dorso)");
+                }
+            }
+
+            reserva.InformacionInquilinos = System.Text.Json.JsonSerializer.Serialize(reserva.Inquilinos);
             // Validar datos (incluyendo que la cantidad de adultos y niños no superen la capacidad maxima)
             mensaje = await reservaAlta.Ejecutar(reserva);
         }
@@ -218,6 +291,5 @@ else
         {
             mensaje = $"No pudimos procesar la reserva: {ex.Message}";
         }
-
     }
 }
