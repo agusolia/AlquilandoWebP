@@ -14,5 +14,5 @@ public interface IServicioSesion
     public Task LogoutAsync();
     public Task InicializarUsuarioAsync();
     public void IniciarSesion();
-
+    Task<bool> ExisteUsuarioConEmail(string email);
 }

@@ -102,4 +102,9 @@ public class ServicioSesion: IServicioSesion
         OnChange?.Invoke();
 
     }
+    public Task<bool> ExisteUsuarioConEmail(string email)
+    {
+    var usuario = _repo.IniciarSesion(email);
+    return Task.FromResult(usuario != null);
+    }
 }
