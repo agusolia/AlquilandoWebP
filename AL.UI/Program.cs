@@ -45,6 +45,8 @@ builder.Services.AddScoped<IServicioReserva, ServicioReserva>();
 builder.Services.AddScoped<IServicioChat, ServicioChat>();
 builder.Services.AddTransient<IServicioActualizacionEstadoReserva, ServicioActualizacionEstadoReserva>();
 builder.Services.AddScoped<ProtectedSessionStorage>();
+builder.Services.AddScoped<GestionarReservasCasoDeUso>();
+
 
 // Add services to the container.
 builder.Services.AddRazorComponents()

@@ -40,20 +40,17 @@ else
         </tbody>
     </table>
 }
-
-<h3>Mis Reservas</h3>
-@if (rol != RolUsuario.Usuario )
-{
-    //<p>Debes iniciar sesión para ver tus reservas.</p>
-}
-else if (reservas.Count == 0)
-{
-    <p>No tenés reservas.</p>
-}
-else
-{
-    @foreach (var reserva in reservas)
+@if (rol == RolUsuario.Usuario)
     {
+    <h3>Mis Reservas</h3>
+    if (reservas.Count == 0)
+        {
+            <p>No tenés reservas.</p>
+        }
+    else
+    {
+        @foreach (var reserva in reservas)
+        {
         <div class="card p-2 my-2">
             <div class="d-flex justify-content-between align-items-start">
                 <div> 

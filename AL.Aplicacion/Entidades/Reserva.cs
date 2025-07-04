@@ -2,6 +2,8 @@ using AL.Aplicacion.Enumerativos;
 using System.ComponentModel.DataAnnotations;
 namespace AL.Aplicacion.Entidades;
 
+using System.ComponentModel.DataAnnotations;
+
 public class Reserva
 {
     public int Id { get; set; }
