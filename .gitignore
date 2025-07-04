@@ -1,0 +1,26 @@
+# Ignorar carpetas de compilación en todos los proyectos
+**/bin/
+**/obj/
+
+# Archivos de configuración de usuario
+*.user
+*.suo
+
+# Configs temporales de VS y Rider
+.vscode/
+.idea/
+*.log
+
+# Archivos de compilación
+*.dll
+*.exe
+*.pdb
+*.cache
+
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db
+
+# SQLite y backups
+*.sqlite
+*.bak
