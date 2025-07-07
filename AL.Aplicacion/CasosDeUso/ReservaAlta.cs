@@ -46,7 +46,6 @@ public class ReservaAlta
         bool pagoExitoso = _servicioPago.ValidarPago(tarjeta);
         if (!pagoExitoso)
             return "Reserva rechazada por error en el pago";
-
         if (alojamiento.TieneInformacionAdicional)
         {
             reserva.EstadoReserva = EstadoReserva.Pendiente;

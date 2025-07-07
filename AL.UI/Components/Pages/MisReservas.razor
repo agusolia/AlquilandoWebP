@@ -4,6 +4,7 @@
 @inject NavigationManager NavigationManager
 @inject CancelarReservaCasoDeUso cancelarReservaUseCase
 @inject ReservaConsultaTodosPorUsuario ReservaConsultaTodosPorUsuario
+@inject EliminarUsuario EliminarUsuarioUseCase
 @inject AlojamientoPuntuar AlojamientoPuntuar
 @inject IAlojamientoRepositorio AlojamientoRepositorio
 @inject IServicioSesion ServicioSesion
@@ -45,9 +46,9 @@ else
     </table>
 }
 @if (rol == RolUsuario.Usuario)
-    {
+{
     <h3>Mis Reservas</h3>
-    if (reservas.Count == 0)
+    @if (reservas.Count == 0)
         {
             <p>No tenés reservas.</p>
         }
@@ -110,13 +111,19 @@ else
                                 <span class="visually-hidden">mensajes no leídos</span>
                             </span>
                         }
-                        </button>
+                    </button>
                     }
                 </div>
             </div>
         </div>
     }
-}
+    }
+    <div class="d-flex justify-content-end mt-4">
+        <button class="btn btn-danger" @onclick="ConfirmarEliminarCuenta">
+            Eliminar mi cuenta
+        </button>
+    </div>
+
 @if (!string.IsNullOrEmpty(ErrorMessage))
 {
     <div class="alert alert-danger" role="alert">
@@ -142,6 +149,7 @@ else
     String SuccessMessage { get; set; } = string.Empty;
     private Dictionary<int, int> puntuaciones = new(); // idReserva -> puntuación
     private Dictionary<int, String> _datosAlojamiento = new();
+    [Inject] IJSRuntime? JS { get; set; }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -209,5 +217,31 @@ else
     {
         NavigationManager.NavigateTo($"/Chat/{idReserva}");
     }
+
+private async Task ConfirmarEliminarCuenta()
+{
+    var confirmado = await JS.InvokeAsync<bool>("confirm", "¿Estás seguro de que querés eliminar tu cuenta? Esta acción no se puede deshacer.");
+    if (confirmado)
+    {
+        try
+        {
+            bool eliminado = EliminarUsuarioUseCase.Ejecutar(ServicioSesion.Id, out string error);
+            if (eliminado)
+            {
+                await ServicioSesion.LogoutAsync(); // Cerrar sesión si tenés ese método
+                NavigationManager.NavigateTo("/", forceLoad: true);
+            }
+            else
+            {
+                ErrorMessage = error;
+                StateHasChanged();
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Error al eliminar la cuenta: {ex.Message}";
+        }
+    }
+}
 }
 }
