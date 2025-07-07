@@ -36,5 +36,12 @@ public class TarjetaRepositorio : ITarjetaRepositorio
             return db.Tarjetas.Find(id);
         }
     }
-
+    public void Actualizar(Tarjeta t)
+    {
+        using (var db = new EntidadesContext())
+        {
+            db.Tarjetas.Update(t);
+            db.SaveChanges();
+        }
+    }
 }

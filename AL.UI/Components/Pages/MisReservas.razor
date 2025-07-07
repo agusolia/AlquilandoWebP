@@ -35,7 +35,11 @@ else
                     <td>@_usuario.Apellido</td>
                     <th>@_usuario.FechaDeNacimiento</th>
                     <td>@_usuario.CorreoElectronico</td>
-                    <td>@_numeroTarjeta</td>
+                    <td> @_numeroTarjeta
+                        <button type="button" class="btn btn-sm btn-outline-primary ms-2" @onclick="IrAModificarTarjeta">
+                            Modificar
+                        </button>
+                    </td>
             </tr>
         </tbody>
     </table>
@@ -169,6 +173,10 @@ else
             StateHasChanged();
         }
     }
+   private void IrAModificarTarjeta()
+    {
+        NavigationManager.NavigateTo("/modificartarjeta");
+    }
 
     private void Cancelar(int idReserva)
     {
@@ -201,4 +209,5 @@ else
     {
         NavigationManager.NavigateTo($"/Chat/{idReserva}");
     }
+}
 }
