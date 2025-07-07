@@ -119,10 +119,31 @@ else
     }
     }
     <div class="d-flex justify-content-end mt-4">
-        <button class="btn btn-danger" @onclick="ConfirmarEliminarCuenta">
+        <button class="btn btn-danger" @onclick="() => mostrarConfirmacion = true">
             Eliminar mi cuenta
         </button>
     </div>
+    @if (mostrarConfirmacion)
+    {
+        <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Confirmar eliminación</h5>
+                        <button type="button" class="btn-close" @onclick="() => mostrarConfirmacion = false"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>¿Estás seguro de que querés eliminar tu cuenta? Esta acción no se puede deshacer.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" @onclick="() => mostrarConfirmacion = false">Cancelar</button>
+                        <button class="btn btn-danger" @onclick="EliminarCuenta">Eliminar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
 
 @if (!string.IsNullOrEmpty(ErrorMessage))
 {
@@ -218,30 +239,29 @@ else
         NavigationManager.NavigateTo($"/Chat/{idReserva}");
     }
 
-private async Task ConfirmarEliminarCuenta()
-{
-    var confirmado = await JS.InvokeAsync<bool>("confirm", "¿Estás seguro de que querés eliminar tu cuenta? Esta acción no se puede deshacer.");
-    if (confirmado)
+    bool mostrarConfirmacion = false;
+
+    private async Task EliminarCuenta()
     {
         try
         {
             bool eliminado = EliminarUsuarioUseCase.Ejecutar(ServicioSesion.Id, out string error);
             if (eliminado)
             {
-                await ServicioSesion.LogoutAsync(); // Cerrar sesión si tenés ese método
-                NavigationManager.NavigateTo("/", forceLoad: true);
+                await ServicioSesion.LogoutAsync();
+                NavigationManager.NavigateTo("/", true);
             }
             else
             {
                 ErrorMessage = error;
-                StateHasChanged();
             }
         }
         catch (Exception ex)
         {
             ErrorMessage = $"Error al eliminar la cuenta: {ex.Message}";
         }
+        mostrarConfirmacion = false;
     }
-}
+
 }
 }
