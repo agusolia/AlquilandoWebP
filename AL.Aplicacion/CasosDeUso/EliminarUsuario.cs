@@ -26,7 +26,7 @@ public class EliminarUsuario
         }
 
         var reservas = _reservasRepositorio.ObtenerReservasPorUsuarioId(usuarioId);
-
+        
         var reservasActivas = reservas
             .Where(r => r.EstadoReserva == EstadoReserva.EnCurso || r.FechaInicioEstadia > DateTime.Now)
             .ToList();
@@ -36,11 +36,11 @@ public class EliminarUsuario
             mensajeError = "No se puede eliminar la cuenta con reservas activas o futuras.";
             return false;
         }
-
+        
         // Anonimizar usuario
         usuario.Nombre = "Usuario";
         usuario.Apellido = "No disponible";
-        usuario.CorreoElectronico = "anonimo@eliminado.com";
+        usuario.CorreoElectronico = $"eliminado_{usuario.Id}@anonimo.com";
         usuario.HashContraseña = "";
         usuario.SalContraseña = "";
         usuario.EstaHabilitado = false;

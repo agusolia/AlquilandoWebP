@@ -2,7 +2,9 @@
 @rendermode InteractiveServer
 @inject GestionarReservasCasoDeUso GestionarReservasUseCase
 @inject IServicioSesion ServicioSesion
+@inject IUsuarioRepositorio UsuarioRepositorio
 @inject NavigationManager NavigationManager
+@inject IAlojamientoRepositorio AlojamientoRepositorio
 
 <h3>Gestión de Reservas</h3>
 
@@ -15,8 +17,16 @@ else
     @foreach (var reserva in reservas) //*corregir boton para ver la informacion de los inquilinos*//
     {
         <div class="card p-3 my-3">
-            <p><strong>Usuario:</strong> @reserva.IdUsuario</p>
-            <p><strong>Alojamiento:</strong> @reserva.IdAlojamiento</p>
+            @if (!infoUsuarios[reserva.IdUsuario].Eliminado)
+            {
+                <p><strong>Usuario:</strong> @infoUsuarios[reserva.IdUsuario].NombreCompleto</p>
+                <p><strong>ID:</strong> @reserva.IdUsuario</p>
+            }
+            else
+            {
+                <p>@infoUsuarios[reserva.IdUsuario].NombreCompleto</p>
+            }
+            <p><strong>Alojamiento:</strong> @nombresAlojamientos[reserva.IdAlojamiento]</p>
             <p><strong>Desde:</strong> @reserva.FechaInicioEstadia.ToShortDateString()</p>
             <p><strong>Hasta:</strong> @reserva.FechaFinEstadia.ToShortDateString()</p>
             <p><strong>Monto:</strong> $@reserva.MontoEstadia</p>
@@ -50,14 +60,14 @@ else
             </div>
             }
             <div class="d-flex gap-2 mt-3">
-                @if (reserva.ListaInformacionAdicional.Count > 0)
+                @if (reserva.ListaInformacionAdicional.Count > 0 && !infoUsuarios[reserva.IdUsuario].Eliminado)
                 {
                     <button class="btn btn-outline-primary btn-sm" @onclick="() => VerInformacionAdicional(reserva.Id)">
                         Ver Información Adicional
                     </button>
                 }
 
-            @if (reserva.Inquilinos?.Count > 0)
+            @if (reserva.Inquilinos?.Count > 0 && !infoUsuarios[reserva.IdUsuario].Eliminado)
             {
                 <button class="btn btn-outline-secondary btn-sm" @onclick="() => VerInquilinos(reserva.Id)">
                     Ver Inquilinos
@@ -110,6 +120,9 @@ else
     Reserva? reservaSeleccionada = null;
     bool mostrarInformacionAdicional = false;
     bool mostrarInquilinos = false;
+    Dictionary<int, (string NombreCompleto, bool Eliminado)> infoUsuarios = new();
+    Dictionary<int, string> nombresAlojamientos = new();
+
 
     void VerInformacionAdicional(int id)
     {
@@ -129,6 +142,37 @@ else
     {
         ServicioSesion.IniciarSesion();
         reservas = GestionarReservasUseCase.ObtenerTodas();
+        var idsUsuarios = reservas.Select(r => r.IdUsuario).Distinct().ToList();
+
+        foreach (var id in idsUsuarios)
+        {
+            var usuario = UsuarioRepositorio.ObtenerPorId(id);
+            if (usuario is not null)
+            {
+                string nombre = usuario.EstaHabilitado
+                    ? $"{usuario.Nombre} {usuario.Apellido}"
+                    : "Usuario No disponible";
+
+                infoUsuarios[id] = (nombre, !usuario.EstaHabilitado);
+            }
+            else
+            {
+                infoUsuarios[id] = ("Usuario No disponible", true);
+            }
+        }
+        var idsAlojamientos = reservas.Select(r => r.IdAlojamiento).Distinct().ToList();
+        foreach (var id in idsAlojamientos)
+        {
+            var alojamiento = AlojamientoRepositorio.ObtenerPorId(id).Result; // como es async
+            if (alojamiento is not null)
+            {
+                nombresAlojamientos[id] = alojamiento.Nombre;
+            }
+            else
+            {
+                nombresAlojamientos[id] = "Alojamiento desconocido";
+            }
+        }
     }
     void Aceptar(int id)
     {
