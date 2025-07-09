@@ -66,11 +66,11 @@ else
                                 {
                                     <div class="mb-2">
                                         <label>Foto frente del DNI:</label>
-                                        <InputFile OnChange="e => OnFileSelected(e, i, true)" class="form-control" />
+                                        <InputFile OnChange="ObtenerCallbackFrente(i)" class="form-control" />
                                     </div>
                                     <div class="mb-2">
                                         <label>Foto dorso del DNI:</label>
-                                        <InputFile OnChange="e => OnFileSelected(e, i, false)" class="form-control" />
+                                        <InputFile OnChange="ObtenerCallbackDorso(i)" class="form-control" />
                                     </div>
                                 }
                                 else
@@ -158,16 +158,26 @@ else
         reserva.FechaInicioEstadia = desde ?? DateTime.Now;
         reserva.FechaFinEstadia = hasta ?? DateTime.Now.AddDays(1);
     }
-    private void OnFileSelected(InputFileChangeEventArgs e, int index, bool esFrente)
+    private EventCallback<InputFileChangeEventArgs> ObtenerCallbackFrente(int index)
+    {
+        return EventCallback.Factory.Create<InputFileChangeEventArgs>(this, e => OnFileFrenteSeleccionado(e, index));
+    }
+
+    private EventCallback<InputFileChangeEventArgs> ObtenerCallbackDorso(int index)
+    {
+        return EventCallback.Factory.Create<InputFileChangeEventArgs>(this, e => OnFileDorsoSeleccionado(e, index));
+    }
+
+    private void OnFileFrenteSeleccionado(InputFileChangeEventArgs e, int index)
     {
         if (e.FileCount > 0)
-        {
-            var archivo = e.File;
-            if (esFrente)
-                dniFrenteArchivos[index] = archivo;
-            else
-                dniDorsoArchivos[index] = archivo;
-        }
+            dniFrenteArchivos[index] = e.File;
+    }
+
+    private void OnFileDorsoSeleccionado(InputFileChangeEventArgs e, int index)
+    {
+        if (e.FileCount > 0)
+            dniDorsoArchivos[index] = e.File;
     }
 
     private bool _isDisposed = false;
