@@ -29,7 +29,8 @@ else
         <div class="mb-3">
             <label>Número:</label>
             <input placeholder="Número de tarjeta (16 dígitos)" @bind="_tarjeta.Numero" class="form-control"
-                   required type="text" maxlength="16" pattern="\d{16}" inputmode="numeric" />
+                type="text" maxlength="16" inputmode="numeric" />
+
             @if (!string.IsNullOrEmpty(_errorNumero))
             {
                 <div class="text-danger">@_errorNumero</div>
@@ -38,7 +39,7 @@ else
 
         <div class="mb-3">
             <label>Nombre del Titular:</label>
-            <input placeholder="Nombre Titular" @bind="_tarjeta.NombreTitular" class="form-control" required type="text" />
+            <input placeholder="Nombre Titular" @bind="_tarjeta.NombreTitular" class="form-control" type="text" />
             @if (!string.IsNullOrEmpty(_errorNombreTitular))
             {
                 <div class="text-danger">@_errorNombreTitular</div>
@@ -70,8 +71,9 @@ else
 
         <div class="mb-3">
             <label>Código de Seguridad:</label>
-            <input placeholder="Codigo de seguridad" @bind="_codigoSeguridadTexto" class="form-control"
-                required type="text" maxlength="3" pattern="\d{3}" inputmode="numeric" />
+            <input placeholder="Código de seguridad" @bind="_codigoSeguridadTexto" class="form-control"
+                type="text" maxlength="3" inputmode="numeric" />
+
             @if (!string.IsNullOrEmpty(_errorCodigoSeguridad))
             {
                 <div class="text-danger">@_errorCodigoSeguridad</div>
@@ -133,7 +135,7 @@ else
 
         if (string.IsNullOrWhiteSpace(_tarjeta.Numero) || _tarjeta.Numero.Length != 16 || !_tarjeta.Numero.All(char.IsDigit))
         {
-            _errorNumero = "El número de tarjeta debe tener exactamente 16 dígitos.";
+            _errorNumero = "El número de tarjeta debe tener exactamente 16 dígitos (sin letras ni símbolos).";
             hayErrores = true;
         }
 
@@ -145,7 +147,7 @@ else
 
         if (string.IsNullOrWhiteSpace(_codigoSeguridadTexto) || _codigoSeguridadTexto.Length != 3 || !_codigoSeguridadTexto.All(char.IsDigit))
         {
-            _errorCodigoSeguridad = "El código de seguridad debe tener exactamente 3 dígitos.";
+            _errorCodigoSeguridad = "El código de seguridad debe tener exactamente 3 dígitos (sin letras ni símbolos).";
             hayErrores = true;
         }
 
