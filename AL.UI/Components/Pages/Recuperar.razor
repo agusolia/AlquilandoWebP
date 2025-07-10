@@ -1,29 +1,26 @@
 @page "/recuperar"
-@using Microsoft.AspNetCore.Components.Forms
-@using System.ComponentModel.DataAnnotations
-@rendermode InteractiveServer
 @inject IServicioSesion ServicioSesion
+@rendermode InteractiveServer
 
 <h3>Recuperar contraseña</h3>
 
 @if (!enviado)
 {
-    <EditForm Model="modelo" OnValidSubmit="VerificarEmail">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
-
-        <div class="mb-3">
-            <label>Email:</label>
-            <InputText @bind-Value="modelo.Email" class="form-control" />
-        </div>
-
-        @if (!string.IsNullOrEmpty(mensajeError))
+    <div class="mb-3">
+        <label>Email:</label>
+        <input @bind="_email" class="form-control" />
+        @if (!string.IsNullOrEmpty(_errorEmail))
         {
-            <div class="alert alert-danger">@mensajeError</div>
+            <div class="text-danger">@_errorEmail</div>
         }
+    </div>
 
-        <button type="submit" class="btn btn-primary">Enviar</button>
-    </EditForm>
+    @if (!string.IsNullOrEmpty(_mensajeErrorGeneral))
+    {
+        <div class="alert alert-danger">@_mensajeErrorGeneral</div>
+    }
+
+    <button class="btn btn-primary" @onclick="Enviar">Enviar</button>
 }
 else
 {
@@ -33,29 +30,49 @@ else
 }
 
 @code {
-    private RecuperarModelo modelo = new();
+    private string _email = "";
+    private string? _errorEmail;
+    private string? _mensajeErrorGeneral;
     private bool enviado = false;
-    private string? mensajeError;
 
-    public class RecuperarModelo
+    private async Task Enviar()
     {
-        [Required]
-        [EmailAddress]
-        public string Email { get; set; } = string.Empty;
-    }
+        _errorEmail = null;
+        _mensajeErrorGeneral = null;
 
-    private async Task VerificarEmail()
-    {
-        mensajeError = null;
+        // Validaciones personalizadas
+        if (string.IsNullOrWhiteSpace(_email))
+        {
+            _errorEmail = "Por favor ingrese un email con un formato válido.";
+            return;
+        }
+        else if (!EsEmailValido(_email))
+        {
+            _errorEmail = "Por favor ingrese un email con un formato válido.";
+            return;
+        }
 
-        var existe = await ServicioSesion.ExisteUsuarioConEmail(modelo.Email);
+        var existe = await ServicioSesion.ExisteUsuarioConEmail(_email);
         if (existe)
         {
             enviado = true;
         }
         else
         {
-            mensajeError = "El correo ingresado no está registrado.";
+            _mensajeErrorGeneral = "El correo ingresado no está registrado.";
+        }
+    }
+
+    private bool EsEmailValido(string email)
+    {
+        try
+        {
+            var addr = new System.Net.Mail.MailAddress(email);
+            return addr.Address == email;
+        }
+        catch
+        {
+            return false;
         }
     }
 }
