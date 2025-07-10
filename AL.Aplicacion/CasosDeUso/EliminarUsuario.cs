@@ -27,8 +27,14 @@ public class EliminarUsuario
 
         var reservas = _reservasRepositorio.ObtenerReservasPorUsuarioId(usuarioId);
         
-        var reservasActivas = reservas
-            .Where(r => r.EstadoReserva == EstadoReserva.EnCurso || r.FechaInicioEstadia > DateTime.Now)
+        var reservasActivas = reservas.Where(r =>
+                r.EstadoReserva == EstadoReserva.EnCurso ||
+                (
+                    r.FechaInicioEstadia >= DateTime.Now &&
+                    r.EstadoReserva != EstadoReserva.Rechazada &&
+                    r.EstadoReserva != EstadoReserva.Cancelada
+                )
+            )
             .ToList();
 
         if (reservasActivas.Any())
