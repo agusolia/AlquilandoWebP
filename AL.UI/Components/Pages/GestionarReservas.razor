@@ -60,13 +60,6 @@ else
             </div>
             }
             <div class="d-flex gap-2 mt-3">
-                @if (reserva.ListaInformacionAdicional.Count > 0 && !infoUsuarios[reserva.IdUsuario].Eliminado)
-                {
-                    <button class="btn btn-outline-primary btn-sm" @onclick="() => VerInformacionAdicional(reserva.Id)">
-                        Ver Información Adicional
-                    </button>
-                }
-
             @if (reserva.Inquilinos?.Count > 0 && !infoUsuarios[reserva.IdUsuario].Eliminado)
             {
                 <button class="btn btn-outline-secondary btn-sm" @onclick="() => VerInquilinos(reserva.Id)">
@@ -75,39 +68,42 @@ else
             }
         </div>
 
-            @if (mostrarInformacionAdicional && reservaSeleccionada?.Id == reserva.Id)
-            {
-                <div class="card p-3 my-3 bg-light border-primary">
-                    <h5>Información Adicional (Fotos)</h5>
-                    @if (reservaSeleccionada.ListaInformacionAdicional.Any())
-                    {
-                        <div class="d-flex flex-wrap gap-2">
-                            @foreach (var foto in reservaSeleccionada.ListaInformacionAdicional)
-                            {
-                                <img src="@foto" alt="Foto adicional" width="150" class="img-thumbnail" />
-                            }
-                        </div>
-                    }
-                    else
-                    {
-                        <p>No hay información adicional disponible.</p>
-                    }
-                </div>
-            }
-
-            @if (mostrarInquilinos && reservaSeleccionada?.Id == reserva.Id)
+           @if (mostrarInquilinos && reservaSeleccionada?.Id == reserva.Id)
             {
                 <div class="card p-3 my-3 bg-light border-secondary">
                     <h5>Información de Inquilinos</h5>
-                    <ul class="list-group">
-                        @foreach (var inquilino in reservaSeleccionada.Inquilinos)
-                        {
-                            <li class="list-group-item">
-                                <strong>Nombre:</strong> @inquilino.Nombre<br />
-                                <strong>Documento:</strong> @inquilino.Dni
-                            </li>
-                        }
-                    </ul>
+                    @for (int i = 0; i < reservaSeleccionada.Inquilinos.Count; i++)
+                    {
+                        var inquilino = reservaSeleccionada.Inquilinos[i];
+                        <div class="border p-2 mb-2 rounded">
+                            <p><strong>Nombre:</strong> @inquilino.Nombre</p>
+
+                            @if (!string.IsNullOrWhiteSpace(inquilino.Dni))
+                            {
+                                <p><strong>DNI:</strong> @inquilino.Dni</p>
+                            }
+
+                            @if (reservaSeleccionada.ListaInformacionAdicional?.Count > 0)
+                            {
+                                <div class="d-flex flex-wrap gap-2">
+                                    <p><strong>Fotos del DNI:</strong></p>
+                                    @{
+                                        var frente = reservaSeleccionada.ListaInformacionAdicional.FirstOrDefault(x => x.Contains($"Inquilino {i + 1}:") && x.Contains("frente"));
+                                        var dorso = reservaSeleccionada.ListaInformacionAdicional.FirstOrDefault(x => x.Contains($"Inquilino {i + 1}:") && x.Contains("dorso"));
+                                    }
+                                    @if (frente is not null)
+                                    {
+                                        <img src="@ExtraerRuta(frente)" alt="Frente DNI" width="150" class="img-thumbnail" />
+                                    }
+                                    @if (dorso is not null)
+                                    {
+                                        <img src="@ExtraerRuta(dorso)" alt="Dorso DNI" width="150" class="img-thumbnail" />
+
+                                    }
+                                </div>
+                            }
+                        </div>
+                    }
                 </div>
             }
         </div>
@@ -118,25 +114,17 @@ else
     List<Reserva> reservas = new();
     //string mensajeEstado = "";
     Reserva? reservaSeleccionada = null;
-    bool mostrarInformacionAdicional = false;
     bool mostrarInquilinos = false;
     Dictionary<int, (string NombreCompleto, bool Eliminado)> infoUsuarios = new();
     Dictionary<int, string> nombresAlojamientos = new();
 
 
-    void VerInformacionAdicional(int id)
-    {
-        reservaSeleccionada = reservas.FirstOrDefault(r => r.Id == id);
-        mostrarInformacionAdicional = true;
-        mostrarInquilinos = false;
-    }
-
     void VerInquilinos(int id)
     {
         reservaSeleccionada = reservas.FirstOrDefault(r => r.Id == id);
         mostrarInquilinos = true;
-        mostrarInformacionAdicional = false;
     }
+
 
     protected override void OnInitialized()
     {
@@ -187,4 +175,17 @@ else
         reservas = GestionarReservasUseCase.ObtenerTodas();
         StateHasChanged();
     }
+    private string ExtraerRuta(string entrada)
+    {
+        // Ej: "Inquilino 1: /imagenes/reservas/abc123.jpg (frente)"
+        var inicioRuta = entrada.IndexOf("/imagenes/reservas/");
+        var finRuta = entrada.LastIndexOf(" ");
+        if (inicioRuta >= 0 && finRuta > inicioRuta)
+        {
+            return entrada.Substring(inicioRuta, finRuta - inicioRuta);
+        }
+
+        return "/imagenes/reservas/imagen-no-encontrada.jpg"; // opcional: imagen por defecto
+    }
+
 }
