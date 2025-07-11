@@ -139,11 +139,12 @@ else
             hayErrores = true;
         }
 
-        if (string.IsNullOrWhiteSpace(_tarjeta.NombreTitular))
+        if (string.IsNullOrWhiteSpace(_tarjeta.NombreTitular) || _tarjeta.NombreTitular.Any(char.IsDigit))
         {
-            _errorNombreTitular = "El nombre del titular es obligatorio.";
+            _errorNombreTitular = "El nombre del titular es obligatorio y no debe contener números.";
             hayErrores = true;
         }
+
 
         if (string.IsNullOrWhiteSpace(_codigoSeguridadTexto) || _codigoSeguridadTexto.Length != 3 || !_codigoSeguridadTexto.All(char.IsDigit))
         {
