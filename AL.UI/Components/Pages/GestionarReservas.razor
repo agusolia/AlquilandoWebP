@@ -7,20 +7,33 @@
 @inject IAlojamientoRepositorio AlojamientoRepositorio
 
 <h3>Gestión de Reservas</h3>
+    <div class="mb-3">
+    <label for="filtroEstado" class="form-label"><strong>Filtrar por estado:</strong></label>
+    <select id="filtroEstado" class="form-select w-auto d-inline-block" @bind="estadoFiltro">
+        <option value="Todos">Todos</option>
+        <option value="Pendiente">Pendiente</option>
+        <option value="Confirmada">Confirmada</option>
+        <option value="Rechazada">Rechazada</option>
+    </select>
+</div>
 
 @if (reservas.Count == 0)
 {
     <p>No hay reservas aún.</p>
 }
+else if (reservasFiltradas.Count == 0)
+{
+    <p>No hay reservas que coincidan con el filtro seleccionado.</p>
+}
 else
 {
-    @foreach (var reserva in reservas) //*corregir boton para ver la informacion de los inquilinos*//
+    @foreach (var reserva in reservasFiltradas)
     {
         <div class="card p-3 my-3">
             @if (!infoUsuarios[reserva.IdUsuario].Eliminado)
             {
                 <p><strong>Usuario:</strong> @infoUsuarios[reserva.IdUsuario].NombreCompleto</p>
-                <p><strong>ID:</strong> @reserva.IdUsuario</p>
+                <p><strong>Email:</strong> @infoUsuarios[reserva.IdUsuario].Email</p>
             }
             else
             {
@@ -115,9 +128,38 @@ else
     //string mensajeEstado = "";
     Reserva? reservaSeleccionada = null;
     bool mostrarInquilinos = false;
-    Dictionary<int, (string NombreCompleto, bool Eliminado)> infoUsuarios = new();
-    Dictionary<int, string> nombresAlojamientos = new();
+    Dictionary<int, (string NombreCompleto, string Email, bool Eliminado)> infoUsuarios = new();
 
+    Dictionary<int, string> nombresAlojamientos = new();
+    private List<Reserva> reservasFiltradas = new();
+    private string _estadoFiltro = "Todos";
+
+    private string estadoFiltro
+    {
+        get => _estadoFiltro;
+        set
+        {
+            if (_estadoFiltro != value)
+            {
+                _estadoFiltro = value;
+                FiltrarReservas(); // Se ejecuta automáticamente cuando cambia el filtro
+            }
+        }
+    }
+
+    private void FiltrarReservas()
+    {
+        if (estadoFiltro == "Todos")
+        {
+            reservasFiltradas = reservas;
+        }
+        else
+        {
+            reservasFiltradas = reservas
+                .Where(r => r.EstadoReserva.ToString() == estadoFiltro)
+                .ToList();
+        }
+    }
 
     void VerInquilinos(int id)
     {
@@ -141,11 +183,11 @@ else
                     ? $"{usuario.Nombre} {usuario.Apellido}"
                     : "Usuario No disponible";
 
-                infoUsuarios[id] = (nombre, !usuario.EstaHabilitado);
+                infoUsuarios[id] = (nombre, usuario.CorreoElectronico, !usuario.EstaHabilitado);
             }
             else
             {
-                infoUsuarios[id] = ("Usuario No disponible", true);
+                infoUsuarios[id] = ("Usuario No disponible","Sin correo", true);
             }
         }
         var idsAlojamientos = reservas.Select(r => r.IdAlojamiento).Distinct().ToList();
@@ -161,11 +203,13 @@ else
                 nombresAlojamientos[id] = "Alojamiento desconocido";
             }
         }
+        FiltrarReservas();
     }
     void Aceptar(int id)
     {
         GestionarReservasUseCase.AceptarReserva(id);
         reservas = GestionarReservasUseCase.ObtenerTodas();
+        FiltrarReservas(); 
         StateHasChanged();
     }
 
@@ -173,8 +217,10 @@ else
     {
         GestionarReservasUseCase.RechazarReserva(id);
         reservas = GestionarReservasUseCase.ObtenerTodas();
+        FiltrarReservas(); 
         StateHasChanged();
     }
+
     private string ExtraerRuta(string entrada)
     {
         // Ej: "Inquilino 1: /imagenes/reservas/abc123.jpg (frente)"
